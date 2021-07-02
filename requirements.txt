@@ -1,0 +1,6 @@
+autograd
+cvxpy
+numpy
+matplotlib
+scipy
+jax
