@@ -46,7 +46,7 @@ class DataGenerator:
         self.data_ptr = self.num_iterations_for_tuning * self.num_nodes
 
     def get_num_samples(self):
-        if self.data_ptr == 0:  # Tuning data
+        if self.num_iterations_for_tuning > 0 and self.data_ptr == 0:  # Tuning data
             return self.num_iterations_for_tuning * self.num_nodes
         else:  # Testing data
             return self.data.shape[0] - self.num_iterations_for_tuning * self.num_nodes
