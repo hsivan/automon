@@ -6,7 +6,6 @@ from timeit import default_timer as timer
 import argparse
 import logging
 from importlib import reload
-import numpy as np
 import sys
 
 from node_stream import NodeStream
@@ -44,6 +43,8 @@ def end_test():
 
 def _test_data_loop(coordinator, nodes, verifier, data_generator, sliding_window_size, func_update_local_vector, b_check_violation_every_sample):
     local_vec_len = 1 if len(data_generator.data.shape) == 1 else data_generator.data.shape[1]
+    if b_check_violation_every_sample and local_vec_len > 1:
+        local_vec_len -= 1
     num_nodes = len(nodes)
     node_stream = NodeStream(num_nodes, sliding_window_size, local_vec_len, func_update_local_vector, verifier.x0)
     num_iterations = data_generator.get_num_samples()
