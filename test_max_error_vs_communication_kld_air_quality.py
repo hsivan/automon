@@ -57,4 +57,4 @@ if __name__ == "__main__":
     for error_bound in error_bounds:
         test_error_bounds(error_bound, parent_test_folder)
 
-    plot_max_error_vs_communication(parent_test_folder, "kld")
+    plot_max_error_vs_communication(parent_test_folder, "KLD")

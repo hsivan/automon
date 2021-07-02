@@ -49,6 +49,7 @@ def neighborhood_size_impact(experiment_folder, error_bound):
             logging.info("\n ###################### Start MLP AutoMon test ######################")
             data_generator.reset()
             coordinator, nodes, verifier = get_objects(NodeMlpAutoMon, CoordinatorAutoMon, conf, conf["k"], func_mlp)
+            coordinator.b_fix_neighborhood_dynamically = False  # Should not change neighborhood size dynamically in this experiment
             run_test(data_generator, coordinator, nodes, verifier, sub_test_folder, conf["sliding_window_size"], update_local_vector_average)
 
             plot_figures(sub_test_folder)

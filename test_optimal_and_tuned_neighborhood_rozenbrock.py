@@ -46,6 +46,7 @@ def neighborhood_size_impact(experiment_folder, error_bound):
             logging.info("\n ###################### Start Rozenbrock AutoMon test ######################")
             data_generator.reset()
             coordinator, nodes, verifier = get_objects(NodeRozenbrockAutoMon, CoordinatorAutoMon, conf, 2 * conf["k"], func_rozenbrock)
+            coordinator.b_fix_neighborhood_dynamically = False  # Should not change neighborhood size dynamically in this experiment
             run_test(data_generator, coordinator, nodes, verifier, sub_test_folder, conf["sliding_window_size"], update_local_vector_average)
 
             plot_figures(sub_test_folder)
