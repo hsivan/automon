@@ -2,11 +2,9 @@ from auto_mon_monitoring.node_inner_product_auto_mon import NodeInnerProductAuto
 from cb_monitoring.node_inner_product_cb import NodeInnerProductCB
 from coordinators.coordinator_auto_mon import CoordinatorAutoMon
 from coordinators.coordinator_cb import CoordinatorCB
-from coordinators.coordinator_rlv import CoordinatorRLV
 from data_generator import DataGenerator, DataGeneratorInnerProduct
 from coordinators.coordinator_common import SlackType, SyncType
 from functions_to_update_local_vector import update_local_vector_average
-from rlv_monitoring.node_inner_product_rlv import NodeInnerProductRLV
 from test_utils import start_test, end_test, run_test, get_config, write_config_to_file, read_config_file
 from stats_analysis_utils import plot_figures
 import logging
@@ -26,11 +24,6 @@ def test_error_bounds(error_bound, parent_test_folder):
 
         conf["error_bound"] = error_bound
         write_config_to_file(test_folder, conf)
-
-        logging.info("\n ###################### Start RLV test ######################")
-        data_generator.reset()
-        coordinator, nodes, verifier = get_objects(NodeInnerProductRLV, CoordinatorRLV, conf, 2*conf["k"], func_inner_product)
-        run_test(data_generator, coordinator, nodes, verifier, test_folder, conf["sliding_window_size"], update_local_vector_average)
 
         logging.info("\n ###################### Start CB test ######################")
         data_generator.reset()

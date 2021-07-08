@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 from matplotlib import rcParams, rcParamsDefault
 import numpy as np
 from test_figures.plot_error_communication_tradeoff import get_period_approximation_error
-from test_figures.plot_figures_utils import get_figsize, get_function_value_offset
+from test_figures.plot_figures_utils import get_figsize
 from test_utils import read_config_file
 from stats_analysis_utils import _search_largest_period_under_error_bound
 import os
@@ -17,7 +17,6 @@ def plot_monitoring_stats(test_folder, func_name):
     conf = read_config_file(test_folder)
     error_bound = conf["error_bound"]
     num_nodes = conf["num_nodes"]
-    offset = get_function_value_offset(test_folder)
 
     fig, axs = plt.subplots(3, 1, figsize=get_figsize(hf=1.0), sharex=True)
     real_function_value_file_suffix = "_real_function_value.csv"
@@ -31,17 +30,13 @@ def plot_monitoring_stats(test_folder, func_name):
 
     # Real function value
     real_function_value = np.genfromtxt(test_folder + "/" + real_function_value_files[0])  # Need only one, as they are all the same
-    data_len = len(real_function_value) - offset
-    start_iteration = offset
-    end_iteration = offset + data_len
-    axs[0].plot(np.arange(start_iteration, end_iteration), real_function_value[offset:], label=r'$f \pm T$', color="tab:blue", linewidth=1)
-    axs[0].fill_between(np.arange(start_iteration, end_iteration),
-                        real_function_value[offset:] - error_bound,
-                        real_function_value[offset:] + error_bound, facecolor='tab:blue', alpha=0.3)
+    data_len = len(real_function_value)
+    axs[0].plot(np.arange(0, data_len), real_function_value, label=r'$f \pm T$', color="tab:blue", linewidth=1)
+    axs[0].fill_between(np.arange(0, data_len), real_function_value - error_bound, real_function_value + error_bound, facecolor='tab:blue', alpha=0.3)
     axs[0].set_ylabel(r'$f$')
 
-    period = _search_largest_period_under_error_bound(real_function_value, error_bound, offset)
-    periodic_approximation_error, periodic_cumulative_msg = get_period_approximation_error(period, real_function_value, num_nodes, offset)
+    period = _search_largest_period_under_error_bound(real_function_value, error_bound)
+    periodic_approximation_error, periodic_cumulative_msg = get_period_approximation_error(period, real_function_value, num_nodes, 0)
 
     # Approximation error
     colors = ["tab:blue", "tab:orange", "tab:green", "tab:red"]
@@ -49,31 +44,25 @@ def plot_monitoring_stats(test_folder, func_name):
     for idx, file in enumerate(function_approximation_error_files):
         function_approximation_error = np.genfromtxt(test_folder + "/" + file)
         coordinator_name = file.replace(function_approximation_error_file_suffix, "")
-        axs[1].plot(np.arange(start_iteration, end_iteration), function_approximation_error[offset:],
-                    label=coordinator_name, color=colors[idx], linestyle=linestyles[idx], linewidth=1)
-    axs[1].plot(np.arange(start_iteration, end_iteration), periodic_approximation_error[offset:],
-                label="Periodic oracle " + str(period), color=colors[-2], linestyle=linestyles[-1], linewidth=1)
+        axs[1].plot(np.arange(0, data_len), function_approximation_error, label=coordinator_name, color=colors[idx], linestyle=linestyles[idx], linewidth=1)
+    axs[1].plot(np.arange(0, data_len), periodic_approximation_error, label="Periodic oracle " + str(period), color=colors[-2], linestyle=linestyles[-1], linewidth=1)
     axs[1].set_ylabel("Approx. error")
 
     # Cumulative messages - broadcast disabled
     for idx, file in enumerate(cumulative_msgs_broadcast_disabled_files):
         cumulative_msgs_broadcast_disabled = np.genfromtxt(test_folder + "/" + file)
         coordinator_name = file.replace(cumulative_msgs_broadcast_disabled_suffix, "")
-        axs[2].plot(np.arange(start_iteration, end_iteration), cumulative_msgs_broadcast_disabled[offset:],
-                    label=coordinator_name, color=colors[idx], linestyle=linestyles[idx], linewidth=1)
-    axs[2].plot(np.arange(start_iteration, end_iteration), periodic_cumulative_msg[offset:],
-                label="Periodic oracle", color=colors[-2], linestyle=linestyles[-1], linewidth=1)
+        axs[2].plot(np.arange(0, data_len), cumulative_msgs_broadcast_disabled, label=coordinator_name, color=colors[idx], linestyle=linestyles[idx], linewidth=1)
+    axs[2].plot(np.arange(0, data_len), periodic_cumulative_msg, label="Periodic oracle", color=colors[-2], linestyle=linestyles[-1], linewidth=1)
 
     # Centralization line - every node sends its statistics every second
-    axs[2].plot(np.arange(start_iteration, end_iteration),
-                np.arange(1, end_iteration - start_iteration + 1) * num_nodes,
-                label="Centralization", color="black", linestyle='--', linewidth=1)
+    axs[2].plot(np.arange(0, data_len), np.arange(1, data_len + 1) * num_nodes, label="Centralization", color="black", linestyle='--', linewidth=1)
     axs[2].set_ylabel("Cumul. messages")
     axs[2].set_xlabel("rounds")
     axs[2].set_yscale('log')
 
     # Error bound
-    axs[1].hlines(error_bound, xmin=start_iteration, xmax=end_iteration - 1, linestyles='dashed', color="black", label="error bound")
+    axs[1].hlines(error_bound, xmin=0, xmax=data_len - 1, linestyles='dashed', color="black", label="error bound")
 
     axs[0].spines['right'].set_visible(False)
     axs[0].spines['top'].set_visible(False)
@@ -107,8 +96,5 @@ def plot_monitoring_stats(test_folder, func_name):
 
 
 if __name__ == "__main__":
-    test_folder = "../test_results/results_compare_methods_mlp_2_2021-04-04_10-24-28"
-    plot_monitoring_stats(test_folder, "mlp_2")
-
-    test_folder = "../test_results/results_compare_methods_kld_air_quality_2021-03-24_08-47-12"
+    test_folder = "../test_results/results_compare_methods_kld_air_quality_2021-07-09_11-15-23"
     plot_monitoring_stats(test_folder, "kld_air_quality")

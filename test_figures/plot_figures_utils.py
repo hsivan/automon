@@ -63,7 +63,7 @@ def get_function_value_offset(test_folder):
     :param test_folder:
     :return:
     """
-    date = test_folder.split("results_test_")[1].split("/")[0].split("_")[-2].split("-")
+    date = test_folder.split("results_")[1].split("/")[0].split("_")[-2].split("-")
     year = int(date[0])
     month = int(date[1])
     day = int(date[2])

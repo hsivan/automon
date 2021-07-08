@@ -1,9 +1,9 @@
 import os
 from functions_to_update_local_vector import update_local_vector_average
-from stats_analysis_utils import get_neighborhood_size_error_bound_connection
 from auto_mon_monitoring.node_mlp_auto_mon import NodeMlpAutoMon
 from data_generator import DataGenerator
 from coordinators.coordinator_auto_mon import CoordinatorAutoMon
+from test_neighborhood_impact_on_communication_rozenbrock import get_optimal_neighborhood_sizes_from_full_test
 from test_utils import start_test, end_test, run_test, write_config_to_file, read_config_file
 from stats_analysis_utils import plot_figures
 import logging
@@ -44,17 +44,7 @@ def neighborhood_size_impact(experiment_folder, test_folder, neighborhood_sizes,
         except Exception as e:
             logging.info(traceback.print_exc())
             end_test()
-
-
-def get_optimal_neighborhood_sizes_from_full_test(experiment_folders):
-    optimal_neighborhood_sizes_experiments = []
-    tuned_neighborhood_sizes_experiments = []
-    for experiment in experiment_folders:
-        error_bounds, optimal_neighborhood_sizes, tuned_neighborhood_sizes = get_neighborhood_size_error_bound_connection(experiment)
-        optimal_neighborhood_sizes_experiments.append(optimal_neighborhood_sizes)
-        tuned_neighborhood_sizes_experiments.append(tuned_neighborhood_sizes)
-
-    return error_bounds, optimal_neighborhood_sizes_experiments, tuned_neighborhood_sizes_experiments
+            raise
 
 
 if __name__ == "__main__":

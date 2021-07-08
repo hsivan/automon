@@ -33,8 +33,7 @@ def max_error_vs_communication(parent_test_folder, func_name, ax, b_use_aggregat
         error_bound_folders = [parent_test_folder + "/" + sub_folder for sub_folder in error_bound_folders]
 
         error_bound_arr = []
-        period_equiv_arr = []
-    
+
         max_error_arr_automon = []
         avg_error_arr_automon = []
         p99_error_arr_automon = []
@@ -89,18 +88,16 @@ def max_error_vs_communication(parent_test_folder, func_name, ax, b_use_aggregat
         if func_name == "DNN Intrusion Detection":
             periods = list(range(1, 11)) + [15, 20, 25, 30, 35, 40, 45, 50, 60, 80, 100, 200, 500]
 
-        for period_equiv in periods:
-            periodic_equiv_approximation_error, periodic_equiv_cumulative_msg = get_period_approximation_error(
-                period_equiv, real_function_value, num_nodes, offset)
-            max_error_arr_periodic.append(np.max(periodic_equiv_approximation_error))
-            num_messages_arr_periodic.append(periodic_equiv_cumulative_msg[-1])
-            period_equiv_arr.append(period_equiv)
+        for period in periods:
+            periodic_approximation_error, periodic_cumulative_msg = get_period_approximation_error(period, real_function_value, num_nodes, offset)
+            max_error_arr_periodic.append(np.max(periodic_approximation_error))
+            num_messages_arr_periodic.append(periodic_cumulative_msg[-1])
 
         if b_use_aggregated_data:
             # Create folder with with aggregated data as pickle files for the figure
             os.mkdir(parent_test_folder_suffix)
             pkl.dump(error_bound_arr, open(parent_test_folder_suffix + "/error_bound_arr_" + func_name + ".pkl", 'wb'))
-            pkl.dump(period_equiv_arr, open(parent_test_folder_suffix + "/period_equiv_arr_" + func_name + ".pkl", 'wb'))
+            pkl.dump(periods, open(parent_test_folder_suffix + "/period_arr_" + func_name + ".pkl", 'wb'))
             pkl.dump(max_error_arr_automon, open(parent_test_folder_suffix + "/max_error_arr_automon_" + func_name + ".pkl", 'wb'))
             pkl.dump(avg_error_arr_automon, open(parent_test_folder_suffix + "/avg_error_arr_automon_" + func_name + ".pkl", 'wb'))
             pkl.dump(p99_error_arr_automon, open(parent_test_folder_suffix + "/p99_error_arr_automon_" + func_name + ".pkl", 'wb'))
@@ -119,7 +116,7 @@ def max_error_vs_communication(parent_test_folder, func_name, ax, b_use_aggregat
         offset = get_function_value_offset(parent_test_folder_suffix)
         real_function_value = np.genfromtxt(parent_test_folder_suffix + "/real_function_value_" + func_name + ".csv")
         error_bound_arr = pkl.load(open(parent_test_folder_suffix + "/error_bound_arr_" + func_name + ".pkl", 'rb'))
-        period_equiv_arr = pkl.load(open(parent_test_folder_suffix + "/period_equiv_arr_" + func_name + ".pkl", 'rb'))
+        periods = pkl.load(open(parent_test_folder_suffix + "/period_arr_" + func_name + ".pkl", 'rb'))
         max_error_arr_automon = pkl.load(open(parent_test_folder_suffix + "/max_error_arr_automon_" + func_name + ".pkl", 'rb'))
         avg_error_arr_automon = pkl.load(open(parent_test_folder_suffix + "/avg_error_arr_automon_" + func_name + ".pkl", 'rb'))
         p99_error_arr_automon = pkl.load(open(parent_test_folder_suffix + "/p99_error_arr_automon_" + func_name + ".pkl", 'rb'))
@@ -190,7 +187,7 @@ def max_error_vs_communication(parent_test_folder, func_name, ax, b_use_aggregat
     ax.set_xlim(left=0)
 
     print("error_bound_arr:", error_bound_arr)
-    print("period_equiv:", period_equiv_arr)
+    print("periods:", periods)
 
     print("max_error_arr_automon:", max_error_arr_automon)
     print("num_messages_arr_automon:", num_messages_arr_automon)

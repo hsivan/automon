@@ -6,7 +6,7 @@ from data_generator import DataGenerator, DataGeneratorRozenbrock
 from coordinators.coordinator_common import SlackType, SyncType
 from coordinators.coordinator_auto_mon import CoordinatorAutoMon, DomainType
 from test_utils import start_test, end_test, run_test, get_config, write_config_to_file, read_config_file
-from stats_analysis_utils import plot_figures, plot_impact_of_neighborhood_size_on_violations, plot_neighborhood_size_error_bound_connection_avg
+from stats_analysis_utils import plot_figures, plot_impact_of_neighborhood_size_on_violations
 import logging
 import numpy as np
 import traceback
@@ -14,6 +14,7 @@ from concurrent.futures import ProcessPoolExecutor
 from object_factory import get_objects
 from functions_to_monitor import func_rozenbrock
 from functions_to_update_local_vector import update_local_vector_average
+from test_figures.plot_neighborhood_impact import plot_neighborhood_size_error_bound_connection_avg
 
 
 def neighborhood_size_impact(experiment_folder, error_bound):
@@ -55,6 +56,7 @@ def neighborhood_size_impact(experiment_folder, error_bound):
         except Exception as e:
             logging.info(traceback.print_exc())
             end_test()
+            raise
 
     plot_impact_of_neighborhood_size_on_violations(test_folder)
 
@@ -87,5 +89,4 @@ if __name__ == "__main__":
             futures_arr.append(future)
         executor.shutdown()
 
-    plot_neighborhood_size_error_bound_connection_avg(parent_test_folder)
-
+    plot_neighborhood_size_error_bound_connection_avg(parent_test_folder, "Rozenbrock")

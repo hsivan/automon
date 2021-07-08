@@ -32,6 +32,8 @@ def read_csv(csv_file):
 
 def prepare_pm_data(step=20, relative_folder='./'):
     csv_files = [csv_file for csv_file in os.listdir(relative_folder) if csv_file.endswith('csv')]
+    station_data_arr = []
+
     for csv_file in csv_files:
         station_name = csv_file.split('_')[2]
         print("station_name:", station_name)
@@ -55,7 +57,9 @@ def prepare_pm_data(step=20, relative_folder='./'):
 
         data[:, 0] = x
         data[:, 1] = y
-        np.savetxt(relative_folder + "station_" + station_name + "_pm.txt", data)
+        station_data_arr.append(data)
+
+    return station_data_arr
 
 
 if __name__ == "__main__":

@@ -4,3 +4,5 @@ numpy
 matplotlib
 scipy
 jax
+pandas
+scikit-learn

@@ -6,7 +6,7 @@ from test_utils import read_config_file
 import os
 
 
-def plot_monitoring_stats(test_folder):
+def plot_monitoring_stats_sine(test_folder):
     rcParams['pdf.fonttype'] = 42
     rcParams['ps.fonttype'] = 42
     rcParams.update({'legend.fontsize': 6})
@@ -133,8 +133,8 @@ def plot_violations_histogram(convex_diff_folder, concave_diff_folder, heuristic
 
 
 if __name__ == "__main__":
-    test_folder = "./sine_monitoring/results_compare_methods_sine_merged_all_methods/"
-    plot_monitoring_stats(test_folder)
+    test_folder = "./sine_monitoring/results_compare_methods_sine_merged_all_methods_2021-01-23_17-36-55/"
+    plot_monitoring_stats_sine(test_folder)
 
     convex_diff_folder = "./sine_monitoring/results_compare_methods_sine_2021-01-23_17-37-31/"
     concave_diff_folder = "./sine_monitoring/results_compare_methods_sine_2021-01-23_17-38-20/"

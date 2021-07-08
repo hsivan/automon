@@ -7,7 +7,7 @@ import os
 import matplotlib.ticker as tick
 
 
-def plot_monitoring_stats_graph_and_barchart(test_folder, func_name):
+def plot_monitoring_stats_graph_and_barchart(test_folder, func_name, relative_folder='./'):
     rcParams['pdf.fonttype'] = 42
     rcParams['ps.fonttype'] = 42
     rcParams.update({'legend.fontsize': 5.4})
@@ -55,7 +55,7 @@ def plot_monitoring_stats_graph_and_barchart(test_folder, func_name):
     ax.tick_params(width=0.5)
 
     plt.subplots_adjust(top=0.97, bottom=0.29, left=0.27, right=0.96)
-    fig.savefig("func_val_and_approx_error_" + func_name + ".pdf")
+    fig.savefig(relative_folder + "func_val_and_approx_error_" + func_name + ".pdf")
 
     new_order = [0, 2, 1]
     function_approximation_error_files = [function_approximation_error_files[i] for i in new_order]
@@ -84,14 +84,17 @@ def plot_monitoring_stats_graph_and_barchart(test_folder, func_name):
             coordinator_name = "no ADCD"
         if "RLV no slack" in coordinator_name:
             coordinator_name = "no ADCD no slack"
+
         if coordinator_name == "no ADCD no slack":
             ax0.plot(np.arange(start_iteration, end_iteration), function_approximation_error[offset:],
                         label=coordinator_name, color=colors[idx], linestyle=linestyles[idx], linewidth=1.1)
         else:
             ax0.plot(np.arange(start_iteration, end_iteration), function_approximation_error[offset:],
                      label=coordinator_name, color=colors[idx], linestyle=linestyles[idx], linewidth=0.8)
+
         max_errors.append(np.max(function_approximation_error))
         coordinators.append(coordinator_name)
+
     ax0.set_ylabel("max error")
 
     # \u03B5 is the unicode of epsilon: r'$\epsilon=$'
@@ -203,12 +206,12 @@ def plot_monitoring_stats_graph_and_barchart(test_folder, func_name):
     plt.legend(handles, labels, loc="upper center", ncol=3, bbox_to_anchor=(-1.5, 2.55), columnspacing=1.5, handletextpad=0.6, frameon=False, framealpha=0, handlelength=1.5)
 
     plt.subplots_adjust(top=0.9, bottom=0.17, left=0.18, right=0.99)
-    fig.savefig("monitoring_stats_" + func_name + ".pdf")
+    fig.savefig(relative_folder + "monitoring_stats_" + func_name + ".pdf")
 
     rcParams.update(rcParamsDefault)
 
 
-def plot_monitoring_stats_barchart(test_folder, func_name):
+def plot_monitoring_stats_barchart(test_folder, func_name, relative_folder='./'):
     rcParams['pdf.fonttype'] = 42
     rcParams['ps.fonttype'] = 42
     rcParams.update({'legend.fontsize': 5.4})
@@ -315,14 +318,14 @@ def plot_monitoring_stats_barchart(test_folder, func_name):
                  horizontalalignment='right', verticalalignment='bottom')
 
     plt.subplots_adjust(top=0.9, bottom=0.17, left=0.5, right=0.99)
-    fig.savefig("monitoring_stats_barchart_" + func_name + ".pdf")
+    fig.savefig(relative_folder + "monitoring_stats_barchart_" + func_name + ".pdf")
 
 
 if __name__ == "__main__":
     # Figure 9 (a) in the paper
-    test_folder = "../test_results/results_compare_methods_quadratic_inverse_2021-03-19_16-13-05"
+    test_folder = "../test_results/results_ablation_study_quadratic_inverse_2021-07-08_15-40-37"
     plot_monitoring_stats_graph_and_barchart(test_folder, "quadratic_inverse")
 
     # Figure 9 (b) in the paper
-    test_folder = "../test_results/results_compare_methods_mlp_2_2021-04-04_10-24-28"
+    test_folder = "../test_results/results_ablation_study_mlp_2_2021-07-08_15-46-33"
     plot_monitoring_stats_barchart(test_folder, "mlp_2")

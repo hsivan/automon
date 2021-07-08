@@ -5,13 +5,12 @@ from auto_mon_monitoring.node_rosenbrock_auto_mon import NodeRozenbrockAutoMon
 from data_generator import DataGenerator
 from coordinators.coordinator_auto_mon import CoordinatorAutoMon
 from test_utils import start_test, end_test, run_test, write_config_to_file, read_config_file
-from stats_analysis_utils import plot_figures
+from stats_analysis_utils import plot_figures, get_neighborhood_size_error_bound_connection
 import logging
 import traceback
 from concurrent.futures import ProcessPoolExecutor
 from object_factory import get_objects
 from functions_to_monitor import func_rozenbrock
-from test_neighborhood_impact_on_communication_mlp_2 import get_optimal_neighborhood_sizes_from_full_test
 
 
 def neighborhood_size_impact(experiment_folder, test_folder, neighborhood_sizes, prefixes):
@@ -41,7 +40,18 @@ def neighborhood_size_impact(experiment_folder, test_folder, neighborhood_sizes,
         except Exception as e:
             logging.info(traceback.print_exc())
             end_test()
+            raise
 
+
+def get_optimal_neighborhood_sizes_from_full_test(experiment_folders):
+    optimal_neighborhood_sizes_experiments = []
+    tuned_neighborhood_sizes_experiments = []
+    for experiment in experiment_folders:
+        error_bounds, optimal_neighborhood_sizes, tuned_neighborhood_sizes = get_neighborhood_size_error_bound_connection(experiment)
+        optimal_neighborhood_sizes_experiments.append(optimal_neighborhood_sizes)
+        tuned_neighborhood_sizes_experiments.append(tuned_neighborhood_sizes)
+
+    return error_bounds, optimal_neighborhood_sizes_experiments, tuned_neighborhood_sizes_experiments
 
 if __name__ == "__main__":
 

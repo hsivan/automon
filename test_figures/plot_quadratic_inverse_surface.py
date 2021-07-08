@@ -94,7 +94,7 @@ def draw_f_contour_and_node_trail(nodes_data, test_folder):
 
 
 if __name__ == "__main__":
-    data_folder = "../test_results/results_compare_methods_quadratic_inverse_2021-03-19_16-13-05"
+    data_folder = "../test_results/results_ablation_study_quadratic_inverse_2021-07-08_15-40-37"
     conf = read_config_file(data_folder)
     data_generator = DataGenerator(num_iterations=conf["num_iterations"], num_nodes=conf["num_nodes"], data_file_name="data_file.txt", test_folder=data_folder)
     draw_f_contour_and_node_trail(data_generator.data, "./")

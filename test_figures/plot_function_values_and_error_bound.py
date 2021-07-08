@@ -62,22 +62,22 @@ def plot_monitoring_f_and_error_bound_around_it(kld_test_folder, inner_product_t
 if __name__ == "__main__":
     '''
     # AutoMon_real_function_value.csv and config.txt files were taken from the following experiment folders
-    kld_test_folder = "../test_results/results_test_max_error_vs_communication_kld_air_quality_2021-04-10_13-55-59/threshold_0.1"  # dim 20, threshold 0.1 (full dataset)
+    kld_test_folder = "../test_results/results_test_max_error_vs_communication_kld_air_quality_2021-07-01_14-11-49/threshold_0.1"  # dim 20, threshold 0.1 (full dataset)
     inner_product_test_folder = "../test_results/results_test_dimension_impact_inner_product_2021-04-12_15-51-08/dimension_40"
     mlp_40_test_folder = "../test_results/results_test_dimension_impact_mlp_2021-04-10_09-31-45/dimension_40"
-    mlp_2_test_folder = "../test_results/results_compare_methods_mlp_2_2021-04-04_10-24-28"
+    mlp_2_test_folder = "../test_results/results_test_num_nodes_impact_mlp_2_2021-04-04_11-33-19/num_nodes_10"
     quadratic_test_folder = "../test_results/results_test_max_error_vs_communication_quadratic_2021-04-13_15-32-27/threshold_0.03"  # dim 40
     dnn_intrusion_detection = "../test_results/results_test_max_error_vs_communication_dnn_intrusion_detection_2021-04-10_14-13-40/threshold_0.007"  # (full dataset)
     rozenbrock_folder = "../test_results/results_comm_neighborhood_rozen_2021-04-10_10-13-41/0/thresh_0_05/optimal_domain_0_03"
     '''
 
-    kld_test_folder = "./function_values/kld_air_quality"
-    inner_product_test_folder = "./function_values/inner_product"
-    mlp_40_test_folder = "./function_values/mlp_40"
-    mlp_2_test_folder = "./function_values/mlp_2"
-    quadratic_test_folder = "./function_values/quadratic"
-    dnn_intrusion_detection_test_folder = "./function_values/dnn_intrusion_detection"
-    rozenbrock_folder = "./function_values/rozenbrock"
+    kld_test_folder = "./function_values/results_kld_air_quality_2021-04-10_13-55-59"
+    inner_product_test_folder = "./function_values/results_inner_product_2021-04-12_15-51-08"
+    mlp_40_test_folder = "./function_values/results_mlp_40_2021-04-10_09-31-45"
+    mlp_2_test_folder = "./function_values/results_mlp_2_2021-04-04_11-33-19"
+    quadratic_test_folder = "./function_values/results_quadratic_2021-04-13_15-32-27"
+    dnn_intrusion_detection_test_folder = "./function_values/results_dnn_intrusion_detection_2021-04-10_14-13-40"
+    rozenbrock_folder = "./function_values/results_rozenbrock_2021-04-10_10-13-41"
 
     plot_monitoring_f_and_error_bound_around_it(kld_test_folder, inner_product_test_folder,
                                                 mlp_40_test_folder, mlp_2_test_folder,

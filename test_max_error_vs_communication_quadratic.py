@@ -1,10 +1,8 @@
 from auto_mon_monitoring.node_quadratic_auto_mon import NodeQuadraticAutoMon
 from coordinators.coordinator_auto_mon import CoordinatorAutoMon
-from coordinators.coordinator_rlv import CoordinatorRLV
 from data_generator import DataGenerator, DataGeneratorQuadratic
 from coordinators.coordinator_common import SlackType, SyncType
 from functions_to_update_local_vector import update_local_vector_average
-from rlv_monitoring.node_quadratic_rlv import NodeQuadraticRLV
 from test_utils import start_test, end_test, run_test, get_config, write_config_to_file, read_config_file
 from stats_analysis_utils import plot_figures
 import logging
@@ -28,11 +26,6 @@ def test_error_bounds(error_bound, parent_test_folder):
         conf["error_bound"] = error_bound
         write_config_to_file(test_folder, conf)
 
-        logging.info("\n ###################### Start RLV test ######################")
-        data_generator.reset()
-        coordinator, nodes, verifier = get_objects(NodeQuadraticRLV, CoordinatorRLV, conf, conf["k"], func_quadratic)
-        run_test(data_generator, coordinator, nodes, verifier, test_folder, conf["sliding_window_size"], update_local_vector_average)
-
         logging.info("\n ###################### Start AutoMon test ######################")
         data_generator.reset()
         coordinator, nodes, verifier = get_objects(NodeQuadraticAutoMon, CoordinatorAutoMon, conf, conf["k"], func_quadratic)
@@ -54,7 +47,7 @@ if __name__ == "__main__":
     write_config_to_file(parent_test_folder, conf)
     set_H(conf["k"])
     H = get_H().copy()
-    np.savetxt(parent_test_folder + r'\H_matrix.txt', H, fmt='%f')
+    np.savetxt(parent_test_folder + '/H_matrix.txt', H, fmt='%f')
 
     data_generator = DataGeneratorQuadratic(num_iterations=conf["num_iterations"], num_nodes=conf["num_nodes"], k=conf["k"], test_folder=parent_test_folder)
 

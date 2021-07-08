@@ -19,6 +19,8 @@ if AUTO_GRAD_TOOL == "AutoGrad":
     import autograd.numpy as np
     print("Use AutoGrad implementation for functions to monitor")
 
+import numpy
+
 
 def maybe_jit(func):
     return jit(func) if AUTO_GRAD_TOOL == "Jax" else func
@@ -141,7 +143,7 @@ H = None
 def set_H(X_len, H_=None):
     global H
     if H_ is None:
-        H = np.random.randn(X_len, X_len).astype(np.float32)
+        H = numpy.random.randn(X_len, X_len).astype(np.float32)
     else:
         H = H_.copy()
 

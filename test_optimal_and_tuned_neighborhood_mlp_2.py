@@ -4,8 +4,9 @@ from data_generator import DataGenerator, DataGeneratorMlp
 from coordinators.coordinator_common import SlackType, SyncType
 from coordinators.coordinator_auto_mon import CoordinatorAutoMon, DomainType
 from functions_to_update_local_vector import update_local_vector_average
+from test_figures.plot_neighborhood_impact import plot_neighborhood_size_error_bound_connection_avg
 from test_utils import start_test, end_test, run_test, get_config, write_config_to_file, read_config_file
-from stats_analysis_utils import plot_figures, plot_impact_of_neighborhood_size_on_violations, plot_neighborhood_size_error_bound_connection_avg
+from stats_analysis_utils import plot_figures, plot_impact_of_neighborhood_size_on_violations
 import logging
 import numpy as np
 import traceback
@@ -58,6 +59,7 @@ def neighborhood_size_impact(experiment_folder, error_bound):
         except Exception as e:
             logging.info(traceback.print_exc())
             end_test()
+            raise
 
     plot_impact_of_neighborhood_size_on_violations(test_folder)
 
@@ -75,7 +77,7 @@ if __name__ == "__main__":
         end_test()  # To close the logging
 
         # Generate basic config (each test should change the error bound and neighborhood size accordingly), and save it to file
-        conf = get_config(num_nodes=10, num_iterations=1000, sliding_window_size=20, k=2,
+        conf = get_config(num_nodes=10, num_iterations=1020, sliding_window_size=20, k=2,
                           slack_type=SlackType.Drift.value, sync_type=SyncType.LazyLRU.value,
                           domain_type=DomainType.Relative.value)
         write_config_to_file(experiment_folder, conf)
@@ -92,5 +94,5 @@ if __name__ == "__main__":
             #futures_arr.append(future)
         #executor.shutdown()
 
-    plot_neighborhood_size_error_bound_connection_avg(parent_test_folder)
+    plot_neighborhood_size_error_bound_connection_avg(parent_test_folder, "MLP-2")
 

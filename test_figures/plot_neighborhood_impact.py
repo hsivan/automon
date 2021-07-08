@@ -2,7 +2,8 @@ import matplotlib.pyplot as plt
 from matplotlib import rcParams, rcParamsDefault
 from test_figures.plot_figures_utils import get_figsize, reformat_large_tick_values
 from test_utils import read_config_file
-from stats_analysis_utils import get_violations_per_neighborhood_size, get_neighborhood_size_error_bound_connection
+from stats_analysis_utils import get_violations_per_neighborhood_size, get_neighborhood_size_error_bound_connection, \
+    get_optimal_neighborhood_size
 import os
 import numpy as np
 import matplotlib.ticker as tick
@@ -186,13 +187,10 @@ def plot_communication_or_violation_error_bound_connection_rozenbrock_mlp_2(pare
     rcParams.update(rcParamsDefault)
 
 
-def plot_neighborhood_size_error_bound_connection(parent_test_folder, func_name, ax):
+def plot_neighborhood_size_error_bound_connection(parent_test_folder, func_name, ax, b_use_aggregated_data=True):
     parent_test_folder_suffix = parent_test_folder.split('/')[-1]
 
     if parent_test_folder_suffix not in os.listdir("."):
-        # Create folder with with aggregated data for the figure in pickle files
-        os.mkdir(parent_test_folder_suffix)
-
         experiment_folders = list(filter(lambda x: os.path.isdir(os.path.join(parent_test_folder, x)), os.listdir(parent_test_folder)))
         experiment_folders.sort()
         experiment_folders = [parent_test_folder + "/" + sub_folder for sub_folder in experiment_folders]
@@ -204,13 +202,17 @@ def plot_neighborhood_size_error_bound_connection(parent_test_folder, func_name,
             optimal_neighborhood_sizes_experiments.append(optimal_neighborhood_sizes)
             tuned_neighborhood_sizes_experiments.append(tuned_neighborhood_sizes)
 
-        pkl.dump(error_bounds, open(parent_test_folder_suffix + "/" + func_name + "_error_bounds.pkl", 'wb'))
-        pkl.dump(optimal_neighborhood_sizes_experiments, open(parent_test_folder_suffix + "/" + func_name + "_optimal_neighborhood_sizes_experiments.pkl", 'wb'))
-        pkl.dump(tuned_neighborhood_sizes_experiments, open(parent_test_folder_suffix + "/" + func_name + "_tuned_neighborhood_sizes_experiments.pkl", 'wb'))
+        if b_use_aggregated_data:
+            # Create folder with with aggregated data for the figure in pickle files
+            os.mkdir(parent_test_folder_suffix)
+            pkl.dump(error_bounds, open(parent_test_folder_suffix + "/" + func_name + "_error_bounds.pkl", 'wb'))
+            pkl.dump(optimal_neighborhood_sizes_experiments, open(parent_test_folder_suffix + "/" + func_name + "_optimal_neighborhood_sizes_experiments.pkl", 'wb'))
+            pkl.dump(tuned_neighborhood_sizes_experiments, open(parent_test_folder_suffix + "/" + func_name + "_tuned_neighborhood_sizes_experiments.pkl", 'wb'))
 
-    error_bounds = pkl.load(open(parent_test_folder_suffix + "/" + func_name + "_error_bounds.pkl", 'rb'))
-    optimal_neighborhood_sizes_experiments = pkl.load(open(parent_test_folder_suffix + "/" + func_name + "_optimal_neighborhood_sizes_experiments.pkl", 'rb'))
-    tuned_neighborhood_sizes_experiments = pkl.load(open(parent_test_folder_suffix + "/" + func_name + "_tuned_neighborhood_sizes_experiments.pkl", 'rb'))
+    if b_use_aggregated_data:
+        error_bounds = pkl.load(open(parent_test_folder_suffix + "/" + func_name + "_error_bounds.pkl", 'rb'))
+        optimal_neighborhood_sizes_experiments = pkl.load(open(parent_test_folder_suffix + "/" + func_name + "_optimal_neighborhood_sizes_experiments.pkl", 'rb'))
+        tuned_neighborhood_sizes_experiments = pkl.load(open(parent_test_folder_suffix + "/" + func_name + "_tuned_neighborhood_sizes_experiments.pkl", 'rb'))
 
     optimal_neighborhood_sizes_mean = np.mean(optimal_neighborhood_sizes_experiments, axis=0)
     optimal_neighborhood_sizes_std = np.std(optimal_neighborhood_sizes_experiments, axis=0)
@@ -266,6 +268,46 @@ def plot_neighborhood_size_error_bound_connection_avg_rozenbrock_mlp_2(parent_te
     fig.savefig("optimal_and_tuned_neighborhood.pdf")
     plt.close(fig)
     rcParams.update(rcParamsDefault)
+
+
+# This function is called only from test_optimal_and_tuned_neighborhood_xxx experiments.
+def plot_neighborhood_size_error_bound_connection_avg(parent_test_folder, func_name):
+    experiment_folders = list(filter(lambda x: os.path.isdir(os.path.join(parent_test_folder, x)), os.listdir(parent_test_folder)))
+    experiment_folders.sort()
+    experiment_folders = [parent_test_folder + "/" + sub_folder for sub_folder in experiment_folders]
+
+    # Plot for every sub folder the connection between neighborhood size and error bound
+    for experiment in experiment_folders:
+        sub_test_folders = list(filter(lambda x: os.path.isdir(os.path.join(experiment, x)), os.listdir(experiment)))
+        sub_test_folders.sort()
+        test_folders = [experiment + "/" + sub_folder for sub_folder in sub_test_folders]
+        test_folders.sort()
+        optimal_neighborhood_sizes = np.zeros(len(test_folders))
+        error_bounds = np.zeros(len(test_folders))
+
+        for idx, test_folder in enumerate(test_folders):
+            conf = read_config_file(test_folder)
+            error_bound = conf["error_bound"]
+            optimal_neighborhood_size = get_optimal_neighborhood_size(test_folder)
+            optimal_neighborhood_sizes[idx] = optimal_neighborhood_size
+            error_bounds[idx] = error_bound
+
+        fig, ax = plt.subplots()
+        ax.plot(error_bounds, optimal_neighborhood_sizes, linestyle='-', marker='x')
+        ax.set_xlabel('error bound')
+        ax.set_ylabel('neighborhood size around $x_0$')
+        ax.set_title('neighborhood size - error bound connection')
+        ax.legend()
+
+        fig.savefig(experiment + "/neighborhood_size_error_bound_connection.pdf")
+        plt.close(fig)
+
+    # Plot the average connection
+    fig, ax = plt.subplots()
+    plot_neighborhood_size_error_bound_connection(parent_test_folder, func_name, ax, b_use_aggregated_data=False)
+    ax.set_ylabel('best size $r$')
+    fig.savefig(parent_test_folder + "/neighborhood_size_error_bound_connection_avg.pdf")
+    plt.close(fig)
 
 
 if __name__ == "__main__":

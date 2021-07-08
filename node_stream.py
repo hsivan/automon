@@ -3,6 +3,11 @@ import numpy as np
 
 
 class NodeStream:
+    """
+    The data streams of all the nodes in the system.
+    Receives data points and updates the local vector of the nodes.
+    Updates the global vector of the verifier with every new data point.
+    """
     def __init__(self, num_nodes, sliding_window_size, local_vec_len,
                  func_update_local_vector, initial_x0):
         self.sliding_window_size = sliding_window_size

@@ -1,7 +1,13 @@
 import numpy as np
+import enum
 import os
 from datasets.air_quality.read_data import prepare_pm_data
 from datasets.intrusion_detection.read_csv import prepare_intrusion_detection_data
+
+
+class DataGeneratorState(enum.Enum):
+    Monitoring = 0
+    NeighborhoodTuning = 1
 
 
 class DataGenerator:
@@ -9,51 +15,89 @@ class DataGenerator:
         self.num_iterations = num_iterations
         self.num_nodes = num_nodes
         self.num_iterations_for_tuning = num_iterations_for_tuning
+        self.state = DataGeneratorState.Monitoring
+        self.node_schedule_file_name = test_folder + "/node_schedule_file.txt"
 
         if data_file_name is not None:
             self.data_file_name = test_folder + "/" + data_file_name
             self._get_data_from_file()
         else:
             self.data_file_name = test_folder + "/data_file.txt"
-            self._generate_data_tune_and_test()
-
+            self._generate_data_tuning_and_monitoring()
             self._save_data_to_file()
 
-        self.data_ptr = 0
-        return
+        self.data_ptr_tuning = 0
+        self.data_ptr_monitoring = 0
 
     def _get_data_from_file(self):
         self.data = np.genfromtxt(self.data_file_name)
+        self.tuning_data = self.data[:self.num_iterations_for_tuning*self.num_nodes]
+        self.monitoring_data = self.data[self.num_iterations_for_tuning*self.num_nodes:]
+
+        # write and read the schedule to file to support different types of scheduling.
+        # Currently the only non-standard schedule is for DNN Intrusion Detection experiment.
+        if os.path.exists(self.node_schedule_file_name):
+            self.node_schedule = np.genfromtxt(self.node_schedule_file_name)
+            self.node_schedule = self.node_schedule.astype(int)
+            self.tuning_node_schedule = self.node_schedule[:self.num_iterations_for_tuning*self.num_nodes]
+            self.monitoring_node_schedule = self.node_schedule[self.num_iterations_for_tuning*self.num_nodes:]
+        else:
+            self.tuning_node_schedule = np.tile(np.arange(self.num_nodes), self.num_iterations_for_tuning)
+            self.monitoring_node_schedule = np.tile(np.arange(self.num_nodes), self.num_iterations)
+            self.node_schedule = np.concatenate((self.tuning_node_schedule, self.monitoring_node_schedule))
 
     def _save_data_to_file(self):
         np.savetxt(self.data_file_name, self.data)
+        np.savetxt(self.node_schedule_file_name, self.node_schedule)
 
-    def _generate_data_tune_and_test(self):
-        data_for_tuning = self._generate_data(number_of_data_point=self.num_iterations_for_tuning*self.num_nodes, data_type="tuning")
-        data_for_test = self._generate_data(number_of_data_point=self.num_iterations*self.num_nodes, data_type="testing")
-        self.data = np.concatenate((data_for_tuning, data_for_test))
+    def _generate_data_tuning_and_monitoring(self):
+        self.tuning_node_schedule = np.tile(np.arange(self.num_nodes), self.num_iterations_for_tuning)
+        self.monitoring_node_schedule = np.tile(np.arange(self.num_nodes), self.num_iterations)
+
+        self.tuning_data = self._generate_data(number_of_data_point=self.num_iterations_for_tuning*self.num_nodes, data_type="tuning")
+        self.monitoring_data = self._generate_data(number_of_data_point=self.num_iterations*self.num_nodes, data_type="testing")
+
+        self.data = np.concatenate((self.tuning_data, self.monitoring_data))
+        # _generate_data() function may change the node schedule.
+        # Therefore concatenation of tuning_node_schedule and monitoring_node_schedule must be after the call to _generate_data().
+        self.node_schedule = np.concatenate((self.tuning_node_schedule, self.monitoring_node_schedule))
 
     def _generate_data(self, number_of_data_point):
         raise NotImplementedError("To be implemented by inherent class")
 
     def get_next_data_point(self):
-        data_point = self.data[self.data_ptr]
-        self.data_ptr += 1
-        return data_point
+        if self.state == DataGeneratorState.NeighborhoodTuning:
+            data_point = self.tuning_data[self.data_ptr_tuning]
+            node_idx = self.tuning_node_schedule[self.data_ptr_tuning]
+            self.data_ptr_tuning += 1
+        else:
+            data_point = self.monitoring_data[self.data_ptr_monitoring]
+            node_idx = self.monitoring_node_schedule[self.data_ptr_monitoring]
+            self.data_ptr_monitoring += 1
+        return data_point, node_idx
 
-    # Reset the read ptr to point on the test data (skip tuning data)
+    # Reset the read ptr
     def reset(self):
-        self.data_ptr = self.num_iterations_for_tuning * self.num_nodes
+        self.data_ptr_tuning = 0
+        self.data_ptr_monitoring = 0
 
     def get_num_samples(self):
-        if self.num_iterations_for_tuning > 0 and self.data_ptr == 0:  # Tuning data
-            return self.num_iterations_for_tuning * self.num_nodes
-        else:  # Testing data
-            return self.data.shape[0] - self.num_iterations_for_tuning * self.num_nodes
+        if self.state == DataGeneratorState.NeighborhoodTuning:
+            return self.tuning_data.shape[0]
+        else:
+            return self.monitoring_data.shape[0]
 
-    # Reset the read ptr to point on the tuning data
-    def reset_for_tuning(self):
-        self.data_ptr = 0
+    def get_num_iterations(self):
+        if self.state == DataGeneratorState.NeighborhoodTuning:
+            return self.num_iterations_for_tuning
+        else:
+            return self.num_iterations
+
+    def set_neighborhood_tuning_state(self):
+        self.state = DataGeneratorState.NeighborhoodTuning
+
+    def set_monitoring_state(self):
+        self.state = DataGeneratorState.Monitoring
 
 
 class DataGeneratorVariance(DataGenerator):
@@ -124,6 +168,18 @@ class DataGeneratorInnerProduct(DataGenerator):
         return data
 
 
+class DataGeneratorCosineSimilarity(DataGenerator):
+    def __init__(self, num_iterations, num_nodes, data_file_name=None, k=1, test_folder="./", num_iterations_for_tuning=0):
+        self.k = k
+        DataGenerator.__init__(self, num_iterations, num_nodes, data_file_name, test_folder, num_iterations_for_tuning)
+
+    def _generate_data(self, number_of_data_point, data_type="testing"):
+        data_x = np.random.randn(number_of_data_point, self.k) + 2
+        data_y = np.random.randn(number_of_data_point, self.k) + 4
+        data = np.concatenate((data_x, data_y), axis=1)
+        return data
+
+
 class DataGeneratorQuadratic(DataGenerator):
     def __init__(self, num_iterations, num_nodes, data_file_name=None, k=1, test_folder="./", num_iterations_for_tuning=0):
         self.k = k
@@ -160,13 +216,11 @@ class DataGeneratorRozenbrock(DataGenerator):
 class DataGeneratorKldAirQuality(DataGenerator):
     def __init__(self, num_iterations, num_nodes, data_file_name=None, k=26, test_folder="./", num_iterations_for_tuning=0):
         self.k = k
-        prepare_pm_data(step=500/(k-1), relative_folder='datasets/air_quality/')
+        self.station_data_arr = prepare_pm_data(step=500/(k-1), relative_folder='datasets/air_quality/')
         DataGenerator.__init__(self, num_iterations, num_nodes, data_file_name, test_folder, num_iterations_for_tuning)
 
     def _generate_data(self, number_of_data_point, data_type="testing"):
-        dataset_folder = 'datasets/air_quality'
-        data_files = [dataset_folder + "/" + file for file in os.listdir(dataset_folder) if file.startswith('station') and file.endswith("_pm.txt")]
-        num_stations = len(data_files)
+        num_stations = len(self.station_data_arr)
         data = np.zeros((number_of_data_point, 2))
 
         if data_type == "testing":
@@ -174,8 +228,7 @@ class DataGeneratorKldAirQuality(DataGenerator):
         else:  # Tuning
             stations_data = np.zeros((num_stations, self.num_iterations_for_tuning, 2))
 
-        for idx, station_file in enumerate(data_files):
-            station_data = np.genfromtxt(station_file)
+        for idx, station_data in enumerate(self.station_data_arr):
             if data_type == "testing":
                 stations_data[idx, :, :] = station_data[self.num_iterations_for_tuning:self.num_iterations_for_tuning + self.num_iterations, :]
             else:  # Tuning
@@ -264,8 +317,14 @@ class DataGeneratorDnnIntrusionDetection(DataGenerator):
 
         if data_type == "testing":
             data = prepare_intrusion_detection_data(relative_folder=dataset_folder, num_rows_to_drop_from_beginning=self.num_iterations_for_tuning*self.num_nodes)[:self.num_iterations]
+            # Override the default node schedule
+            self.monitoring_node_schedule = data[:, 0]
+            data = data[:, 1:]
         else:  # Tuning
             data = prepare_intrusion_detection_data(relative_folder=dataset_folder, num_rows_to_drop_from_beginning=0)[:number_of_data_point]
+            # Override the default node schedule
+            self.tuning_node_schedule = data[:, 0]
+            data = data[:, 1:]
 
         return data
 
