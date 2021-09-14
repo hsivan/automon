@@ -1,0 +1,17 @@
+
+
+Coordinator AutoMonConvex statistics:
+True violations 0
+False Global violations 0
+False Local violations 300
+Sync broadcast msg counter 163
+Sync msg counter 573
+Get node statistics broadcast msg counter 200
+Get node statistics msg counter 273
+Miss violations counter 0
+Rounds with violations counter 164
+Total violations msg counter 300
+Node return statistics msg counter 273
+Total msgs broadcast enabled 936, and disabled 1419
+Num violations caused by local vector outside safe zone 300
+Num violations caused by local vector outside domain 0

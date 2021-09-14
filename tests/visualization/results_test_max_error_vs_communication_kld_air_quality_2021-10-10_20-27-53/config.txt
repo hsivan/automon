@@ -1,0 +1,1 @@
+{'num_nodes': 12, 'num_iterations': 30000, 'sliding_window_size': 200, 'd': 20, 'error_bound': 0.14, 'slack_type': 1, 'sync_type': 2, 'b_force_window_full_for_violation_report': True, 'domain': (0, 1), 'domain_type': 1, 'neighborhood_size': 1.0, 'num_iterations_for_tuning': 300}

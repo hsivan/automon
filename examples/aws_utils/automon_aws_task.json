@@ -1,0 +1,68 @@
+{
+  "executionRoleArn": "arn:aws:iam::<account_id>:role/ecsTaskExecutionRole",
+  "containerDefinitions": [
+    {
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/automon_log_group",
+          "awslogs-region": "us-east-2",
+          "awslogs-stream-prefix": "ecs"
+        }
+      },
+      "portMappings": [
+        {
+          "hostPort": 6400,
+          "protocol": "tcp",
+          "containerPort": 6400
+        }
+      ],
+      "environment": [
+        {
+          "name": "ERROR_BOUND",
+          "value": "0.3"
+        },
+        {
+          "name": "HOST",
+          "value": "0.0.0.0"
+        },
+        {
+          "name": "NODE_IDX",
+          "value": "0"
+        },
+        {
+          "name": "NODE_TYPE",
+          "value": "inner_product"
+        },
+        {
+          "name": "S3_WRITE",
+          "value": "1"
+        },
+        {
+          "name": "LS_LATENCY",
+          "value": "1.0"
+        },
+        {
+          "name": "FS_LATENCY",
+          "value": "5.0"
+        }
+      ],
+      "mountPoints": [],
+      "workingDirectory": "/app",
+      "volumesFrom": [],
+      "image": "<account_id>.dkr.ecr.us-east-2.amazonaws.com/automon",
+      "essential": true,
+      "name": "automon_container"
+    }
+  ],
+  "placementConstraints": [],
+  "taskRoleArn": "arn:aws:iam::<account_id>:role/ecsTaskExecutionRole",
+  "family": "automon_task_definition_example",
+  "requiresCompatibilities": [
+    "FARGATE"
+  ],
+  "networkMode": "awsvpc",
+  "cpu": "1024",
+  "memory": "4096",
+  "volumes": []
+}

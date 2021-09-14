@@ -1,0 +1,49 @@
+# Test folder and test output
+temp
+0001-GM-change-all-pathes-to-be-relative-to-the-script-lo.patch
+tests
+examples/test_results
+nethogs_out.txt
+examples/nethogs_out.txt
+
+.git
+.cache
+*$py.class
+
+# Distribution / packaging
+.Python
+env
+build
+develop-eggs
+dist
+downloads
+eggs
+.eggs
+lib
+lib64
+parts
+sdist
+var
+wheels
+*.egg-info
+.installed.cfg
+*.egg
+
+# PyInstaller
+# Usually these files are written by a python script from a template
+# before PyInstaller builds the exe, so as to inject date/other infos into it.
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# IDEA files (IntelliJ, PyCharm,etc.)
+.idea
+
+# pytest
+.pytest_cache
+
+# IDE
+.spyproject

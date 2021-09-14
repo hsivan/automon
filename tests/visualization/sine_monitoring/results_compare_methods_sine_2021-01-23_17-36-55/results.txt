@@ -1,0 +1,17 @@
+
+
+Coordinator AutoMon statistics:
+True violations 0
+False Global violations 3
+False Local violations 211
+Sync broadcast msg counter 117
+Sync msg counter 412
+Get node statistics broadcast msg counter 140
+Get node statistics msg counter 198
+Miss violations counter 0
+Rounds with violations counter 118
+Total violations msg counter 214
+Node return statistics msg counter 198
+Total msgs broadcast enabled 669, and disabled 1022
+Num violations caused by local vector outside safe zone 214
+Num violations caused by local vector outside domain 0

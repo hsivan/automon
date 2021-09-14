@@ -1,0 +1,2317 @@
+INFO:root:Started test - compare_methods_sine
+INFO:root:
+ ###################### Start Sine AutoMon test ######################
+INFO:root:sliding_window_size 20, b_force_window_full_for_violation_report True
+INFO:root:CoordinatorCommon initialization: x0_len 1, u_thresh_additive 1.5, l_thresh_additive 1.5
+INFO:root:CoordinatorCommon initialization: slack_type SlackType.Drift, sync_type SyncType.LazyLRU, lazy_sync_max_S 0.5
+INFO:root:CoordinatorAutoMon initialization: domain [(3,)], domain_type DomainType.Relative, AUTO_GRAD_TOOL AutoGrad
+INFO:root:Optimization method is SLSQP
+INFO:root:num_nodes 10, num_iterations 4000
+INFO:root:Can't call numpy() on Variable that requires grad. Use var.detach().numpy() instead.
+INFO:root:Iteration 0: 10 nodes with violation
+INFO:root:Iteration 0: Coordinator about to ask 10 nodes for statistics. Nodes [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+INFO:root:Iteration 0: Coordinator asks node 0 for statistics
+INFO:root:Iteration 0: Node 0 returns to coordinator with statistics
+INFO:root:Iteration 0: Coordinator asks node 1 for statistics
+INFO:root:Iteration 0: Node 1 returns to coordinator with statistics
+INFO:root:Iteration 0: Coordinator asks node 2 for statistics
+INFO:root:Iteration 0: Node 2 returns to coordinator with statistics
+INFO:root:Iteration 0: Coordinator asks node 3 for statistics
+INFO:root:Iteration 0: Node 3 returns to coordinator with statistics
+INFO:root:Iteration 0: Coordinator asks node 4 for statistics
+INFO:root:Iteration 0: Node 4 returns to coordinator with statistics
+INFO:root:Iteration 0: Coordinator asks node 5 for statistics
+INFO:root:Iteration 0: Node 5 returns to coordinator with statistics
+INFO:root:Iteration 0: Coordinator asks node 6 for statistics
+INFO:root:Iteration 0: Node 6 returns to coordinator with statistics
+INFO:root:Iteration 0: Coordinator asks node 7 for statistics
+INFO:root:Iteration 0: Node 7 returns to coordinator with statistics
+INFO:root:Iteration 0: Coordinator asks node 8 for statistics
+INFO:root:Iteration 0: Node 8 returns to coordinator with statistics
+INFO:root:Iteration 0: Coordinator asks node 9 for statistics
+INFO:root:Iteration 0: Node 9 returns to coordinator with statistics
+INFO:root:Iteration 0: fallback to eager sync from lazy sync !!!!!!!!!!!!!!!!!!
+INFO:root:Iteration 0: About to sync the value [0.]
+INFO:root:Iteration 0: About to sync the thresholds [-1.5],[1.5]
+INFO:root:Iteration 0: Update adaptive domain [(-3.0, 3.0)]
+INFO:root:Iteration 0: Minimal eigenvalue of hessian in the domain: -0.9999999997275972
+INFO:root:Iteration 0: Maximal eigenvalue of hessian in the domain: 0.9999999999999994
+INFO:root:Optimization time: 0.0261775
+INFO:root:Use g,h convex diff with min eigenvalue -0.9999999997275972
+INFO:root:Iteration 0: Coordinator about to sync 10 nodes. Nodes [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+INFO:root:Iteration 0: Coordinator syncs node 0
+INFO:root:Iteration 0: Coordinator syncs node 1
+INFO:root:Iteration 0: Coordinator syncs node 2
+INFO:root:Iteration 0: Coordinator syncs node 3
+INFO:root:Iteration 0: Coordinator syncs node 4
+INFO:root:Iteration 0: Coordinator syncs node 5
+INFO:root:Iteration 0: Coordinator syncs node 6
+INFO:root:Iteration 0: Coordinator syncs node 7
+INFO:root:Iteration 0: Coordinator syncs node 8
+INFO:root:Iteration 0: Coordinator syncs node 9
+INFO:root:Iteration 181: Node 0 notify False Local Violation
+INFO:root:Iteration 181: 1 nodes with violation
+INFO:root:Iteration 181: Coordinator about to ask 1 nodes for statistics. Nodes [1]
+INFO:root:Iteration 181: Coordinator asks node 1 for statistics
+INFO:root:Iteration 181: Node 1 returns to coordinator with statistics
+INFO:root:Iteration 181: used 2 nodes in lazy sync. Nodes [0 1]
+INFO:root:Iteration 181: Coordinator about to sync 2 nodes. Nodes [0 1]
+INFO:root:Iteration 181: Coordinator syncs node 0
+INFO:root:Iteration 181: Coordinator syncs node 1
+INFO:root:Iteration 183: Node 7 notify False Local Violation
+INFO:root:Iteration 183: 1 nodes with violation
+INFO:root:Iteration 183: Coordinator about to ask 1 nodes for statistics. Nodes [2]
+INFO:root:Iteration 183: Coordinator asks node 2 for statistics
+INFO:root:Iteration 183: Node 2 returns to coordinator with statistics
+INFO:root:Iteration 183: used 2 nodes in lazy sync. Nodes [7 2]
+INFO:root:Iteration 183: Coordinator about to sync 2 nodes. Nodes [7 2]
+INFO:root:Iteration 183: Coordinator syncs node 7
+INFO:root:Iteration 183: Coordinator syncs node 2
+INFO:root:Iteration 184: Node 0 notify False Local Violation
+INFO:root:Iteration 184: Node 1 notify False Local Violation
+INFO:root:Iteration 184: Node 2 notify False Local Violation
+INFO:root:Iteration 184: Node 3 notify False Local Violation
+INFO:root:Iteration 184: Node 4 notify False Local Violation
+INFO:root:Iteration 184: 5 nodes with violation
+INFO:root:Iteration 184: fallback to eager sync from lazy sync !!!!!!!!!!!!!!!!!!
+INFO:root:Iteration 184: Coordinator about to ask 5 nodes for statistics. Nodes [5, 6, 7, 8, 9]
+INFO:root:Iteration 184: Coordinator asks node 5 for statistics
+INFO:root:Iteration 184: Node 5 returns to coordinator with statistics
+INFO:root:Iteration 184: Coordinator asks node 6 for statistics
+INFO:root:Iteration 184: Node 6 returns to coordinator with statistics
+INFO:root:Iteration 184: Coordinator asks node 7 for statistics
+INFO:root:Iteration 184: Node 7 returns to coordinator with statistics
+INFO:root:Iteration 184: Coordinator asks node 8 for statistics
+INFO:root:Iteration 184: Node 8 returns to coordinator with statistics
+INFO:root:Iteration 184: Coordinator asks node 9 for statistics
+INFO:root:Iteration 184: Node 9 returns to coordinator with statistics
+INFO:root:Iteration 184: About to sync the value [1.0836797]
+INFO:root:Iteration 184: About to sync the thresholds [-0.61631382],[2.38368618]
+INFO:root:Iteration 184: Update adaptive domain [(-1.9163202995223014, 4.083679700477699)]
+INFO:root:Iteration 184: Minimal eigenvalue of hessian in the domain: -0.9999999999998881
+INFO:root:Iteration 184: Maximal eigenvalue of hessian in the domain: 0.8087872560077835
+INFO:root:Optimization time: 0.027643299999999982
+INFO:root:Use g,h convex diff with min eigenvalue -0.9999999999998881
+INFO:root:Iteration 184: Coordinator about to sync 10 nodes. Nodes [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+INFO:root:Iteration 184: Coordinator syncs node 0
+INFO:root:Iteration 184: Coordinator syncs node 1
+INFO:root:Iteration 184: Coordinator syncs node 2
+INFO:root:Iteration 184: Coordinator syncs node 3
+INFO:root:Iteration 184: Coordinator syncs node 4
+INFO:root:Iteration 184: Coordinator syncs node 5
+INFO:root:Iteration 184: Coordinator syncs node 6
+INFO:root:Iteration 184: Coordinator syncs node 7
+INFO:root:Iteration 184: Coordinator syncs node 8
+INFO:root:Iteration 184: Coordinator syncs node 9
+INFO:root:Iteration 521: Node 6 notify False Local Violation
+INFO:root:Iteration 521: 1 nodes with violation
+INFO:root:Iteration 521: Coordinator about to ask 1 nodes for statistics. Nodes [0]
+INFO:root:Iteration 521: Coordinator asks node 0 for statistics
+INFO:root:Iteration 521: Node 0 returns to coordinator with statistics
+INFO:root:Iteration 521: used 2 nodes in lazy sync. Nodes [6 0]
+INFO:root:Iteration 521: Coordinator about to sync 2 nodes. Nodes [6 0]
+INFO:root:Iteration 521: Coordinator syncs node 6
+INFO:root:Iteration 521: Coordinator syncs node 0
+INFO:root:Iteration 523: Node 8 notify False Local Violation
+INFO:root:Iteration 523: 1 nodes with violation
+INFO:root:Iteration 523: Coordinator about to ask 1 nodes for statistics. Nodes [1]
+INFO:root:Iteration 523: Coordinator asks node 1 for statistics
+INFO:root:Iteration 523: Node 1 returns to coordinator with statistics
+INFO:root:Iteration 523: used 2 nodes in lazy sync. Nodes [8 1]
+INFO:root:Iteration 523: Coordinator about to sync 2 nodes. Nodes [8 1]
+INFO:root:Iteration 523: Coordinator syncs node 8
+INFO:root:Iteration 523: Coordinator syncs node 1
+INFO:root:Iteration 535: Node 1 notify False Local Violation
+INFO:root:Iteration 535: 1 nodes with violation
+INFO:root:Iteration 535: Coordinator about to ask 1 nodes for statistics. Nodes [2]
+INFO:root:Iteration 535: Coordinator asks node 2 for statistics
+INFO:root:Iteration 535: Node 2 returns to coordinator with statistics
+INFO:root:Iteration 535: used 2 nodes in lazy sync. Nodes [1 2]
+INFO:root:Iteration 535: Coordinator about to sync 2 nodes. Nodes [1 2]
+INFO:root:Iteration 535: Coordinator syncs node 1
+INFO:root:Iteration 535: Coordinator syncs node 2
+INFO:root:Iteration 536: Node 0 notify False Local Violation
+INFO:root:Iteration 536: Node 1 notify False Local Violation
+INFO:root:Iteration 536: Node 2 notify False Local Violation
+INFO:root:Iteration 536: Node 9 notify False Local Violation
+INFO:root:Iteration 536: 4 nodes with violation
+INFO:root:Iteration 536: Coordinator about to ask 1 nodes for statistics. Nodes [3]
+INFO:root:Iteration 536: Coordinator asks node 3 for statistics
+INFO:root:Iteration 536: Node 3 returns to coordinator with statistics
+INFO:root:Iteration 536: used 5 nodes in lazy sync. Nodes [0 1 2 9 3]
+INFO:root:Iteration 536: Coordinator about to sync 5 nodes. Nodes [0 1 2 9 3]
+INFO:root:Iteration 536: Coordinator syncs node 0
+INFO:root:Iteration 536: Coordinator syncs node 1
+INFO:root:Iteration 536: Coordinator syncs node 2
+INFO:root:Iteration 536: Coordinator syncs node 9
+INFO:root:Iteration 536: Coordinator syncs node 3
+INFO:root:Iteration 537: Node 0 notify False Local Violation
+INFO:root:Iteration 537: Node 1 notify False Local Violation
+INFO:root:Iteration 537: Node 2 notify False Local Violation
+INFO:root:Iteration 537: Node 3 notify False Local Violation
+INFO:root:Iteration 537: 4 nodes with violation
+INFO:root:Iteration 537: Coordinator about to ask 1 nodes for statistics. Nodes [4]
+INFO:root:Iteration 537: Coordinator asks node 4 for statistics
+INFO:root:Iteration 537: Node 4 returns to coordinator with statistics
+INFO:root:Iteration 537: fallback to eager sync from lazy sync !!!!!!!!!!!!!!!!!!
+INFO:root:Iteration 537: Coordinator about to ask 5 nodes for statistics. Nodes [5, 6, 7, 8, 9]
+INFO:root:Iteration 537: Coordinator asks node 5 for statistics
+INFO:root:Iteration 537: Node 5 returns to coordinator with statistics
+INFO:root:Iteration 537: Coordinator asks node 6 for statistics
+INFO:root:Iteration 537: Node 6 returns to coordinator with statistics
+INFO:root:Iteration 537: Coordinator asks node 7 for statistics
+INFO:root:Iteration 537: Node 7 returns to coordinator with statistics
+INFO:root:Iteration 537: Coordinator asks node 8 for statistics
+INFO:root:Iteration 537: Node 8 returns to coordinator with statistics
+INFO:root:Iteration 537: Coordinator asks node 9 for statistics
+INFO:root:Iteration 537: Node 9 returns to coordinator with statistics
+INFO:root:Iteration 537: About to sync the value [3.33246059]
+INFO:root:Iteration 537: About to sync the thresholds [-1.68971114],[1.31028886]
+INFO:root:Iteration 537: Update adaptive domain [(0.33246059165536446, 6.332460591655364)]
+INFO:root:Iteration 537: Minimal eigenvalue of hessian in the domain: -0.999999986900301
+INFO:root:Iteration 537: Maximal eigenvalue of hessian in the domain: 0.9999999999999909
+INFO:root:Optimization time: 0.019830000000000014
+INFO:root:Use g,h convex diff with min eigenvalue -0.999999986900301
+INFO:root:Iteration 537: Coordinator about to sync 10 nodes. Nodes [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+INFO:root:Iteration 537: Coordinator syncs node 0
+INFO:root:Iteration 537: Coordinator syncs node 1
+INFO:root:Iteration 537: Coordinator syncs node 2
+INFO:root:Iteration 537: Coordinator syncs node 3
+INFO:root:Iteration 537: Coordinator syncs node 4
+INFO:root:Iteration 537: Coordinator syncs node 5
+INFO:root:Iteration 537: Coordinator syncs node 6
+INFO:root:Iteration 537: Coordinator syncs node 7
+INFO:root:Iteration 537: Coordinator syncs node 8
+INFO:root:Iteration 537: Coordinator syncs node 9
+INFO:root:Iteration 695: Node 1 notify False Local Violation
+INFO:root:Iteration 695: 1 nodes with violation
+INFO:root:Iteration 695: Coordinator about to ask 1 nodes for statistics. Nodes [0]
+INFO:root:Iteration 695: Coordinator asks node 0 for statistics
+INFO:root:Iteration 695: Node 0 returns to coordinator with statistics
+INFO:root:Iteration 695: used 2 nodes in lazy sync. Nodes [1 0]
+INFO:root:Iteration 695: Coordinator about to sync 2 nodes. Nodes [1 0]
+INFO:root:Iteration 695: Coordinator syncs node 1
+INFO:root:Iteration 695: Coordinator syncs node 0
+INFO:root:Iteration 697: Node 1 notify False Local Violation
+INFO:root:Iteration 697: 1 nodes with violation
+INFO:root:Iteration 697: Coordinator about to ask 1 nodes for statistics. Nodes [2]
+INFO:root:Iteration 697: Coordinator asks node 2 for statistics
+INFO:root:Iteration 697: Node 2 returns to coordinator with statistics
+INFO:root:Iteration 697: used 2 nodes in lazy sync. Nodes [1 2]
+INFO:root:Iteration 697: Coordinator about to sync 2 nodes. Nodes [1 2]
+INFO:root:Iteration 697: Coordinator syncs node 1
+INFO:root:Iteration 697: Coordinator syncs node 2
+INFO:root:Iteration 699: Node 2 notify False Local Violation
+INFO:root:Iteration 699: Node 9 notify False Local Violation
+INFO:root:Iteration 699: 2 nodes with violation
+INFO:root:Iteration 699: Coordinator about to ask 1 nodes for statistics. Nodes [3]
+INFO:root:Iteration 699: Coordinator asks node 3 for statistics
+INFO:root:Iteration 699: Node 3 returns to coordinator with statistics
+INFO:root:Iteration 699: used 3 nodes in lazy sync. Nodes [2 9 3]
+INFO:root:Iteration 699: Coordinator about to sync 3 nodes. Nodes [2 9 3]
+INFO:root:Iteration 699: Coordinator syncs node 2
+INFO:root:Iteration 699: Coordinator syncs node 9
+INFO:root:Iteration 699: Coordinator syncs node 3
+INFO:root:Iteration 700: Node 3 notify False Local Violation
+INFO:root:Iteration 700: 1 nodes with violation
+INFO:root:Iteration 700: Coordinator about to ask 1 nodes for statistics. Nodes [4]
+INFO:root:Iteration 700: Coordinator asks node 4 for statistics
+INFO:root:Iteration 700: Node 4 returns to coordinator with statistics
+INFO:root:Iteration 700: used 2 nodes in lazy sync. Nodes [3 4]
+INFO:root:Iteration 700: Coordinator about to sync 2 nodes. Nodes [3 4]
+INFO:root:Iteration 700: Coordinator syncs node 3
+INFO:root:Iteration 700: Coordinator syncs node 4
+INFO:root:Iteration 701: Node 2 notify False Local Violation
+INFO:root:Iteration 701: 1 nodes with violation
+INFO:root:Iteration 701: Coordinator about to ask 1 nodes for statistics. Nodes [5]
+INFO:root:Iteration 701: Coordinator asks node 5 for statistics
+INFO:root:Iteration 701: Node 5 returns to coordinator with statistics
+INFO:root:Iteration 701: used 2 nodes in lazy sync. Nodes [2 5]
+INFO:root:Iteration 701: Coordinator about to sync 2 nodes. Nodes [2 5]
+INFO:root:Iteration 701: Coordinator syncs node 2
+INFO:root:Iteration 701: Coordinator syncs node 5
+INFO:root:Iteration 704: Node 0 notify False Local Violation
+INFO:root:Iteration 704: Node 5 notify False Local Violation
+INFO:root:Iteration 704: 2 nodes with violation
+INFO:root:Iteration 704: Coordinator about to ask 1 nodes for statistics. Nodes [6]
+INFO:root:Iteration 704: Coordinator asks node 6 for statistics
+INFO:root:Iteration 704: Node 6 returns to coordinator with statistics
+INFO:root:Iteration 704: used 3 nodes in lazy sync. Nodes [0 5 6]
+INFO:root:Iteration 704: Coordinator about to sync 3 nodes. Nodes [0 5 6]
+INFO:root:Iteration 704: Coordinator syncs node 0
+INFO:root:Iteration 704: Coordinator syncs node 5
+INFO:root:Iteration 704: Coordinator syncs node 6
+INFO:root:Iteration 705: Node 7 notify False Local Violation
+INFO:root:Iteration 705: 1 nodes with violation
+INFO:root:Iteration 705: Coordinator about to ask 1 nodes for statistics. Nodes [8]
+INFO:root:Iteration 705: Coordinator asks node 8 for statistics
+INFO:root:Iteration 705: Node 8 returns to coordinator with statistics
+INFO:root:Iteration 705: used 2 nodes in lazy sync. Nodes [7 8]
+INFO:root:Iteration 705: Coordinator about to sync 2 nodes. Nodes [7 8]
+INFO:root:Iteration 705: Coordinator syncs node 7
+INFO:root:Iteration 705: Coordinator syncs node 8
+INFO:root:Iteration 706: Node 7 notify False Local Violation
+INFO:root:Iteration 706: Node 8 notify False Local Violation
+INFO:root:Iteration 706: Node 9 notify False Local Violation
+INFO:root:Iteration 706: 3 nodes with violation
+INFO:root:Iteration 706: Coordinator about to ask 1 nodes for statistics. Nodes [4]
+INFO:root:Iteration 706: Coordinator asks node 4 for statistics
+INFO:root:Iteration 706: Node 4 returns to coordinator with statistics
+INFO:root:Iteration 706: used 4 nodes in lazy sync. Nodes [7 8 9 4]
+INFO:root:Iteration 706: Coordinator about to sync 4 nodes. Nodes [7 8 9 4]
+INFO:root:Iteration 706: Coordinator syncs node 7
+INFO:root:Iteration 706: Coordinator syncs node 8
+INFO:root:Iteration 706: Coordinator syncs node 9
+INFO:root:Iteration 706: Coordinator syncs node 4
+INFO:root:Iteration 707: Node 0 notify False Local Violation
+INFO:root:Iteration 707: Node 4 notify False Local Violation
+INFO:root:Iteration 707: Node 8 notify False Local Violation
+INFO:root:Iteration 707: Node 9 notify False Local Violation
+INFO:root:Iteration 707: 4 nodes with violation
+INFO:root:Iteration 707: Coordinator about to ask 1 nodes for statistics. Nodes [6]
+INFO:root:Iteration 707: Coordinator asks node 6 for statistics
+INFO:root:Iteration 707: Node 6 returns to coordinator with statistics
+INFO:root:Iteration 707: fallback to eager sync from lazy sync !!!!!!!!!!!!!!!!!!
+INFO:root:Iteration 707: Coordinator about to ask 5 nodes for statistics. Nodes [1, 2, 3, 5, 7]
+INFO:root:Iteration 707: Coordinator asks node 1 for statistics
+INFO:root:Iteration 707: Node 1 returns to coordinator with statistics
+INFO:root:Iteration 707: Coordinator asks node 2 for statistics
+INFO:root:Iteration 707: Node 2 returns to coordinator with statistics
+INFO:root:Iteration 707: Coordinator asks node 3 for statistics
+INFO:root:Iteration 707: Node 3 returns to coordinator with statistics
+INFO:root:Iteration 707: Coordinator asks node 5 for statistics
+INFO:root:Iteration 707: Node 5 returns to coordinator with statistics
+INFO:root:Iteration 707: Coordinator asks node 7 for statistics
+INFO:root:Iteration 707: Node 7 returns to coordinator with statistics
+INFO:root:Iteration 707: About to sync the value [4.33761887]
+INFO:root:Iteration 707: About to sync the thresholds [-2.4305918],[0.5694082]
+INFO:root:Iteration 707: Update adaptive domain [(1.3376188698631903, 7.33761886986319)]
+INFO:root:Iteration 707: Minimal eigenvalue of hessian in the domain: -0.9999999994223335
+INFO:root:Iteration 707: Maximal eigenvalue of hessian in the domain: 0.9999999999999997
+INFO:root:Optimization time: 0.027799699999999983
+INFO:root:Use g,h convex diff with min eigenvalue -0.9999999994223335
+INFO:root:Iteration 707: Coordinator about to sync 10 nodes. Nodes [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+INFO:root:Iteration 707: Coordinator syncs node 0
+INFO:root:Iteration 707: Coordinator syncs node 1
+INFO:root:Iteration 707: Coordinator syncs node 2
+INFO:root:Iteration 707: Coordinator syncs node 3
+INFO:root:Iteration 707: Coordinator syncs node 4
+INFO:root:Iteration 707: Coordinator syncs node 5
+INFO:root:Iteration 707: Coordinator syncs node 6
+INFO:root:Iteration 707: Coordinator syncs node 7
+INFO:root:Iteration 707: Coordinator syncs node 8
+INFO:root:Iteration 707: Coordinator syncs node 9
+INFO:root:Iteration 913: Node 4 notify False Local Violation
+INFO:root:Iteration 913: Node 6 notify False Local Violation
+INFO:root:Iteration 913: 2 nodes with violation
+INFO:root:Iteration 913: Coordinator about to ask 1 nodes for statistics. Nodes [0]
+INFO:root:Iteration 913: Coordinator asks node 0 for statistics
+INFO:root:Iteration 913: Node 0 returns to coordinator with statistics
+INFO:root:Iteration 913: used 3 nodes in lazy sync. Nodes [4 6 0]
+INFO:root:Iteration 913: Coordinator about to sync 3 nodes. Nodes [4 6 0]
+INFO:root:Iteration 913: Coordinator syncs node 4
+INFO:root:Iteration 913: Coordinator syncs node 6
+INFO:root:Iteration 913: Coordinator syncs node 0
+INFO:root:Iteration 914: Node 0 notify False Local Violation
+INFO:root:Iteration 914: 1 nodes with violation
+INFO:root:Iteration 914: Coordinator about to ask 1 nodes for statistics. Nodes [1]
+INFO:root:Iteration 914: Coordinator asks node 1 for statistics
+INFO:root:Iteration 914: Node 1 returns to coordinator with statistics
+INFO:root:Iteration 914: used 2 nodes in lazy sync. Nodes [0 1]
+INFO:root:Iteration 914: Coordinator about to sync 2 nodes. Nodes [0 1]
+INFO:root:Iteration 914: Coordinator syncs node 0
+INFO:root:Iteration 914: Coordinator syncs node 1
+INFO:root:Iteration 915: Node 4 notify False Local Violation
+INFO:root:Iteration 915: Node 6 notify False Local Violation
+INFO:root:Iteration 915: 2 nodes with violation
+INFO:root:Iteration 915: Coordinator about to ask 1 nodes for statistics. Nodes [2]
+INFO:root:Iteration 915: Coordinator asks node 2 for statistics
+INFO:root:Iteration 915: Node 2 returns to coordinator with statistics
+INFO:root:Iteration 915: used 3 nodes in lazy sync. Nodes [4 6 2]
+INFO:root:Iteration 915: Coordinator about to sync 3 nodes. Nodes [4 6 2]
+INFO:root:Iteration 915: Coordinator syncs node 4
+INFO:root:Iteration 915: Coordinator syncs node 6
+INFO:root:Iteration 915: Coordinator syncs node 2
+INFO:root:Iteration 917: Node 0 notify False Local Violation
+INFO:root:Iteration 917: Node 6 notify False Local Violation
+INFO:root:Iteration 917: 2 nodes with violation
+INFO:root:Iteration 917: Coordinator about to ask 1 nodes for statistics. Nodes [3]
+INFO:root:Iteration 917: Coordinator asks node 3 for statistics
+INFO:root:Iteration 917: Node 3 returns to coordinator with statistics
+INFO:root:Iteration 917: used 3 nodes in lazy sync. Nodes [0 6 3]
+INFO:root:Iteration 917: Coordinator about to sync 3 nodes. Nodes [0 6 3]
+INFO:root:Iteration 917: Coordinator syncs node 0
+INFO:root:Iteration 917: Coordinator syncs node 6
+INFO:root:Iteration 917: Coordinator syncs node 3
+INFO:root:Iteration 918: Node 5 notify False Local Violation
+INFO:root:Iteration 918: Node 6 notify False Local Violation
+INFO:root:Iteration 918: 2 nodes with violation
+INFO:root:Iteration 918: Coordinator about to ask 1 nodes for statistics. Nodes [7]
+INFO:root:Iteration 918: Coordinator asks node 7 for statistics
+INFO:root:Iteration 918: Node 7 returns to coordinator with statistics
+INFO:root:Iteration 918: used 3 nodes in lazy sync. Nodes [5 6 7]
+INFO:root:Iteration 918: Coordinator about to sync 3 nodes. Nodes [5 6 7]
+INFO:root:Iteration 918: Coordinator syncs node 5
+INFO:root:Iteration 918: Coordinator syncs node 6
+INFO:root:Iteration 918: Coordinator syncs node 7
+INFO:root:Iteration 919: Node 1 notify False Local Violation
+INFO:root:Iteration 919: Node 3 notify False Local Violation
+INFO:root:Iteration 919: 2 nodes with violation
+INFO:root:Iteration 919: Coordinator about to ask 1 nodes for statistics. Nodes [8]
+INFO:root:Iteration 919: Coordinator asks node 8 for statistics
+INFO:root:Iteration 919: Node 8 returns to coordinator with statistics
+INFO:root:Iteration 919: Coordinator about to ask 1 nodes for statistics. Nodes [9]
+INFO:root:Iteration 919: Coordinator asks node 9 for statistics
+INFO:root:Iteration 919: Node 9 returns to coordinator with statistics
+INFO:root:Iteration 919: used 4 nodes in lazy sync. Nodes [1 3 8 9]
+INFO:root:Iteration 919: Coordinator about to sync 4 nodes. Nodes [1 3 8 9]
+INFO:root:Iteration 919: Coordinator syncs node 1
+INFO:root:Iteration 919: Coordinator syncs node 3
+INFO:root:Iteration 919: Coordinator syncs node 8
+INFO:root:Iteration 919: Coordinator syncs node 9
+INFO:root:Iteration 920: Node 0 notify False Local Violation
+INFO:root:Iteration 920: Node 7 notify False Local Violation
+INFO:root:Iteration 920: 2 nodes with violation
+INFO:root:Iteration 920: Coordinator about to ask 1 nodes for statistics. Nodes [2]
+INFO:root:Iteration 920: Coordinator asks node 2 for statistics
+INFO:root:Iteration 920: Node 2 returns to coordinator with statistics
+INFO:root:Iteration 920: Coordinator about to ask 1 nodes for statistics. Nodes [5]
+INFO:root:Iteration 920: Coordinator asks node 5 for statistics
+INFO:root:Iteration 920: Node 5 returns to coordinator with statistics
+INFO:root:Iteration 920: Coordinator about to ask 1 nodes for statistics. Nodes [8]
+INFO:root:Iteration 920: Coordinator asks node 8 for statistics
+INFO:root:Iteration 920: Node 8 returns to coordinator with statistics
+INFO:root:Iteration 920: fallback to eager sync from lazy sync !!!!!!!!!!!!!!!!!!
+INFO:root:Iteration 920: Coordinator about to ask 5 nodes for statistics. Nodes [1, 3, 4, 6, 9]
+INFO:root:Iteration 920: Coordinator asks node 1 for statistics
+INFO:root:Iteration 920: Node 1 returns to coordinator with statistics
+INFO:root:Iteration 920: Coordinator asks node 3 for statistics
+INFO:root:Iteration 920: Node 3 returns to coordinator with statistics
+INFO:root:Iteration 920: Coordinator asks node 4 for statistics
+INFO:root:Iteration 920: Node 4 returns to coordinator with statistics
+INFO:root:Iteration 920: Coordinator asks node 6 for statistics
+INFO:root:Iteration 920: Node 6 returns to coordinator with statistics
+INFO:root:Iteration 920: Coordinator asks node 9 for statistics
+INFO:root:Iteration 920: Node 9 returns to coordinator with statistics
+INFO:root:Iteration 920: About to sync the value [5.73210977]
+INFO:root:Iteration 920: About to sync the thresholds [-2.02360385],[0.97639615]
+INFO:root:Iteration 920: Update adaptive domain [(2.732109773267031, 8.73210977326703)]
+INFO:root:Iteration 920: Minimal eigenvalue of hessian in the domain: -0.9999995854262084
+INFO:root:Iteration 920: Maximal eigenvalue of hessian in the domain: 0.9999999999999997
+INFO:root:Optimization time: 0.02017290000000016
+INFO:root:Use g,h convex diff with min eigenvalue -0.9999995854262084
+INFO:root:Iteration 920: Coordinator about to sync 10 nodes. Nodes [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+INFO:root:Iteration 920: Coordinator syncs node 0
+INFO:root:Iteration 920: Coordinator syncs node 1
+INFO:root:Iteration 920: Coordinator syncs node 2
+INFO:root:Iteration 920: Coordinator syncs node 3
+INFO:root:Iteration 920: Coordinator syncs node 4
+INFO:root:Iteration 920: Coordinator syncs node 5
+INFO:root:Iteration 920: Coordinator syncs node 6
+INFO:root:Iteration 920: Coordinator syncs node 7
+INFO:root:Iteration 920: Coordinator syncs node 8
+INFO:root:Iteration 920: Coordinator syncs node 9
+INFO:root:Iteration 1069: Node 9 notify False Local Violation
+INFO:root:Iteration 1069: 1 nodes with violation
+INFO:root:Iteration 1069: Coordinator about to ask 1 nodes for statistics. Nodes [0]
+INFO:root:Iteration 1069: Coordinator asks node 0 for statistics
+INFO:root:Iteration 1069: Node 0 returns to coordinator with statistics
+INFO:root:Iteration 1069: used 2 nodes in lazy sync. Nodes [9 0]
+INFO:root:Iteration 1069: Coordinator about to sync 2 nodes. Nodes [9 0]
+INFO:root:Iteration 1069: Coordinator syncs node 9
+INFO:root:Iteration 1069: Coordinator syncs node 0
+INFO:root:Iteration 1071: Node 5 notify False Local Violation
+INFO:root:Iteration 1071: 1 nodes with violation
+INFO:root:Iteration 1071: Coordinator about to ask 1 nodes for statistics. Nodes [1]
+INFO:root:Iteration 1071: Coordinator asks node 1 for statistics
+INFO:root:Iteration 1071: Node 1 returns to coordinator with statistics
+INFO:root:Iteration 1071: used 2 nodes in lazy sync. Nodes [5 1]
+INFO:root:Iteration 1071: Coordinator about to sync 2 nodes. Nodes [5 1]
+INFO:root:Iteration 1071: Coordinator syncs node 5
+INFO:root:Iteration 1071: Coordinator syncs node 1
+INFO:root:Iteration 1072: Node 0 notify False Local Violation
+INFO:root:Iteration 1072: 1 nodes with violation
+INFO:root:Iteration 1072: Coordinator about to ask 1 nodes for statistics. Nodes [2]
+INFO:root:Iteration 1072: Coordinator asks node 2 for statistics
+INFO:root:Iteration 1072: Node 2 returns to coordinator with statistics
+INFO:root:Iteration 1072: used 2 nodes in lazy sync. Nodes [0 2]
+INFO:root:Iteration 1072: Coordinator about to sync 2 nodes. Nodes [0 2]
+INFO:root:Iteration 1072: Coordinator syncs node 0
+INFO:root:Iteration 1072: Coordinator syncs node 2
+INFO:root:Iteration 1073: Node 3 notify False Local Violation
+INFO:root:Iteration 1073: 1 nodes with violation
+INFO:root:Iteration 1073: Coordinator about to ask 1 nodes for statistics. Nodes [4]
+INFO:root:Iteration 1073: Coordinator asks node 4 for statistics
+INFO:root:Iteration 1073: Node 4 returns to coordinator with statistics
+INFO:root:Iteration 1073: used 2 nodes in lazy sync. Nodes [3 4]
+INFO:root:Iteration 1073: Coordinator about to sync 2 nodes. Nodes [3 4]
+INFO:root:Iteration 1073: Coordinator syncs node 3
+INFO:root:Iteration 1073: Coordinator syncs node 4
+INFO:root:Iteration 1075: Node 0 notify False Local Violation
+INFO:root:Iteration 1075: 1 nodes with violation
+INFO:root:Iteration 1075: Coordinator about to ask 1 nodes for statistics. Nodes [6]
+INFO:root:Iteration 1075: Coordinator asks node 6 for statistics
+INFO:root:Iteration 1075: Node 6 returns to coordinator with statistics
+INFO:root:Iteration 1075: used 2 nodes in lazy sync. Nodes [0 6]
+INFO:root:Iteration 1075: Coordinator about to sync 2 nodes. Nodes [0 6]
+INFO:root:Iteration 1075: Coordinator syncs node 0
+INFO:root:Iteration 1075: Coordinator syncs node 6
+INFO:root:Iteration 1076: Node 1 notify False Local Violation
+INFO:root:Iteration 1076: Node 3 notify False Local Violation
+INFO:root:Iteration 1076: Node 4 notify False Local Violation
+INFO:root:Iteration 1076: 3 nodes with violation
+INFO:root:Iteration 1076: Coordinator about to ask 1 nodes for statistics. Nodes [7]
+INFO:root:Iteration 1076: Coordinator asks node 7 for statistics
+INFO:root:Iteration 1076: Node 7 returns to coordinator with statistics
+INFO:root:Iteration 1076: used 4 nodes in lazy sync. Nodes [1 3 4 7]
+INFO:root:Iteration 1076: Coordinator about to sync 4 nodes. Nodes [1 3 4 7]
+INFO:root:Iteration 1076: Coordinator syncs node 1
+INFO:root:Iteration 1076: Coordinator syncs node 3
+INFO:root:Iteration 1076: Coordinator syncs node 4
+INFO:root:Iteration 1076: Coordinator syncs node 7
+INFO:root:Iteration 1077: Node 3 notify False Local Violation
+INFO:root:Iteration 1077: Node 9 notify False Local Violation
+INFO:root:Iteration 1077: 2 nodes with violation
+INFO:root:Iteration 1077: Coordinator about to ask 1 nodes for statistics. Nodes [8]
+INFO:root:Iteration 1077: Coordinator asks node 8 for statistics
+INFO:root:Iteration 1077: Node 8 returns to coordinator with statistics
+INFO:root:Iteration 1077: used 3 nodes in lazy sync. Nodes [3 9 8]
+INFO:root:Iteration 1077: Coordinator about to sync 3 nodes. Nodes [3 9 8]
+INFO:root:Iteration 1077: Coordinator syncs node 3
+INFO:root:Iteration 1077: Coordinator syncs node 9
+INFO:root:Iteration 1077: Coordinator syncs node 8
+INFO:root:Iteration 1078: Node 7 notify False Local Violation
+INFO:root:Iteration 1078: Node 8 notify False Local Violation
+INFO:root:Iteration 1078: Node 9 notify False Local Violation
+INFO:root:Iteration 1078: 3 nodes with violation
+INFO:root:Iteration 1078: Coordinator about to ask 1 nodes for statistics. Nodes [2]
+INFO:root:Iteration 1078: Coordinator asks node 2 for statistics
+INFO:root:Iteration 1078: Node 2 returns to coordinator with statistics
+INFO:root:Iteration 1078: Coordinator about to ask 1 nodes for statistics. Nodes [5]
+INFO:root:Iteration 1078: Coordinator asks node 5 for statistics
+INFO:root:Iteration 1078: Node 5 returns to coordinator with statistics
+INFO:root:Iteration 1078: used 5 nodes in lazy sync. Nodes [7 8 9 2 5]
+INFO:root:Iteration 1078: Coordinator about to sync 5 nodes. Nodes [7 8 9 2 5]
+INFO:root:Iteration 1078: Coordinator syncs node 7
+INFO:root:Iteration 1078: Coordinator syncs node 8
+INFO:root:Iteration 1078: Coordinator syncs node 9
+INFO:root:Iteration 1078: Coordinator syncs node 2
+INFO:root:Iteration 1078: Coordinator syncs node 5
+INFO:root:Iteration 1079: Node 4 notify False Local Violation
+INFO:root:Iteration 1079: 1 nodes with violation
+INFO:root:Iteration 1079: Coordinator about to ask 1 nodes for statistics. Nodes [6]
+INFO:root:Iteration 1079: Coordinator asks node 6 for statistics
+INFO:root:Iteration 1079: Node 6 returns to coordinator with statistics
+INFO:root:Iteration 1079: Coordinator about to ask 1 nodes for statistics. Nodes [1]
+INFO:root:Iteration 1079: Coordinator asks node 1 for statistics
+INFO:root:Iteration 1079: Node 1 returns to coordinator with statistics
+INFO:root:Iteration 1079: Coordinator about to ask 1 nodes for statistics. Nodes [2]
+INFO:root:Iteration 1079: Coordinator asks node 2 for statistics
+INFO:root:Iteration 1079: Node 2 returns to coordinator with statistics
+INFO:root:Iteration 1079: Coordinator about to ask 1 nodes for statistics. Nodes [5]
+INFO:root:Iteration 1079: Coordinator asks node 5 for statistics
+INFO:root:Iteration 1079: Node 5 returns to coordinator with statistics
+INFO:root:Iteration 1079: fallback to eager sync from lazy sync !!!!!!!!!!!!!!!!!!
+INFO:root:Iteration 1079: Coordinator about to ask 5 nodes for statistics. Nodes [0, 3, 7, 8, 9]
+INFO:root:Iteration 1079: Coordinator asks node 0 for statistics
+INFO:root:Iteration 1079: Node 0 returns to coordinator with statistics
+INFO:root:Iteration 1079: Coordinator asks node 3 for statistics
+INFO:root:Iteration 1079: Node 3 returns to coordinator with statistics
+INFO:root:Iteration 1079: Coordinator asks node 7 for statistics
+INFO:root:Iteration 1079: Node 7 returns to coordinator with statistics
+INFO:root:Iteration 1079: Coordinator asks node 8 for statistics
+INFO:root:Iteration 1079: Node 8 returns to coordinator with statistics
+INFO:root:Iteration 1079: Coordinator asks node 9 for statistics
+INFO:root:Iteration 1079: Node 9 returns to coordinator with statistics
+INFO:root:Iteration 1079: About to sync the value [6.74188846]
+INFO:root:Iteration 1079: About to sync the thresholds [-1.05721431],[1.94278569]
+INFO:root:Iteration 1079: Update adaptive domain [(3.741888456023487, 9.741888456023487)]
+INFO:root:Iteration 1079: Minimal eigenvalue of hessian in the domain: -1.0
+INFO:root:Iteration 1079: Maximal eigenvalue of hessian in the domain: 0.9999999999999802
+INFO:root:Optimization time: 0.02500200000000019
+INFO:root:Use g,h convex diff with min eigenvalue -1.0
+INFO:root:Iteration 1079: Coordinator about to sync 10 nodes. Nodes [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+INFO:root:Iteration 1079: Coordinator syncs node 0
+INFO:root:Iteration 1079: Coordinator syncs node 1
+INFO:root:Iteration 1079: Coordinator syncs node 2
+INFO:root:Iteration 1079: Coordinator syncs node 3
+INFO:root:Iteration 1079: Coordinator syncs node 4
+INFO:root:Iteration 1079: Coordinator syncs node 5
+INFO:root:Iteration 1079: Coordinator syncs node 6
+INFO:root:Iteration 1079: Coordinator syncs node 7
+INFO:root:Iteration 1079: Coordinator syncs node 8
+INFO:root:Iteration 1079: Coordinator syncs node 9
+INFO:root:Iteration 1290: Node 2 notify False Local Violation
+INFO:root:Iteration 1290: 1 nodes with violation
+INFO:root:Iteration 1290: Coordinator about to ask 1 nodes for statistics. Nodes [0]
+INFO:root:Iteration 1290: Coordinator asks node 0 for statistics
+INFO:root:Iteration 1290: Node 0 returns to coordinator with statistics
+INFO:root:Iteration 1290: used 2 nodes in lazy sync. Nodes [2 0]
+INFO:root:Iteration 1290: Coordinator about to sync 2 nodes. Nodes [2 0]
+INFO:root:Iteration 1290: Coordinator syncs node 2
+INFO:root:Iteration 1290: Coordinator syncs node 0
+INFO:root:Iteration 1292: Node 5 notify False Local Violation
+INFO:root:Iteration 1292: 1 nodes with violation
+INFO:root:Iteration 1292: Coordinator about to ask 1 nodes for statistics. Nodes [1]
+INFO:root:Iteration 1292: Coordinator asks node 1 for statistics
+INFO:root:Iteration 1292: Node 1 returns to coordinator with statistics
+INFO:root:Iteration 1292: used 2 nodes in lazy sync. Nodes [5 1]
+INFO:root:Iteration 1292: Coordinator about to sync 2 nodes. Nodes [5 1]
+INFO:root:Iteration 1292: Coordinator syncs node 5
+INFO:root:Iteration 1292: Coordinator syncs node 1
+INFO:root:Iteration 1293: Node 1 notify False Local Violation
+INFO:root:Iteration 1293: 1 nodes with violation
+INFO:root:Iteration 1293: Coordinator about to ask 1 nodes for statistics. Nodes [3]
+INFO:root:Iteration 1293: Coordinator asks node 3 for statistics
+INFO:root:Iteration 1293: Node 3 returns to coordinator with statistics
+INFO:root:Iteration 1293: used 2 nodes in lazy sync. Nodes [1 3]
+INFO:root:Iteration 1293: Coordinator about to sync 2 nodes. Nodes [1 3]
+INFO:root:Iteration 1293: Coordinator syncs node 1
+INFO:root:Iteration 1293: Coordinator syncs node 3
+INFO:root:Iteration 1296: Node 3 notify False Local Violation
+INFO:root:Iteration 1296: Node 6 notify False Local Violation
+INFO:root:Iteration 1296: 2 nodes with violation
+INFO:root:Iteration 1296: Coordinator about to ask 1 nodes for statistics. Nodes [4]
+INFO:root:Iteration 1296: Coordinator asks node 4 for statistics
+INFO:root:Iteration 1296: Node 4 returns to coordinator with statistics
+INFO:root:Iteration 1296: used 3 nodes in lazy sync. Nodes [3 6 4]
+INFO:root:Iteration 1296: Coordinator about to sync 3 nodes. Nodes [3 6 4]
+INFO:root:Iteration 1296: Coordinator syncs node 3
+INFO:root:Iteration 1296: Coordinator syncs node 6
+INFO:root:Iteration 1296: Coordinator syncs node 4
+INFO:root:Iteration 1297: Node 5 notify False Local Violation
+INFO:root:Iteration 1297: 1 nodes with violation
+INFO:root:Iteration 1297: Coordinator about to ask 1 nodes for statistics. Nodes [7]
+INFO:root:Iteration 1297: Coordinator asks node 7 for statistics
+INFO:root:Iteration 1297: Node 7 returns to coordinator with statistics
+INFO:root:Iteration 1297: used 2 nodes in lazy sync. Nodes [5 7]
+INFO:root:Iteration 1297: Coordinator about to sync 2 nodes. Nodes [5 7]
+INFO:root:Iteration 1297: Coordinator syncs node 5
+INFO:root:Iteration 1297: Coordinator syncs node 7
+INFO:root:Iteration 1298: Node 6 notify False Local Violation
+INFO:root:Iteration 1298: 1 nodes with violation
+INFO:root:Iteration 1298: Coordinator about to ask 1 nodes for statistics. Nodes [8]
+INFO:root:Iteration 1298: Coordinator asks node 8 for statistics
+INFO:root:Iteration 1298: Node 8 returns to coordinator with statistics
+INFO:root:Iteration 1298: used 2 nodes in lazy sync. Nodes [6 8]
+INFO:root:Iteration 1298: Coordinator about to sync 2 nodes. Nodes [6 8]
+INFO:root:Iteration 1298: Coordinator syncs node 6
+INFO:root:Iteration 1298: Coordinator syncs node 8
+INFO:root:Iteration 1299: Node 2 notify False Local Violation
+INFO:root:Iteration 1299: Node 6 notify False Local Violation
+INFO:root:Iteration 1299: 2 nodes with violation
+INFO:root:Iteration 1299: Coordinator about to ask 1 nodes for statistics. Nodes [9]
+INFO:root:Iteration 1299: Coordinator asks node 9 for statistics
+INFO:root:Iteration 1299: Node 9 returns to coordinator with statistics
+INFO:root:Iteration 1299: used 3 nodes in lazy sync. Nodes [2 6 9]
+INFO:root:Iteration 1299: Coordinator about to sync 3 nodes. Nodes [2 6 9]
+INFO:root:Iteration 1299: Coordinator syncs node 2
+INFO:root:Iteration 1299: Coordinator syncs node 6
+INFO:root:Iteration 1299: Coordinator syncs node 9
+INFO:root:Iteration 1300: Node 7 notify False Local Violation
+INFO:root:Iteration 1300: 1 nodes with violation
+INFO:root:Iteration 1300: Coordinator about to ask 1 nodes for statistics. Nodes [0]
+INFO:root:Iteration 1300: Coordinator asks node 0 for statistics
+INFO:root:Iteration 1300: Node 0 returns to coordinator with statistics
+INFO:root:Iteration 1300: used 2 nodes in lazy sync. Nodes [7 0]
+INFO:root:Iteration 1300: Coordinator about to sync 2 nodes. Nodes [7 0]
+INFO:root:Iteration 1300: Coordinator syncs node 7
+INFO:root:Iteration 1300: Coordinator syncs node 0
+INFO:root:Iteration 1301: Node 0 notify False Local Violation
+INFO:root:Iteration 1301: Node 2 notify False Local Violation
+INFO:root:Iteration 1301: Node 5 notify False Local Violation
+INFO:root:Iteration 1301: Node 7 notify False Local Violation
+INFO:root:Iteration 1301: Node 9 notify False Local Violation
+INFO:root:Iteration 1301: 5 nodes with violation
+INFO:root:Iteration 1301: fallback to eager sync from lazy sync !!!!!!!!!!!!!!!!!!
+INFO:root:Iteration 1301: Coordinator about to ask 5 nodes for statistics. Nodes [1, 3, 4, 6, 8]
+INFO:root:Iteration 1301: Coordinator asks node 1 for statistics
+INFO:root:Iteration 1301: Node 1 returns to coordinator with statistics
+INFO:root:Iteration 1301: Coordinator asks node 3 for statistics
+INFO:root:Iteration 1301: Node 3 returns to coordinator with statistics
+INFO:root:Iteration 1301: Coordinator asks node 4 for statistics
+INFO:root:Iteration 1301: Node 4 returns to coordinator with statistics
+INFO:root:Iteration 1301: Coordinator asks node 6 for statistics
+INFO:root:Iteration 1301: Node 6 returns to coordinator with statistics
+INFO:root:Iteration 1301: Coordinator asks node 8 for statistics
+INFO:root:Iteration 1301: Node 8 returns to coordinator with statistics
+INFO:root:Iteration 1301: About to sync the value [8.13380994]
+INFO:root:Iteration 1301: About to sync the thresholds [-0.53889713],[2.46110287]
+INFO:root:Iteration 1301: Update adaptive domain [(5.133809939499599, 11.1338099394996)]
+INFO:root:Iteration 1301: Minimal eigenvalue of hessian in the domain: -0.9999999999994582
+INFO:root:Iteration 1301: Maximal eigenvalue of hessian in the domain: 0.9999999957256279
+INFO:root:Optimization time: 0.026058899999999996
+INFO:root:Use g,h convex diff with min eigenvalue -0.9999999999994582
+INFO:root:Iteration 1301: Coordinator about to sync 10 nodes. Nodes [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+INFO:root:Iteration 1301: Coordinator syncs node 0
+INFO:root:Iteration 1301: Coordinator syncs node 1
+INFO:root:Iteration 1301: Coordinator syncs node 2
+INFO:root:Iteration 1301: Coordinator syncs node 3
+INFO:root:Iteration 1301: Coordinator syncs node 4
+INFO:root:Iteration 1301: Coordinator syncs node 5
+INFO:root:Iteration 1301: Coordinator syncs node 6
+INFO:root:Iteration 1301: Coordinator syncs node 7
+INFO:root:Iteration 1301: Coordinator syncs node 8
+INFO:root:Iteration 1301: Coordinator syncs node 9
+INFO:root:Iteration 1517: Node 4 notify False Local Violation
+INFO:root:Iteration 1517: 1 nodes with violation
+INFO:root:Iteration 1517: Coordinator about to ask 1 nodes for statistics. Nodes [0]
+INFO:root:Iteration 1517: Coordinator asks node 0 for statistics
+INFO:root:Iteration 1517: Node 0 returns to coordinator with statistics
+INFO:root:Iteration 1517: used 2 nodes in lazy sync. Nodes [4 0]
+INFO:root:Iteration 1517: Coordinator about to sync 2 nodes. Nodes [4 0]
+INFO:root:Iteration 1517: Coordinator syncs node 4
+INFO:root:Iteration 1517: Coordinator syncs node 0
+INFO:root:Iteration 1520: Node 0 notify False Local Violation
+INFO:root:Iteration 1520: 1 nodes with violation
+INFO:root:Iteration 1520: Coordinator about to ask 1 nodes for statistics. Nodes [1]
+INFO:root:Iteration 1520: Coordinator asks node 1 for statistics
+INFO:root:Iteration 1520: Node 1 returns to coordinator with statistics
+INFO:root:Iteration 1520: used 2 nodes in lazy sync. Nodes [0 1]
+INFO:root:Iteration 1520: Coordinator about to sync 2 nodes. Nodes [0 1]
+INFO:root:Iteration 1520: Coordinator syncs node 0
+INFO:root:Iteration 1520: Coordinator syncs node 1
+INFO:root:Iteration 1527: Node 0 notify False Local Violation
+INFO:root:Iteration 1527: 1 nodes with violation
+INFO:root:Iteration 1527: Coordinator about to ask 1 nodes for statistics. Nodes [2]
+INFO:root:Iteration 1527: Coordinator asks node 2 for statistics
+INFO:root:Iteration 1527: Node 2 returns to coordinator with statistics
+INFO:root:Iteration 1527: used 2 nodes in lazy sync. Nodes [0 2]
+INFO:root:Iteration 1527: Coordinator about to sync 2 nodes. Nodes [0 2]
+INFO:root:Iteration 1527: Coordinator syncs node 0
+INFO:root:Iteration 1527: Coordinator syncs node 2
+INFO:root:Iteration 1528: Node 8 notify False Local Violation
+INFO:root:Iteration 1528: 1 nodes with violation
+INFO:root:Iteration 1528: Coordinator about to ask 1 nodes for statistics. Nodes [3]
+INFO:root:Iteration 1528: Coordinator asks node 3 for statistics
+INFO:root:Iteration 1528: Node 3 returns to coordinator with statistics
+INFO:root:Iteration 1528: used 2 nodes in lazy sync. Nodes [8 3]
+INFO:root:Iteration 1528: Coordinator about to sync 2 nodes. Nodes [8 3]
+INFO:root:Iteration 1528: Coordinator syncs node 8
+INFO:root:Iteration 1528: Coordinator syncs node 3
+INFO:root:Iteration 1529: Node 3 notify False Local Violation
+INFO:root:Iteration 1529: Node 9 notify False Local Violation
+INFO:root:Iteration 1529: 2 nodes with violation
+INFO:root:Iteration 1529: Coordinator about to ask 1 nodes for statistics. Nodes [5]
+INFO:root:Iteration 1529: Coordinator asks node 5 for statistics
+INFO:root:Iteration 1529: Node 5 returns to coordinator with statistics
+INFO:root:Iteration 1529: used 3 nodes in lazy sync. Nodes [3 9 5]
+INFO:root:Iteration 1529: Coordinator about to sync 3 nodes. Nodes [3 9 5]
+INFO:root:Iteration 1529: Coordinator syncs node 3
+INFO:root:Iteration 1529: Coordinator syncs node 9
+INFO:root:Iteration 1529: Coordinator syncs node 5
+INFO:root:Iteration 1531: Node 1 notify False Local Violation
+INFO:root:Iteration 1531: 1 nodes with violation
+INFO:root:Iteration 1531: Coordinator about to ask 1 nodes for statistics. Nodes [6]
+INFO:root:Iteration 1531: Coordinator asks node 6 for statistics
+INFO:root:Iteration 1531: Node 6 returns to coordinator with statistics
+INFO:root:Iteration 1531: used 2 nodes in lazy sync. Nodes [1 6]
+INFO:root:Iteration 1531: Coordinator about to sync 2 nodes. Nodes [1 6]
+INFO:root:Iteration 1531: Coordinator syncs node 1
+INFO:root:Iteration 1531: Coordinator syncs node 6
+INFO:root:Iteration 1532: Node 9 notify False Local Violation
+INFO:root:Iteration 1532: 1 nodes with violation
+INFO:root:Iteration 1532: Coordinator about to ask 1 nodes for statistics. Nodes [7]
+INFO:root:Iteration 1532: Coordinator asks node 7 for statistics
+INFO:root:Iteration 1532: Node 7 returns to coordinator with statistics
+INFO:root:Iteration 1532: used 2 nodes in lazy sync. Nodes [9 7]
+INFO:root:Iteration 1532: Coordinator about to sync 2 nodes. Nodes [9 7]
+INFO:root:Iteration 1532: Coordinator syncs node 9
+INFO:root:Iteration 1532: Coordinator syncs node 7
+INFO:root:Iteration 1533: Node 4 notify False Local Violation
+INFO:root:Iteration 1533: 1 nodes with violation
+INFO:root:Iteration 1533: Coordinator about to ask 1 nodes for statistics. Nodes [2]
+INFO:root:Iteration 1533: Coordinator asks node 2 for statistics
+INFO:root:Iteration 1533: Node 2 returns to coordinator with statistics
+INFO:root:Iteration 1533: used 2 nodes in lazy sync. Nodes [4 2]
+INFO:root:Iteration 1533: Coordinator about to sync 2 nodes. Nodes [4 2]
+INFO:root:Iteration 1533: Coordinator syncs node 4
+INFO:root:Iteration 1533: Coordinator syncs node 2
+INFO:root:Iteration 1534: Node 2 notify False Local Violation
+INFO:root:Iteration 1534: Node 8 notify False Local Violation
+INFO:root:Iteration 1534: 2 nodes with violation
+INFO:root:Iteration 1534: Coordinator about to ask 1 nodes for statistics. Nodes [5]
+INFO:root:Iteration 1534: Coordinator asks node 5 for statistics
+INFO:root:Iteration 1534: Node 5 returns to coordinator with statistics
+INFO:root:Iteration 1534: used 3 nodes in lazy sync. Nodes [2 8 5]
+INFO:root:Iteration 1534: Coordinator about to sync 3 nodes. Nodes [2 8 5]
+INFO:root:Iteration 1534: Coordinator syncs node 2
+INFO:root:Iteration 1534: Coordinator syncs node 8
+INFO:root:Iteration 1534: Coordinator syncs node 5
+INFO:root:Iteration 1535: Node 2 notify False Local Violation
+INFO:root:Iteration 1535: 1 nodes with violation
+INFO:root:Iteration 1535: Coordinator about to ask 1 nodes for statistics. Nodes [6]
+INFO:root:Iteration 1535: Coordinator asks node 6 for statistics
+INFO:root:Iteration 1535: Node 6 returns to coordinator with statistics
+INFO:root:Iteration 1535: used 2 nodes in lazy sync. Nodes [2 6]
+INFO:root:Iteration 1535: Coordinator about to sync 2 nodes. Nodes [2 6]
+INFO:root:Iteration 1535: Coordinator syncs node 2
+INFO:root:Iteration 1535: Coordinator syncs node 6
+INFO:root:Iteration 1536: Node 6 notify False Local Violation
+INFO:root:Iteration 1536: Node 8 notify False Local Violation
+INFO:root:Iteration 1536: 2 nodes with violation
+INFO:root:Iteration 1536: Coordinator about to ask 1 nodes for statistics. Nodes [7]
+INFO:root:Iteration 1536: Coordinator asks node 7 for statistics
+INFO:root:Iteration 1536: Node 7 returns to coordinator with statistics
+INFO:root:Iteration 1536: used 3 nodes in lazy sync. Nodes [6 8 7]
+INFO:root:Iteration 1536: Coordinator about to sync 3 nodes. Nodes [6 8 7]
+INFO:root:Iteration 1536: Coordinator syncs node 6
+INFO:root:Iteration 1536: Coordinator syncs node 8
+INFO:root:Iteration 1536: Coordinator syncs node 7
+INFO:root:Iteration 1537: Node 8 notify False Local Violation
+INFO:root:Iteration 1537: 1 nodes with violation
+INFO:root:Iteration 1537: Coordinator about to ask 1 nodes for statistics. Nodes [1]
+INFO:root:Iteration 1537: Coordinator asks node 1 for statistics
+INFO:root:Iteration 1537: Node 1 returns to coordinator with statistics
+INFO:root:Iteration 1537: used 2 nodes in lazy sync. Nodes [8 1]
+INFO:root:Iteration 1537: Coordinator about to sync 2 nodes. Nodes [8 1]
+INFO:root:Iteration 1537: Coordinator syncs node 8
+INFO:root:Iteration 1537: Coordinator syncs node 1
+INFO:root:Iteration 1538: Node 2 notify False Local Violation
+INFO:root:Iteration 1538: 1 nodes with violation
+INFO:root:Iteration 1538: Coordinator about to ask 1 nodes for statistics. Nodes [3]
+INFO:root:Iteration 1538: Coordinator asks node 3 for statistics
+INFO:root:Iteration 1538: Node 3 returns to coordinator with statistics
+INFO:root:Iteration 1538: used 2 nodes in lazy sync. Nodes [2 3]
+INFO:root:Iteration 1538: Coordinator about to sync 2 nodes. Nodes [2 3]
+INFO:root:Iteration 1538: Coordinator syncs node 2
+INFO:root:Iteration 1538: Coordinator syncs node 3
+INFO:root:Iteration 1539: Node 1 notify False Local Violation
+INFO:root:Iteration 1539: 1 nodes with violation
+INFO:root:Iteration 1539: Coordinator about to ask 1 nodes for statistics. Nodes [4]
+INFO:root:Iteration 1539: Coordinator asks node 4 for statistics
+INFO:root:Iteration 1539: Node 4 returns to coordinator with statistics
+INFO:root:Iteration 1539: used 2 nodes in lazy sync. Nodes [1 4]
+INFO:root:Iteration 1539: Coordinator about to sync 2 nodes. Nodes [1 4]
+INFO:root:Iteration 1539: Coordinator syncs node 1
+INFO:root:Iteration 1539: Coordinator syncs node 4
+INFO:root:Iteration 1540: Node 5 notify False Local Violation
+INFO:root:Iteration 1540: Node 8 notify False Local Violation
+INFO:root:Iteration 1540: 2 nodes with violation
+INFO:root:Iteration 1540: Coordinator about to ask 1 nodes for statistics. Nodes [7]
+INFO:root:Iteration 1540: Coordinator asks node 7 for statistics
+INFO:root:Iteration 1540: Node 7 returns to coordinator with statistics
+INFO:root:Iteration 1540: Coordinator about to ask 1 nodes for statistics. Nodes [9]
+INFO:root:Iteration 1540: Coordinator asks node 9 for statistics
+INFO:root:Iteration 1540: Node 9 returns to coordinator with statistics
+INFO:root:Iteration 1540: used 4 nodes in lazy sync. Nodes [5 8 7 9]
+INFO:root:Iteration 1540: Coordinator about to sync 4 nodes. Nodes [5 8 7 9]
+INFO:root:Iteration 1540: Coordinator syncs node 5
+INFO:root:Iteration 1540: Coordinator syncs node 8
+INFO:root:Iteration 1540: Coordinator syncs node 7
+INFO:root:Iteration 1540: Coordinator syncs node 9
+INFO:root:Iteration 1541: Node 3 notify False Local Violation
+INFO:root:Iteration 1541: Node 4 notify False Local Violation
+INFO:root:Iteration 1541: Node 5 notify False Local Violation
+INFO:root:Iteration 1541: Node 7 notify False Local Violation
+INFO:root:Iteration 1541: Node 9 notify False Local Violation
+INFO:root:Iteration 1541: 5 nodes with violation
+INFO:root:Iteration 1541: fallback to eager sync from lazy sync !!!!!!!!!!!!!!!!!!
+INFO:root:Iteration 1541: Coordinator about to ask 5 nodes for statistics. Nodes [0, 1, 2, 6, 8]
+INFO:root:Iteration 1541: Coordinator asks node 0 for statistics
+INFO:root:Iteration 1541: Node 0 returns to coordinator with statistics
+INFO:root:Iteration 1541: Coordinator asks node 1 for statistics
+INFO:root:Iteration 1541: Node 1 returns to coordinator with statistics
+INFO:root:Iteration 1541: Coordinator asks node 2 for statistics
+INFO:root:Iteration 1541: Node 2 returns to coordinator with statistics
+INFO:root:Iteration 1541: Coordinator asks node 6 for statistics
+INFO:root:Iteration 1541: Node 6 returns to coordinator with statistics
+INFO:root:Iteration 1541: Coordinator asks node 8 for statistics
+INFO:root:Iteration 1541: Node 8 returns to coordinator with statistics
+INFO:root:Iteration 1541: About to sync the value [9.6075689]
+INFO:root:Iteration 1541: About to sync the thresholds [-1.68177472],[1.31822528]
+INFO:root:Iteration 1541: Update adaptive domain [(6.607568902556707, 12.607568902556707)]
+INFO:root:Iteration 1541: Minimal eigenvalue of hessian in the domain: -0.9999999999999991
+INFO:root:Iteration 1541: Maximal eigenvalue of hessian in the domain: 0.9999999999997763
+INFO:root:Optimization time: 0.02392580000000022
+INFO:root:Use g,h convex diff with min eigenvalue -0.9999999999999991
+INFO:root:Iteration 1541: Coordinator about to sync 10 nodes. Nodes [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+INFO:root:Iteration 1541: Coordinator syncs node 0
+INFO:root:Iteration 1541: Coordinator syncs node 1
+INFO:root:Iteration 1541: Coordinator syncs node 2
+INFO:root:Iteration 1541: Coordinator syncs node 3
+INFO:root:Iteration 1541: Coordinator syncs node 4
+INFO:root:Iteration 1541: Coordinator syncs node 5
+INFO:root:Iteration 1541: Coordinator syncs node 6
+INFO:root:Iteration 1541: Coordinator syncs node 7
+INFO:root:Iteration 1541: Coordinator syncs node 8
+INFO:root:Iteration 1541: Coordinator syncs node 9
+INFO:root:Iteration 1685: Node 5 notify False Local Violation
+INFO:root:Iteration 1685: 1 nodes with violation
+INFO:root:Iteration 1685: Coordinator about to ask 1 nodes for statistics. Nodes [0]
+INFO:root:Iteration 1685: Coordinator asks node 0 for statistics
+INFO:root:Iteration 1685: Node 0 returns to coordinator with statistics
+INFO:root:Iteration 1685: used 2 nodes in lazy sync. Nodes [5 0]
+INFO:root:Iteration 1685: Coordinator about to sync 2 nodes. Nodes [5 0]
+INFO:root:Iteration 1685: Coordinator syncs node 5
+INFO:root:Iteration 1685: Coordinator syncs node 0
+INFO:root:Iteration 1686: Node 0 notify False Local Violation
+INFO:root:Iteration 1686: Node 5 notify False Local Violation
+INFO:root:Iteration 1686: Node 7 notify False Local Violation
+INFO:root:Iteration 1686: 3 nodes with violation
+INFO:root:Iteration 1686: Coordinator about to ask 1 nodes for statistics. Nodes [1]
+INFO:root:Iteration 1686: Coordinator asks node 1 for statistics
+INFO:root:Iteration 1686: Node 1 returns to coordinator with statistics
+INFO:root:Iteration 1686: used 4 nodes in lazy sync. Nodes [0 5 7 1]
+INFO:root:Iteration 1686: Coordinator about to sync 4 nodes. Nodes [0 5 7 1]
+INFO:root:Iteration 1686: Coordinator syncs node 0
+INFO:root:Iteration 1686: Coordinator syncs node 5
+INFO:root:Iteration 1686: Coordinator syncs node 7
+INFO:root:Iteration 1686: Coordinator syncs node 1
+INFO:root:Iteration 1687: Node 0 notify False Local Violation
+INFO:root:Iteration 1687: Node 1 notify False Local Violation
+INFO:root:Iteration 1687: 2 nodes with violation
+INFO:root:Iteration 1687: Coordinator about to ask 1 nodes for statistics. Nodes [2]
+INFO:root:Iteration 1687: Coordinator asks node 2 for statistics
+INFO:root:Iteration 1687: Node 2 returns to coordinator with statistics
+INFO:root:Iteration 1687: used 3 nodes in lazy sync. Nodes [0 1 2]
+INFO:root:Iteration 1687: Coordinator about to sync 3 nodes. Nodes [0 1 2]
+INFO:root:Iteration 1687: Coordinator syncs node 0
+INFO:root:Iteration 1687: Coordinator syncs node 1
+INFO:root:Iteration 1687: Coordinator syncs node 2
+INFO:root:Iteration 1688: Node 1 notify False Local Violation
+INFO:root:Iteration 1688: 1 nodes with violation
+INFO:root:Iteration 1688: Coordinator about to ask 1 nodes for statistics. Nodes [3]
+INFO:root:Iteration 1688: Coordinator asks node 3 for statistics
+INFO:root:Iteration 1688: Node 3 returns to coordinator with statistics
+INFO:root:Iteration 1688: Coordinator about to ask 1 nodes for statistics. Nodes [4]
+INFO:root:Iteration 1688: Coordinator asks node 4 for statistics
+INFO:root:Iteration 1688: Node 4 returns to coordinator with statistics
+INFO:root:Iteration 1688: used 3 nodes in lazy sync. Nodes [1 3 4]
+INFO:root:Iteration 1688: Coordinator about to sync 3 nodes. Nodes [1 3 4]
+INFO:root:Iteration 1688: Coordinator syncs node 1
+INFO:root:Iteration 1688: Coordinator syncs node 3
+INFO:root:Iteration 1688: Coordinator syncs node 4
+INFO:root:Iteration 1689: Node 3 notify False Local Violation
+INFO:root:Iteration 1689: 1 nodes with violation
+INFO:root:Iteration 1689: Coordinator about to ask 1 nodes for statistics. Nodes [6]
+INFO:root:Iteration 1689: Coordinator asks node 6 for statistics
+INFO:root:Iteration 1689: Node 6 returns to coordinator with statistics
+INFO:root:Iteration 1689: used 2 nodes in lazy sync. Nodes [3 6]
+INFO:root:Iteration 1689: Coordinator about to sync 2 nodes. Nodes [3 6]
+INFO:root:Iteration 1689: Coordinator syncs node 3
+INFO:root:Iteration 1689: Coordinator syncs node 6
+INFO:root:Iteration 1690: Node 3 notify False Local Violation
+INFO:root:Iteration 1690: Node 6 notify False Local Violation
+INFO:root:Iteration 1690: 2 nodes with violation
+INFO:root:Iteration 1690: Coordinator about to ask 1 nodes for statistics. Nodes [8]
+INFO:root:Iteration 1690: Coordinator asks node 8 for statistics
+INFO:root:Iteration 1690: Node 8 returns to coordinator with statistics
+INFO:root:Iteration 1690: used 3 nodes in lazy sync. Nodes [3 6 8]
+INFO:root:Iteration 1690: Coordinator about to sync 3 nodes. Nodes [3 6 8]
+INFO:root:Iteration 1690: Coordinator syncs node 3
+INFO:root:Iteration 1690: Coordinator syncs node 6
+INFO:root:Iteration 1690: Coordinator syncs node 8
+INFO:root:Iteration 1691: Node 8 notify False Local Violation
+INFO:root:Iteration 1691: 1 nodes with violation
+INFO:root:Iteration 1691: Coordinator about to ask 1 nodes for statistics. Nodes [9]
+INFO:root:Iteration 1691: Coordinator asks node 9 for statistics
+INFO:root:Iteration 1691: Node 9 returns to coordinator with statistics
+INFO:root:Iteration 1691: used 2 nodes in lazy sync. Nodes [8 9]
+INFO:root:Iteration 1691: Coordinator about to sync 2 nodes. Nodes [8 9]
+INFO:root:Iteration 1691: Coordinator syncs node 8
+INFO:root:Iteration 1691: Coordinator syncs node 9
+INFO:root:Iteration 1692: Node 3 notify False Local Violation
+INFO:root:Iteration 1692: Node 7 notify False Local Violation
+INFO:root:Iteration 1692: 2 nodes with violation
+INFO:root:Iteration 1692: Coordinator about to ask 1 nodes for statistics. Nodes [2]
+INFO:root:Iteration 1692: Coordinator asks node 2 for statistics
+INFO:root:Iteration 1692: Node 2 returns to coordinator with statistics
+INFO:root:Iteration 1692: Coordinator about to ask 1 nodes for statistics. Nodes [4]
+INFO:root:Iteration 1692: Coordinator asks node 4 for statistics
+INFO:root:Iteration 1692: Node 4 returns to coordinator with statistics
+INFO:root:Iteration 1692: Coordinator about to ask 1 nodes for statistics. Nodes [9]
+INFO:root:Iteration 1692: Coordinator asks node 9 for statistics
+INFO:root:Iteration 1692: Node 9 returns to coordinator with statistics
+INFO:root:Iteration 1692: used 5 nodes in lazy sync. Nodes [3 7 2 4 9]
+INFO:root:Iteration 1692: Coordinator about to sync 5 nodes. Nodes [3 7 2 4 9]
+INFO:root:Iteration 1692: Coordinator syncs node 3
+INFO:root:Iteration 1692: Coordinator syncs node 7
+INFO:root:Iteration 1692: Coordinator syncs node 2
+INFO:root:Iteration 1692: Coordinator syncs node 4
+INFO:root:Iteration 1692: Coordinator syncs node 9
+INFO:root:Iteration 1693: Node 1 notify False Local Violation
+INFO:root:Iteration 1693: Node 9 notify False Local Violation
+INFO:root:Iteration 1693: 2 nodes with violation
+INFO:root:Iteration 1693: Coordinator about to ask 1 nodes for statistics. Nodes [2]
+INFO:root:Iteration 1693: Coordinator asks node 2 for statistics
+INFO:root:Iteration 1693: Node 2 returns to coordinator with statistics
+INFO:root:Iteration 1693: Coordinator about to ask 1 nodes for statistics. Nodes [4]
+INFO:root:Iteration 1693: Coordinator asks node 4 for statistics
+INFO:root:Iteration 1693: Node 4 returns to coordinator with statistics
+INFO:root:Iteration 1693: used 4 nodes in lazy sync. Nodes [1 9 2 4]
+INFO:root:Iteration 1693: Coordinator about to sync 4 nodes. Nodes [1 9 2 4]
+INFO:root:Iteration 1693: Coordinator syncs node 1
+INFO:root:Iteration 1693: Coordinator syncs node 9
+INFO:root:Iteration 1693: Coordinator syncs node 2
+INFO:root:Iteration 1693: Coordinator syncs node 4
+INFO:root:Iteration 1694: Node 1 notify False Local Violation
+INFO:root:Iteration 1694: Node 3 notify False Local Violation
+INFO:root:Iteration 1694: Node 6 notify False Local Violation
+INFO:root:Iteration 1694: Node 9 notify False Local Violation
+INFO:root:Iteration 1694: 4 nodes with violation
+INFO:root:Iteration 1694: Coordinator about to ask 1 nodes for statistics. Nodes [5]
+INFO:root:Iteration 1694: Coordinator asks node 5 for statistics
+INFO:root:Iteration 1694: Node 5 returns to coordinator with statistics
+INFO:root:Iteration 1694: fallback to eager sync from lazy sync !!!!!!!!!!!!!!!!!!
+INFO:root:Iteration 1694: Coordinator about to ask 5 nodes for statistics. Nodes [0, 2, 4, 7, 8]
+INFO:root:Iteration 1694: Coordinator asks node 0 for statistics
+INFO:root:Iteration 1694: Node 0 returns to coordinator with statistics
+INFO:root:Iteration 1694: Coordinator asks node 2 for statistics
+INFO:root:Iteration 1694: Node 2 returns to coordinator with statistics
+INFO:root:Iteration 1694: Coordinator asks node 4 for statistics
+INFO:root:Iteration 1694: Node 4 returns to coordinator with statistics
+INFO:root:Iteration 1694: Coordinator asks node 7 for statistics
+INFO:root:Iteration 1694: Node 7 returns to coordinator with statistics
+INFO:root:Iteration 1694: Coordinator asks node 8 for statistics
+INFO:root:Iteration 1694: Node 8 returns to coordinator with statistics
+INFO:root:Iteration 1694: About to sync the value [10.60052359]
+INFO:root:Iteration 1694: About to sync the thresholds [-2.42297706],[0.57702294]
+INFO:root:Iteration 1694: Update adaptive domain [(7.600523594518171, 13.60052359451817)]
+INFO:root:Iteration 1694: Minimal eigenvalue of hessian in the domain: -0.999999999974569
+INFO:root:Iteration 1694: Maximal eigenvalue of hessian in the domain: 0.9999999999956803
+INFO:root:Optimization time: 0.026794499999999832
+INFO:root:Use g,h convex diff with min eigenvalue -0.999999999974569
+INFO:root:Iteration 1694: Coordinator about to sync 10 nodes. Nodes [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+INFO:root:Iteration 1694: Coordinator syncs node 0
+INFO:root:Iteration 1694: Coordinator syncs node 1
+INFO:root:Iteration 1694: Coordinator syncs node 2
+INFO:root:Iteration 1694: Coordinator syncs node 3
+INFO:root:Iteration 1694: Coordinator syncs node 4
+INFO:root:Iteration 1694: Coordinator syncs node 5
+INFO:root:Iteration 1694: Coordinator syncs node 6
+INFO:root:Iteration 1694: Coordinator syncs node 7
+INFO:root:Iteration 1694: Coordinator syncs node 8
+INFO:root:Iteration 1694: Coordinator syncs node 9
+INFO:root:Iteration 1899: Node 8 notify False Local Violation
+INFO:root:Iteration 1899: 1 nodes with violation
+INFO:root:Iteration 1899: Coordinator about to ask 1 nodes for statistics. Nodes [0]
+INFO:root:Iteration 1899: Coordinator asks node 0 for statistics
+INFO:root:Iteration 1899: Node 0 returns to coordinator with statistics
+INFO:root:Iteration 1899: used 2 nodes in lazy sync. Nodes [8 0]
+INFO:root:Iteration 1899: Coordinator about to sync 2 nodes. Nodes [8 0]
+INFO:root:Iteration 1899: Coordinator syncs node 8
+INFO:root:Iteration 1899: Coordinator syncs node 0
+INFO:root:Iteration 1903: Node 0 notify False Local Violation
+INFO:root:Iteration 1903: 1 nodes with violation
+INFO:root:Iteration 1903: Coordinator about to ask 1 nodes for statistics. Nodes [1]
+INFO:root:Iteration 1903: Coordinator asks node 1 for statistics
+INFO:root:Iteration 1903: Node 1 returns to coordinator with statistics
+INFO:root:Iteration 1903: used 2 nodes in lazy sync. Nodes [0 1]
+INFO:root:Iteration 1903: Coordinator about to sync 2 nodes. Nodes [0 1]
+INFO:root:Iteration 1903: Coordinator syncs node 0
+INFO:root:Iteration 1903: Coordinator syncs node 1
+INFO:root:Iteration 1905: Node 1 notify False Local Violation
+INFO:root:Iteration 1905: 1 nodes with violation
+INFO:root:Iteration 1905: Coordinator about to ask 1 nodes for statistics. Nodes [2]
+INFO:root:Iteration 1905: Coordinator asks node 2 for statistics
+INFO:root:Iteration 1905: Node 2 returns to coordinator with statistics
+INFO:root:Iteration 1905: used 2 nodes in lazy sync. Nodes [1 2]
+INFO:root:Iteration 1905: Coordinator about to sync 2 nodes. Nodes [1 2]
+INFO:root:Iteration 1905: Coordinator syncs node 1
+INFO:root:Iteration 1905: Coordinator syncs node 2
+INFO:root:Iteration 1906: Node 7 notify False Local Violation
+INFO:root:Iteration 1906: 1 nodes with violation
+INFO:root:Iteration 1906: Coordinator about to ask 1 nodes for statistics. Nodes [3]
+INFO:root:Iteration 1906: Coordinator asks node 3 for statistics
+INFO:root:Iteration 1906: Node 3 returns to coordinator with statistics
+INFO:root:Iteration 1906: used 2 nodes in lazy sync. Nodes [7 3]
+INFO:root:Iteration 1906: Coordinator about to sync 2 nodes. Nodes [7 3]
+INFO:root:Iteration 1906: Coordinator syncs node 7
+INFO:root:Iteration 1906: Coordinator syncs node 3
+INFO:root:Iteration 1908: Node 0 notify False Local Violation
+INFO:root:Iteration 1908: Node 4 notify False Local Violation
+INFO:root:Iteration 1908: 2 nodes with violation
+INFO:root:Iteration 1908: Coordinator about to ask 1 nodes for statistics. Nodes [5]
+INFO:root:Iteration 1908: Coordinator asks node 5 for statistics
+INFO:root:Iteration 1908: Node 5 returns to coordinator with statistics
+INFO:root:Iteration 1908: used 3 nodes in lazy sync. Nodes [0 4 5]
+INFO:root:Iteration 1908: Coordinator about to sync 3 nodes. Nodes [0 4 5]
+INFO:root:Iteration 1908: Coordinator syncs node 0
+INFO:root:Iteration 1908: Coordinator syncs node 4
+INFO:root:Iteration 1908: Coordinator syncs node 5
+INFO:root:Iteration 1911: Node 4 notify False Local Violation
+INFO:root:Iteration 1911: 1 nodes with violation
+INFO:root:Iteration 1911: Coordinator about to ask 1 nodes for statistics. Nodes [6]
+INFO:root:Iteration 1911: Coordinator asks node 6 for statistics
+INFO:root:Iteration 1911: Node 6 returns to coordinator with statistics
+INFO:root:Iteration 1911: used 2 nodes in lazy sync. Nodes [4 6]
+INFO:root:Iteration 1911: Coordinator about to sync 2 nodes. Nodes [4 6]
+INFO:root:Iteration 1911: Coordinator syncs node 4
+INFO:root:Iteration 1911: Coordinator syncs node 6
+INFO:root:Iteration 1913: Node 0 notify False Local Violation
+INFO:root:Iteration 1913: Node 5 notify False Local Violation
+INFO:root:Iteration 1913: 2 nodes with violation
+INFO:root:Iteration 1913: Coordinator about to ask 1 nodes for statistics. Nodes [9]
+INFO:root:Iteration 1913: Coordinator asks node 9 for statistics
+INFO:root:Iteration 1913: Node 9 returns to coordinator with statistics
+INFO:root:Iteration 1913: Coordinator about to ask 1 nodes for statistics. Nodes [2]
+INFO:root:Iteration 1913: Coordinator asks node 2 for statistics
+INFO:root:Iteration 1913: Node 2 returns to coordinator with statistics
+INFO:root:Iteration 1913: Coordinator about to ask 1 nodes for statistics. Nodes [3]
+INFO:root:Iteration 1913: Coordinator asks node 3 for statistics
+INFO:root:Iteration 1913: Node 3 returns to coordinator with statistics
+INFO:root:Iteration 1913: used 5 nodes in lazy sync. Nodes [0 5 9 2 3]
+INFO:root:Iteration 1913: Coordinator about to sync 5 nodes. Nodes [0 5 9 2 3]
+INFO:root:Iteration 1913: Coordinator syncs node 0
+INFO:root:Iteration 1913: Coordinator syncs node 5
+INFO:root:Iteration 1913: Coordinator syncs node 9
+INFO:root:Iteration 1913: Coordinator syncs node 2
+INFO:root:Iteration 1913: Coordinator syncs node 3
+INFO:root:Iteration 1914: Node 9 notify False Local Violation
+INFO:root:Iteration 1914: 1 nodes with violation
+INFO:root:Iteration 1914: Coordinator about to ask 1 nodes for statistics. Nodes [6]
+INFO:root:Iteration 1914: Coordinator asks node 6 for statistics
+INFO:root:Iteration 1914: Node 6 returns to coordinator with statistics
+INFO:root:Iteration 1914: used 2 nodes in lazy sync. Nodes [9 6]
+INFO:root:Iteration 1914: Coordinator about to sync 2 nodes. Nodes [9 6]
+INFO:root:Iteration 1914: Coordinator syncs node 9
+INFO:root:Iteration 1914: Coordinator syncs node 6
+INFO:root:Iteration 1915: Node 6 notify False Local Violation
+INFO:root:Iteration 1915: Node 9 notify False Local Violation
+INFO:root:Iteration 1915: 2 nodes with violation
+INFO:root:Iteration 1915: Coordinator about to ask 1 nodes for statistics. Nodes [7]
+INFO:root:Iteration 1915: Coordinator asks node 7 for statistics
+INFO:root:Iteration 1915: Node 7 returns to coordinator with statistics
+INFO:root:Iteration 1915: Coordinator about to ask 1 nodes for statistics. Nodes [8]
+INFO:root:Iteration 1915: Coordinator asks node 8 for statistics
+INFO:root:Iteration 1915: Node 8 returns to coordinator with statistics
+INFO:root:Iteration 1915: used 4 nodes in lazy sync. Nodes [6 9 7 8]
+INFO:root:Iteration 1915: Coordinator about to sync 4 nodes. Nodes [6 9 7 8]
+INFO:root:Iteration 1915: Coordinator syncs node 6
+INFO:root:Iteration 1915: Coordinator syncs node 9
+INFO:root:Iteration 1915: Coordinator syncs node 7
+INFO:root:Iteration 1915: Coordinator syncs node 8
+INFO:root:Iteration 1916: Node 4 notify False Local Violation
+INFO:root:Iteration 1916: 1 nodes with violation
+INFO:root:Iteration 1916: Coordinator about to ask 1 nodes for statistics. Nodes [1]
+INFO:root:Iteration 1916: Coordinator asks node 1 for statistics
+INFO:root:Iteration 1916: Node 1 returns to coordinator with statistics
+INFO:root:Iteration 1916: used 2 nodes in lazy sync. Nodes [4 1]
+INFO:root:Iteration 1916: Coordinator about to sync 2 nodes. Nodes [4 1]
+INFO:root:Iteration 1916: Coordinator syncs node 4
+INFO:root:Iteration 1916: Coordinator syncs node 1
+INFO:root:Iteration 1917: Node 2 notify False Local Violation
+INFO:root:Iteration 1917: Node 3 notify False Local Violation
+INFO:root:Iteration 1917: Node 8 notify False Local Violation
+INFO:root:Iteration 1917: 3 nodes with violation
+INFO:root:Iteration 1917: Coordinator about to ask 1 nodes for statistics. Nodes [5]
+INFO:root:Iteration 1917: Coordinator asks node 5 for statistics
+INFO:root:Iteration 1917: Node 5 returns to coordinator with statistics
+INFO:root:Iteration 1917: Coordinator about to ask 1 nodes for statistics. Nodes [7]
+INFO:root:Iteration 1917: Coordinator asks node 7 for statistics
+INFO:root:Iteration 1917: Node 7 returns to coordinator with statistics
+INFO:root:Iteration 1917: fallback to eager sync from lazy sync !!!!!!!!!!!!!!!!!!
+INFO:root:Iteration 1917: Coordinator about to ask 5 nodes for statistics. Nodes [0, 1, 4, 6, 9]
+INFO:root:Iteration 1917: Coordinator asks node 0 for statistics
+INFO:root:Iteration 1917: Node 0 returns to coordinator with statistics
+INFO:root:Iteration 1917: Coordinator asks node 1 for statistics
+INFO:root:Iteration 1917: Node 1 returns to coordinator with statistics
+INFO:root:Iteration 1917: Coordinator asks node 4 for statistics
+INFO:root:Iteration 1917: Node 4 returns to coordinator with statistics
+INFO:root:Iteration 1917: Coordinator asks node 6 for statistics
+INFO:root:Iteration 1917: Node 6 returns to coordinator with statistics
+INFO:root:Iteration 1917: Coordinator asks node 9 for statistics
+INFO:root:Iteration 1917: Node 9 returns to coordinator with statistics
+INFO:root:Iteration 1917: About to sync the value [11.97699935]
+INFO:root:Iteration 1917: About to sync the thresholds [-2.05583847],[0.94416153]
+INFO:root:Iteration 1917: Update adaptive domain [(8.976999345379337, 14.976999345379337)]
+INFO:root:Iteration 1917: Minimal eigenvalue of hessian in the domain: -0.9999999999856921
+INFO:root:Iteration 1917: Maximal eigenvalue of hessian in the domain: 0.9999999999997161
+INFO:root:Optimization time: 0.02529910000000024
+INFO:root:Use g,h convex diff with min eigenvalue -0.9999999999856921
+INFO:root:Iteration 1917: Coordinator about to sync 10 nodes. Nodes [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+INFO:root:Iteration 1917: Coordinator syncs node 0
+INFO:root:Iteration 1917: Coordinator syncs node 1
+INFO:root:Iteration 1917: Coordinator syncs node 2
+INFO:root:Iteration 1917: Coordinator syncs node 3
+INFO:root:Iteration 1917: Coordinator syncs node 4
+INFO:root:Iteration 1917: Coordinator syncs node 5
+INFO:root:Iteration 1917: Coordinator syncs node 6
+INFO:root:Iteration 1917: Coordinator syncs node 7
+INFO:root:Iteration 1917: Coordinator syncs node 8
+INFO:root:Iteration 1917: Coordinator syncs node 9
+INFO:root:Iteration 2070: Node 5 notify False Local Violation
+INFO:root:Iteration 2070: 1 nodes with violation
+INFO:root:Iteration 2070: Coordinator about to ask 1 nodes for statistics. Nodes [0]
+INFO:root:Iteration 2070: Coordinator asks node 0 for statistics
+INFO:root:Iteration 2070: Node 0 returns to coordinator with statistics
+INFO:root:Iteration 2070: used 2 nodes in lazy sync. Nodes [5 0]
+INFO:root:Iteration 2070: Coordinator about to sync 2 nodes. Nodes [5 0]
+INFO:root:Iteration 2070: Coordinator syncs node 5
+INFO:root:Iteration 2070: Coordinator syncs node 0
+INFO:root:Iteration 2071: Node 8 notify False Local Violation
+INFO:root:Iteration 2071: 1 nodes with violation
+INFO:root:Iteration 2071: Coordinator about to ask 1 nodes for statistics. Nodes [1]
+INFO:root:Iteration 2071: Coordinator asks node 1 for statistics
+INFO:root:Iteration 2071: Node 1 returns to coordinator with statistics
+INFO:root:Iteration 2071: used 2 nodes in lazy sync. Nodes [8 1]
+INFO:root:Iteration 2071: Coordinator about to sync 2 nodes. Nodes [8 1]
+INFO:root:Iteration 2071: Coordinator syncs node 8
+INFO:root:Iteration 2071: Coordinator syncs node 1
+INFO:root:Iteration 2072: Node 0 notify False Local Violation
+INFO:root:Iteration 2072: Node 1 notify False Local Violation
+INFO:root:Iteration 2072: 2 nodes with violation
+INFO:root:Iteration 2072: Coordinator about to ask 1 nodes for statistics. Nodes [2]
+INFO:root:Iteration 2072: Coordinator asks node 2 for statistics
+INFO:root:Iteration 2072: Node 2 returns to coordinator with statistics
+INFO:root:Iteration 2072: used 3 nodes in lazy sync. Nodes [0 1 2]
+INFO:root:Iteration 2072: Coordinator about to sync 3 nodes. Nodes [0 1 2]
+INFO:root:Iteration 2072: Coordinator syncs node 0
+INFO:root:Iteration 2072: Coordinator syncs node 1
+INFO:root:Iteration 2072: Coordinator syncs node 2
+INFO:root:Iteration 2073: Node 1 notify False Local Violation
+INFO:root:Iteration 2073: 1 nodes with violation
+INFO:root:Iteration 2073: Coordinator about to ask 1 nodes for statistics. Nodes [3]
+INFO:root:Iteration 2073: Coordinator asks node 3 for statistics
+INFO:root:Iteration 2073: Node 3 returns to coordinator with statistics
+INFO:root:Iteration 2073: used 2 nodes in lazy sync. Nodes [1 3]
+INFO:root:Iteration 2073: Coordinator about to sync 2 nodes. Nodes [1 3]
+INFO:root:Iteration 2073: Coordinator syncs node 1
+INFO:root:Iteration 2073: Coordinator syncs node 3
+INFO:root:Iteration 2074: Node 8 notify False Local Violation
+INFO:root:Iteration 2074: 1 nodes with violation
+INFO:root:Iteration 2074: Coordinator about to ask 1 nodes for statistics. Nodes [4]
+INFO:root:Iteration 2074: Coordinator asks node 4 for statistics
+INFO:root:Iteration 2074: Node 4 returns to coordinator with statistics
+INFO:root:Iteration 2074: used 2 nodes in lazy sync. Nodes [8 4]
+INFO:root:Iteration 2074: Coordinator about to sync 2 nodes. Nodes [8 4]
+INFO:root:Iteration 2074: Coordinator syncs node 8
+INFO:root:Iteration 2074: Coordinator syncs node 4
+INFO:root:Iteration 2075: Node 2 notify False Local Violation
+INFO:root:Iteration 2075: 1 nodes with violation
+INFO:root:Iteration 2075: Coordinator about to ask 1 nodes for statistics. Nodes [6]
+INFO:root:Iteration 2075: Coordinator asks node 6 for statistics
+INFO:root:Iteration 2075: Node 6 returns to coordinator with statistics
+INFO:root:Iteration 2075: used 2 nodes in lazy sync. Nodes [2 6]
+INFO:root:Iteration 2075: Coordinator about to sync 2 nodes. Nodes [2 6]
+INFO:root:Iteration 2075: Coordinator syncs node 2
+INFO:root:Iteration 2075: Coordinator syncs node 6
+INFO:root:Iteration 2076: Node 6 notify False Local Violation
+INFO:root:Iteration 2076: 1 nodes with violation
+INFO:root:Iteration 2076: Coordinator about to ask 1 nodes for statistics. Nodes [7]
+INFO:root:Iteration 2076: Coordinator asks node 7 for statistics
+INFO:root:Iteration 2076: Node 7 returns to coordinator with statistics
+INFO:root:Iteration 2076: used 2 nodes in lazy sync. Nodes [6 7]
+INFO:root:Iteration 2076: Coordinator about to sync 2 nodes. Nodes [6 7]
+INFO:root:Iteration 2076: Coordinator syncs node 6
+INFO:root:Iteration 2076: Coordinator syncs node 7
+INFO:root:Iteration 2077: Node 0 notify False Local Violation
+INFO:root:Iteration 2077: Node 2 notify False Local Violation
+INFO:root:Iteration 2077: Node 3 notify False Local Violation
+INFO:root:Iteration 2077: 3 nodes with violation
+INFO:root:Iteration 2077: Coordinator about to ask 1 nodes for statistics. Nodes [9]
+INFO:root:Iteration 2077: Coordinator asks node 9 for statistics
+INFO:root:Iteration 2077: Node 9 returns to coordinator with statistics
+INFO:root:Iteration 2077: used 4 nodes in lazy sync. Nodes [0 2 3 9]
+INFO:root:Iteration 2077: Coordinator about to sync 4 nodes. Nodes [0 2 3 9]
+INFO:root:Iteration 2077: Coordinator syncs node 0
+INFO:root:Iteration 2077: Coordinator syncs node 2
+INFO:root:Iteration 2077: Coordinator syncs node 3
+INFO:root:Iteration 2077: Coordinator syncs node 9
+INFO:root:Iteration 2078: Node 0 notify False Local Violation
+INFO:root:Iteration 2078: Node 2 notify False Local Violation
+INFO:root:Iteration 2078: Node 3 notify False Local Violation
+INFO:root:Iteration 2078: Node 7 notify False Local Violation
+INFO:root:Iteration 2078: 4 nodes with violation
+INFO:root:Iteration 2078: Coordinator about to ask 1 nodes for statistics. Nodes [4]
+INFO:root:Iteration 2078: Coordinator asks node 4 for statistics
+INFO:root:Iteration 2078: Node 4 returns to coordinator with statistics
+INFO:root:Iteration 2078: used 5 nodes in lazy sync. Nodes [0 2 3 7 4]
+INFO:root:Iteration 2078: Coordinator about to sync 5 nodes. Nodes [0 2 3 7 4]
+INFO:root:Iteration 2078: Coordinator syncs node 0
+INFO:root:Iteration 2078: Coordinator syncs node 2
+INFO:root:Iteration 2078: Coordinator syncs node 3
+INFO:root:Iteration 2078: Coordinator syncs node 7
+INFO:root:Iteration 2078: Coordinator syncs node 4
+INFO:root:Iteration 2079: Node 0 notify False Local Violation
+INFO:root:Iteration 2079: Node 3 notify False Local Violation
+INFO:root:Iteration 2079: Node 4 notify False Local Violation
+INFO:root:Iteration 2079: Node 8 notify False Local Violation
+INFO:root:Iteration 2079: 4 nodes with violation
+INFO:root:Iteration 2079: Coordinator about to ask 1 nodes for statistics. Nodes [5]
+INFO:root:Iteration 2079: Coordinator asks node 5 for statistics
+INFO:root:Iteration 2079: Node 5 returns to coordinator with statistics
+INFO:root:Iteration 2079: fallback to eager sync from lazy sync !!!!!!!!!!!!!!!!!!
+INFO:root:Iteration 2079: Coordinator about to ask 5 nodes for statistics. Nodes [1, 2, 6, 7, 9]
+INFO:root:Iteration 2079: Coordinator asks node 1 for statistics
+INFO:root:Iteration 2079: Node 1 returns to coordinator with statistics
+INFO:root:Iteration 2079: Coordinator asks node 2 for statistics
+INFO:root:Iteration 2079: Node 2 returns to coordinator with statistics
+INFO:root:Iteration 2079: Coordinator asks node 6 for statistics
+INFO:root:Iteration 2079: Node 6 returns to coordinator with statistics
+INFO:root:Iteration 2079: Coordinator asks node 7 for statistics
+INFO:root:Iteration 2079: Node 7 returns to coordinator with statistics
+INFO:root:Iteration 2079: Coordinator asks node 9 for statistics
+INFO:root:Iteration 2079: Node 9 returns to coordinator with statistics
+INFO:root:Iteration 2079: About to sync the value [12.99355471]
+INFO:root:Iteration 2079: About to sync the thresholds [-1.08569041],[1.91430959]
+INFO:root:Iteration 2079: Update adaptive domain [(9.993554706821623, 15.993554706821623)]
+INFO:root:Iteration 2079: Minimal eigenvalue of hessian in the domain: -0.9999999711826947
+INFO:root:Iteration 2079: Maximal eigenvalue of hessian in the domain: 0.9999999797915473
+INFO:root:Optimization time: 0.023340399999999928
+INFO:root:Use g,h convex diff with min eigenvalue -0.9999999711826947
+INFO:root:Iteration 2079: Coordinator about to sync 10 nodes. Nodes [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+INFO:root:Iteration 2079: Coordinator syncs node 0
+INFO:root:Iteration 2079: Coordinator syncs node 1
+INFO:root:Iteration 2079: Coordinator syncs node 2
+INFO:root:Iteration 2079: Coordinator syncs node 3
+INFO:root:Iteration 2079: Coordinator syncs node 4
+INFO:root:Iteration 2079: Coordinator syncs node 5
+INFO:root:Iteration 2079: Coordinator syncs node 6
+INFO:root:Iteration 2079: Coordinator syncs node 7
+INFO:root:Iteration 2079: Coordinator syncs node 8
+INFO:root:Iteration 2079: Coordinator syncs node 9
+INFO:root:Iteration 2282: Node 5 notify False Local Violation
+INFO:root:Iteration 2282: 1 nodes with violation
+INFO:root:Iteration 2282: Coordinator about to ask 1 nodes for statistics. Nodes [0]
+INFO:root:Iteration 2282: Coordinator asks node 0 for statistics
+INFO:root:Iteration 2282: Node 0 returns to coordinator with statistics
+INFO:root:Iteration 2282: used 2 nodes in lazy sync. Nodes [5 0]
+INFO:root:Iteration 2282: Coordinator about to sync 2 nodes. Nodes [5 0]
+INFO:root:Iteration 2282: Coordinator syncs node 5
+INFO:root:Iteration 2282: Coordinator syncs node 0
+INFO:root:Iteration 2291: Node 9 notify False Local Violation
+INFO:root:Iteration 2291: 1 nodes with violation
+INFO:root:Iteration 2291: Coordinator about to ask 1 nodes for statistics. Nodes [1]
+INFO:root:Iteration 2291: Coordinator asks node 1 for statistics
+INFO:root:Iteration 2291: Node 1 returns to coordinator with statistics
+INFO:root:Iteration 2291: used 2 nodes in lazy sync. Nodes [9 1]
+INFO:root:Iteration 2291: Coordinator about to sync 2 nodes. Nodes [9 1]
+INFO:root:Iteration 2291: Coordinator syncs node 9
+INFO:root:Iteration 2291: Coordinator syncs node 1
+INFO:root:Iteration 2292: Node 1 notify False Local Violation
+INFO:root:Iteration 2292: Node 4 notify False Local Violation
+INFO:root:Iteration 2292: Node 9 notify False Local Violation
+INFO:root:Iteration 2292: 3 nodes with violation
+INFO:root:Iteration 2292: Coordinator about to ask 1 nodes for statistics. Nodes [2]
+INFO:root:Iteration 2292: Coordinator asks node 2 for statistics
+INFO:root:Iteration 2292: Node 2 returns to coordinator with statistics
+INFO:root:Iteration 2292: Coordinator about to ask 1 nodes for statistics. Nodes [3]
+INFO:root:Iteration 2292: Coordinator asks node 3 for statistics
+INFO:root:Iteration 2292: Node 3 returns to coordinator with statistics
+INFO:root:Iteration 2292: used 5 nodes in lazy sync. Nodes [1 4 9 2 3]
+INFO:root:Iteration 2292: Coordinator about to sync 5 nodes. Nodes [1 4 9 2 3]
+INFO:root:Iteration 2292: Coordinator syncs node 1
+INFO:root:Iteration 2292: Coordinator syncs node 4
+INFO:root:Iteration 2292: Coordinator syncs node 9
+INFO:root:Iteration 2292: Coordinator syncs node 2
+INFO:root:Iteration 2292: Coordinator syncs node 3
+INFO:root:Iteration 2293: Node 2 notify False Local Violation
+INFO:root:Iteration 2293: Node 3 notify False Local Violation
+INFO:root:Iteration 2293: 2 nodes with violation
+INFO:root:Iteration 2293: Coordinator about to ask 1 nodes for statistics. Nodes [6]
+INFO:root:Iteration 2293: Coordinator asks node 6 for statistics
+INFO:root:Iteration 2293: Node 6 returns to coordinator with statistics
+INFO:root:Iteration 2293: used 3 nodes in lazy sync. Nodes [2 3 6]
+INFO:root:Iteration 2293: Coordinator about to sync 3 nodes. Nodes [2 3 6]
+INFO:root:Iteration 2293: Coordinator syncs node 2
+INFO:root:Iteration 2293: Coordinator syncs node 3
+INFO:root:Iteration 2293: Coordinator syncs node 6
+INFO:root:Iteration 2295: Node 2 notify False Local Violation
+INFO:root:Iteration 2295: Node 3 notify False Local Violation
+INFO:root:Iteration 2295: Node 4 notify False Local Violation
+INFO:root:Iteration 2295: Node 9 notify False Local Violation
+INFO:root:Iteration 2295: 4 nodes with violation
+INFO:root:Iteration 2295: Coordinator about to ask 1 nodes for statistics. Nodes [7]
+INFO:root:Iteration 2295: Coordinator asks node 7 for statistics
+INFO:root:Iteration 2295: Node 7 returns to coordinator with statistics
+INFO:root:Iteration 2295: used 5 nodes in lazy sync. Nodes [2 3 4 9 7]
+INFO:root:Iteration 2295: Coordinator about to sync 5 nodes. Nodes [2 3 4 9 7]
+INFO:root:Iteration 2295: Coordinator syncs node 2
+INFO:root:Iteration 2295: Coordinator syncs node 3
+INFO:root:Iteration 2295: Coordinator syncs node 4
+INFO:root:Iteration 2295: Coordinator syncs node 9
+INFO:root:Iteration 2295: Coordinator syncs node 7
+INFO:root:Iteration 2296: Node 5 notify False Local Violation
+INFO:root:Iteration 2296: Node 7 notify False Local Violation
+INFO:root:Iteration 2296: 2 nodes with violation
+INFO:root:Iteration 2296: Coordinator about to ask 1 nodes for statistics. Nodes [8]
+INFO:root:Iteration 2296: Coordinator asks node 8 for statistics
+INFO:root:Iteration 2296: Node 8 returns to coordinator with statistics
+INFO:root:Iteration 2296: used 3 nodes in lazy sync. Nodes [5 7 8]
+INFO:root:Iteration 2296: Coordinator about to sync 3 nodes. Nodes [5 7 8]
+INFO:root:Iteration 2296: Coordinator syncs node 5
+INFO:root:Iteration 2296: Coordinator syncs node 7
+INFO:root:Iteration 2296: Coordinator syncs node 8
+INFO:root:Iteration 2297: Node 0 notify False Local Violation
+INFO:root:Iteration 2297: Node 2 notify False Local Violation
+INFO:root:Iteration 2297: 2 nodes with violation
+INFO:root:Iteration 2297: Coordinator about to ask 1 nodes for statistics. Nodes [6]
+INFO:root:Iteration 2297: Coordinator asks node 6 for statistics
+INFO:root:Iteration 2297: Node 6 returns to coordinator with statistics
+INFO:root:Iteration 2297: Coordinator about to ask 1 nodes for statistics. Nodes [8]
+INFO:root:Iteration 2297: Coordinator asks node 8 for statistics
+INFO:root:Iteration 2297: Node 8 returns to coordinator with statistics
+INFO:root:Iteration 2297: used 4 nodes in lazy sync. Nodes [0 2 6 8]
+INFO:root:Iteration 2297: Coordinator about to sync 4 nodes. Nodes [0 2 6 8]
+INFO:root:Iteration 2297: Coordinator syncs node 0
+INFO:root:Iteration 2297: Coordinator syncs node 2
+INFO:root:Iteration 2297: Coordinator syncs node 6
+INFO:root:Iteration 2297: Coordinator syncs node 8
+INFO:root:Iteration 2298: Node 0 notify False Local Violation
+INFO:root:Iteration 2298: Node 2 notify False Local Violation
+INFO:root:Iteration 2298: Node 3 notify False Local Violation
+INFO:root:Iteration 2298: Node 4 notify False Local Violation
+INFO:root:Iteration 2298: Node 5 notify False Local Violation
+INFO:root:Iteration 2298: Node 6 notify False Local Violation
+INFO:root:Iteration 2298: Node 8 notify False Local Violation
+INFO:root:Iteration 2298: 7 nodes with violation
+INFO:root:Iteration 2298: fallback to eager sync from lazy sync !!!!!!!!!!!!!!!!!!
+INFO:root:Iteration 2298: Coordinator about to ask 3 nodes for statistics. Nodes [1, 7, 9]
+INFO:root:Iteration 2298: Coordinator asks node 1 for statistics
+INFO:root:Iteration 2298: Node 1 returns to coordinator with statistics
+INFO:root:Iteration 2298: Coordinator asks node 7 for statistics
+INFO:root:Iteration 2298: Node 7 returns to coordinator with statistics
+INFO:root:Iteration 2298: Coordinator asks node 9 for statistics
+INFO:root:Iteration 2298: Node 9 returns to coordinator with statistics
+INFO:root:Iteration 2298: About to sync the value [14.36284674]
+INFO:root:Iteration 2298: About to sync the thresholds [-0.52535778],[2.47464222]
+INFO:root:Iteration 2298: Update adaptive domain [(11.362846736426409, 17.36284673642641)]
+INFO:root:Iteration 2298: Minimal eigenvalue of hessian in the domain: -0.9999999999951571
+INFO:root:Iteration 2298: Maximal eigenvalue of hessian in the domain: 0.9333102009270879
+INFO:root:Optimization time: 0.022891400000000228
+INFO:root:Use g,h convex diff with min eigenvalue -0.9999999999951571
+INFO:root:Iteration 2298: Coordinator about to sync 10 nodes. Nodes [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+INFO:root:Iteration 2298: Coordinator syncs node 0
+INFO:root:Iteration 2298: Coordinator syncs node 1
+INFO:root:Iteration 2298: Coordinator syncs node 2
+INFO:root:Iteration 2298: Coordinator syncs node 3
+INFO:root:Iteration 2298: Coordinator syncs node 4
+INFO:root:Iteration 2298: Coordinator syncs node 5
+INFO:root:Iteration 2298: Coordinator syncs node 6
+INFO:root:Iteration 2298: Coordinator syncs node 7
+INFO:root:Iteration 2298: Coordinator syncs node 8
+INFO:root:Iteration 2298: Coordinator syncs node 9
+INFO:root:Iteration 2525: Node 1 notify False Local Violation
+INFO:root:Iteration 2525: 1 nodes with violation
+INFO:root:Iteration 2525: Coordinator about to ask 1 nodes for statistics. Nodes [0]
+INFO:root:Iteration 2525: Coordinator asks node 0 for statistics
+INFO:root:Iteration 2525: Node 0 returns to coordinator with statistics
+INFO:root:Iteration 2525: used 2 nodes in lazy sync. Nodes [1 0]
+INFO:root:Iteration 2525: Coordinator about to sync 2 nodes. Nodes [1 0]
+INFO:root:Iteration 2525: Coordinator syncs node 1
+INFO:root:Iteration 2525: Coordinator syncs node 0
+INFO:root:Iteration 2526: Node 8 notify False Local Violation
+INFO:root:Iteration 2526: 1 nodes with violation
+INFO:root:Iteration 2526: Coordinator about to ask 1 nodes for statistics. Nodes [2]
+INFO:root:Iteration 2526: Coordinator asks node 2 for statistics
+INFO:root:Iteration 2526: Node 2 returns to coordinator with statistics
+INFO:root:Iteration 2526: used 2 nodes in lazy sync. Nodes [8 2]
+INFO:root:Iteration 2526: Coordinator about to sync 2 nodes. Nodes [8 2]
+INFO:root:Iteration 2526: Coordinator syncs node 8
+INFO:root:Iteration 2526: Coordinator syncs node 2
+INFO:root:Iteration 2531: Node 2 notify False Local Violation
+INFO:root:Iteration 2531: 1 nodes with violation
+INFO:root:Iteration 2531: Coordinator about to ask 1 nodes for statistics. Nodes [3]
+INFO:root:Iteration 2531: Coordinator asks node 3 for statistics
+INFO:root:Iteration 2531: Node 3 returns to coordinator with statistics
+INFO:root:Iteration 2531: used 2 nodes in lazy sync. Nodes [2 3]
+INFO:root:Iteration 2531: Coordinator about to sync 2 nodes. Nodes [2 3]
+INFO:root:Iteration 2531: Coordinator syncs node 2
+INFO:root:Iteration 2531: Coordinator syncs node 3
+INFO:root:Iteration 2533: Node 3 notify False Local Violation
+INFO:root:Iteration 2533: Node 7 notify False Local Violation
+INFO:root:Iteration 2533: Node 9 notify False Local Violation
+INFO:root:Iteration 2533: 3 nodes with violation
+INFO:root:Iteration 2533: Coordinator about to ask 1 nodes for statistics. Nodes [4]
+INFO:root:Iteration 2533: Coordinator asks node 4 for statistics
+INFO:root:Iteration 2533: Node 4 returns to coordinator with statistics
+INFO:root:Iteration 2533: used 4 nodes in lazy sync. Nodes [3 7 9 4]
+INFO:root:Iteration 2533: Coordinator about to sync 4 nodes. Nodes [3 7 9 4]
+INFO:root:Iteration 2533: Coordinator syncs node 3
+INFO:root:Iteration 2533: Coordinator syncs node 7
+INFO:root:Iteration 2533: Coordinator syncs node 9
+INFO:root:Iteration 2533: Coordinator syncs node 4
+INFO:root:Iteration 2534: Node 2 notify False Local Violation
+INFO:root:Iteration 2534: Node 4 notify False Local Violation
+INFO:root:Iteration 2534: Node 7 notify False Local Violation
+INFO:root:Iteration 2534: 3 nodes with violation
+INFO:root:Iteration 2534: Coordinator about to ask 1 nodes for statistics. Nodes [5]
+INFO:root:Iteration 2534: Coordinator asks node 5 for statistics
+INFO:root:Iteration 2534: Node 5 returns to coordinator with statistics
+INFO:root:Iteration 2534: Coordinator about to ask 1 nodes for statistics. Nodes [6]
+INFO:root:Iteration 2534: Coordinator asks node 6 for statistics
+INFO:root:Iteration 2534: Node 6 returns to coordinator with statistics
+INFO:root:Iteration 2534: fallback to eager sync from lazy sync !!!!!!!!!!!!!!!!!!
+INFO:root:Iteration 2534: Coordinator about to ask 5 nodes for statistics. Nodes [0, 1, 3, 8, 9]
+INFO:root:Iteration 2534: Coordinator asks node 0 for statistics
+INFO:root:Iteration 2534: Node 0 returns to coordinator with statistics
+INFO:root:Iteration 2534: Coordinator asks node 1 for statistics
+INFO:root:Iteration 2534: Node 1 returns to coordinator with statistics
+INFO:root:Iteration 2534: Coordinator asks node 3 for statistics
+INFO:root:Iteration 2534: Node 3 returns to coordinator with statistics
+INFO:root:Iteration 2534: Coordinator asks node 8 for statistics
+INFO:root:Iteration 2534: Node 8 returns to coordinator with statistics
+INFO:root:Iteration 2534: Coordinator asks node 9 for statistics
+INFO:root:Iteration 2534: Node 9 returns to coordinator with statistics
+INFO:root:Iteration 2534: About to sync the value [15.87991385]
+INFO:root:Iteration 2534: About to sync the thresholds [-1.67110449],[1.32889551]
+INFO:root:Iteration 2534: Update adaptive domain [(12.8799138468015, 18.8799138468015)]
+INFO:root:Iteration 2534: Minimal eigenvalue of hessian in the domain: -0.9999997465541057
+INFO:root:Iteration 2534: Maximal eigenvalue of hessian in the domain: 0.9999999999994428
+INFO:root:Optimization time: 0.020883299999999938
+INFO:root:Use g,h convex diff with min eigenvalue -0.9999997465541057
+INFO:root:Iteration 2534: Coordinator about to sync 10 nodes. Nodes [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+INFO:root:Iteration 2534: Coordinator syncs node 0
+INFO:root:Iteration 2534: Coordinator syncs node 1
+INFO:root:Iteration 2534: Coordinator syncs node 2
+INFO:root:Iteration 2534: Coordinator syncs node 3
+INFO:root:Iteration 2534: Coordinator syncs node 4
+INFO:root:Iteration 2534: Coordinator syncs node 5
+INFO:root:Iteration 2534: Coordinator syncs node 6
+INFO:root:Iteration 2534: Coordinator syncs node 7
+INFO:root:Iteration 2534: Coordinator syncs node 8
+INFO:root:Iteration 2534: Coordinator syncs node 9
+INFO:root:Iteration 2683: Node 0 notify False Local Violation
+INFO:root:Iteration 2683: 1 nodes with violation
+INFO:root:Iteration 2683: Coordinator about to ask 1 nodes for statistics. Nodes [1]
+INFO:root:Iteration 2683: Coordinator asks node 1 for statistics
+INFO:root:Iteration 2683: Node 1 returns to coordinator with statistics
+INFO:root:Iteration 2683: used 2 nodes in lazy sync. Nodes [0 1]
+INFO:root:Iteration 2683: Coordinator about to sync 2 nodes. Nodes [0 1]
+INFO:root:Iteration 2683: Coordinator syncs node 0
+INFO:root:Iteration 2683: Coordinator syncs node 1
+INFO:root:Iteration 2684: Node 1 notify False Local Violation
+INFO:root:Iteration 2684: 1 nodes with violation
+INFO:root:Iteration 2684: Coordinator about to ask 1 nodes for statistics. Nodes [2]
+INFO:root:Iteration 2684: Coordinator asks node 2 for statistics
+INFO:root:Iteration 2684: Node 2 returns to coordinator with statistics
+INFO:root:Iteration 2684: used 2 nodes in lazy sync. Nodes [1 2]
+INFO:root:Iteration 2684: Coordinator about to sync 2 nodes. Nodes [1 2]
+INFO:root:Iteration 2684: Coordinator syncs node 1
+INFO:root:Iteration 2684: Coordinator syncs node 2
+INFO:root:Iteration 2687: Node 3 notify False Local Violation
+INFO:root:Iteration 2687: 1 nodes with violation
+INFO:root:Iteration 2687: Coordinator about to ask 1 nodes for statistics. Nodes [4]
+INFO:root:Iteration 2687: Coordinator asks node 4 for statistics
+INFO:root:Iteration 2687: Node 4 returns to coordinator with statistics
+INFO:root:Iteration 2687: Coordinator about to ask 1 nodes for statistics. Nodes [5]
+INFO:root:Iteration 2687: Coordinator asks node 5 for statistics
+INFO:root:Iteration 2687: Node 5 returns to coordinator with statistics
+INFO:root:Iteration 2687: used 3 nodes in lazy sync. Nodes [3 4 5]
+INFO:root:Iteration 2687: Coordinator about to sync 3 nodes. Nodes [3 4 5]
+INFO:root:Iteration 2687: Coordinator syncs node 3
+INFO:root:Iteration 2687: Coordinator syncs node 4
+INFO:root:Iteration 2687: Coordinator syncs node 5
+INFO:root:Iteration 2689: Node 4 notify False Local Violation
+INFO:root:Iteration 2689: 1 nodes with violation
+INFO:root:Iteration 2689: Coordinator about to ask 1 nodes for statistics. Nodes [6]
+INFO:root:Iteration 2689: Coordinator asks node 6 for statistics
+INFO:root:Iteration 2689: Node 6 returns to coordinator with statistics
+INFO:root:Iteration 2689: used 2 nodes in lazy sync. Nodes [4 6]
+INFO:root:Iteration 2689: Coordinator about to sync 2 nodes. Nodes [4 6]
+INFO:root:Iteration 2689: Coordinator syncs node 4
+INFO:root:Iteration 2689: Coordinator syncs node 6
+INFO:root:Iteration 2691: Node 9 notify False Local Violation
+INFO:root:Iteration 2691: 1 nodes with violation
+INFO:root:Iteration 2691: Coordinator about to ask 1 nodes for statistics. Nodes [7]
+INFO:root:Iteration 2691: Coordinator asks node 7 for statistics
+INFO:root:Iteration 2691: Node 7 returns to coordinator with statistics
+INFO:root:Iteration 2691: used 2 nodes in lazy sync. Nodes [9 7]
+INFO:root:Iteration 2691: Coordinator about to sync 2 nodes. Nodes [9 7]
+INFO:root:Iteration 2691: Coordinator syncs node 9
+INFO:root:Iteration 2691: Coordinator syncs node 7
+INFO:root:Iteration 2692: Node 0 notify False Local Violation
+INFO:root:Iteration 2692: 1 nodes with violation
+INFO:root:Iteration 2692: Coordinator about to ask 1 nodes for statistics. Nodes [8]
+INFO:root:Iteration 2692: Coordinator asks node 8 for statistics
+INFO:root:Iteration 2692: Node 8 returns to coordinator with statistics
+INFO:root:Iteration 2692: used 2 nodes in lazy sync. Nodes [0 8]
+INFO:root:Iteration 2692: Coordinator about to sync 2 nodes. Nodes [0 8]
+INFO:root:Iteration 2692: Coordinator syncs node 0
+INFO:root:Iteration 2692: Coordinator syncs node 8
+INFO:root:Iteration 2693: Node 3 notify False Local Violation
+INFO:root:Iteration 2693: 1 nodes with violation
+INFO:root:Iteration 2693: Coordinator about to ask 1 nodes for statistics. Nodes [2]
+INFO:root:Iteration 2693: Coordinator asks node 2 for statistics
+INFO:root:Iteration 2693: Node 2 returns to coordinator with statistics
+INFO:root:Iteration 2693: used 2 nodes in lazy sync. Nodes [3 2]
+INFO:root:Iteration 2693: Coordinator about to sync 2 nodes. Nodes [3 2]
+INFO:root:Iteration 2693: Coordinator syncs node 3
+INFO:root:Iteration 2693: Coordinator syncs node 2
+INFO:root:Iteration 2694: Node 2 notify False Local Violation
+INFO:root:Iteration 2694: 1 nodes with violation
+INFO:root:Iteration 2694: Coordinator about to ask 1 nodes for statistics. Nodes [5]
+INFO:root:Iteration 2694: Coordinator asks node 5 for statistics
+INFO:root:Iteration 2694: Node 5 returns to coordinator with statistics
+INFO:root:Iteration 2694: used 2 nodes in lazy sync. Nodes [2 5]
+INFO:root:Iteration 2694: Coordinator about to sync 2 nodes. Nodes [2 5]
+INFO:root:Iteration 2694: Coordinator syncs node 2
+INFO:root:Iteration 2694: Coordinator syncs node 5
+INFO:root:Iteration 2695: Node 2 notify False Local Violation
+INFO:root:Iteration 2695: Node 5 notify False Local Violation
+INFO:root:Iteration 2695: Node 8 notify False Local Violation
+INFO:root:Iteration 2695: 3 nodes with violation
+INFO:root:Iteration 2695: Coordinator about to ask 1 nodes for statistics. Nodes [6]
+INFO:root:Iteration 2695: Coordinator asks node 6 for statistics
+INFO:root:Iteration 2695: Node 6 returns to coordinator with statistics
+INFO:root:Iteration 2695: used 4 nodes in lazy sync. Nodes [2 5 8 6]
+INFO:root:Iteration 2695: Coordinator about to sync 4 nodes. Nodes [2 5 8 6]
+INFO:root:Iteration 2695: Coordinator syncs node 2
+INFO:root:Iteration 2695: Coordinator syncs node 5
+INFO:root:Iteration 2695: Coordinator syncs node 8
+INFO:root:Iteration 2695: Coordinator syncs node 6
+INFO:root:Iteration 2696: Node 2 notify False Local Violation
+INFO:root:Iteration 2696: Node 5 notify False Local Violation
+INFO:root:Iteration 2696: Node 8 notify False Local Violation
+INFO:root:Iteration 2696: 3 nodes with violation
+INFO:root:Iteration 2696: Coordinator about to ask 1 nodes for statistics. Nodes [7]
+INFO:root:Iteration 2696: Coordinator asks node 7 for statistics
+INFO:root:Iteration 2696: Node 7 returns to coordinator with statistics
+INFO:root:Iteration 2696: Coordinator about to ask 1 nodes for statistics. Nodes [9]
+INFO:root:Iteration 2696: Coordinator asks node 9 for statistics
+INFO:root:Iteration 2696: Node 9 returns to coordinator with statistics
+INFO:root:Iteration 2696: used 5 nodes in lazy sync. Nodes [2 5 8 7 9]
+INFO:root:Iteration 2696: Coordinator about to sync 5 nodes. Nodes [2 5 8 7 9]
+INFO:root:Iteration 2696: Coordinator syncs node 2
+INFO:root:Iteration 2696: Coordinator syncs node 5
+INFO:root:Iteration 2696: Coordinator syncs node 8
+INFO:root:Iteration 2696: Coordinator syncs node 7
+INFO:root:Iteration 2696: Coordinator syncs node 9
+INFO:root:Iteration 2697: Node 0 notify False Local Violation
+INFO:root:Iteration 2697: Node 2 notify False Local Violation
+INFO:root:Iteration 2697: Node 3 notify False Local Violation
+INFO:root:Iteration 2697: Node 6 notify False Local Violation
+INFO:root:Iteration 2697: Node 7 notify False Local Violation
+INFO:root:Iteration 2697: Node 8 notify False Local Violation
+INFO:root:Iteration 2697: 6 nodes with violation
+INFO:root:Iteration 2697: fallback to eager sync from lazy sync !!!!!!!!!!!!!!!!!!
+INFO:root:Iteration 2697: Coordinator about to ask 4 nodes for statistics. Nodes [1, 4, 5, 9]
+INFO:root:Iteration 2697: Coordinator asks node 1 for statistics
+INFO:root:Iteration 2697: Node 1 returns to coordinator with statistics
+INFO:root:Iteration 2697: Coordinator asks node 4 for statistics
+INFO:root:Iteration 2697: Node 4 returns to coordinator with statistics
+INFO:root:Iteration 2697: Coordinator asks node 5 for statistics
+INFO:root:Iteration 2697: Node 5 returns to coordinator with statistics
+INFO:root:Iteration 2697: Coordinator asks node 9 for statistics
+INFO:root:Iteration 2697: Node 9 returns to coordinator with statistics
+INFO:root:Iteration 2697: About to sync the value [16.88540038]
+INFO:root:Iteration 2697: About to sync the thresholds [-2.42362671],[0.57637329]
+INFO:root:Iteration 2697: Update adaptive domain [(13.885400376968288, 19.88540037696829)]
+INFO:root:Iteration 2697: Minimal eigenvalue of hessian in the domain: -0.9999999801584862
+INFO:root:Iteration 2697: Maximal eigenvalue of hessian in the domain: 0.999999999875545
+INFO:root:Optimization time: 0.021174000000000248
+INFO:root:Use g,h convex diff with min eigenvalue -0.9999999801584862
+INFO:root:Iteration 2697: Coordinator about to sync 10 nodes. Nodes [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+INFO:root:Iteration 2697: Coordinator syncs node 0
+INFO:root:Iteration 2697: Coordinator syncs node 1
+INFO:root:Iteration 2697: Coordinator syncs node 2
+INFO:root:Iteration 2697: Coordinator syncs node 3
+INFO:root:Iteration 2697: Coordinator syncs node 4
+INFO:root:Iteration 2697: Coordinator syncs node 5
+INFO:root:Iteration 2697: Coordinator syncs node 6
+INFO:root:Iteration 2697: Coordinator syncs node 7
+INFO:root:Iteration 2697: Coordinator syncs node 8
+INFO:root:Iteration 2697: Coordinator syncs node 9
+INFO:root:Iteration 2902: Node 8 notify False Local Violation
+INFO:root:Iteration 2902: 1 nodes with violation
+INFO:root:Iteration 2902: Coordinator about to ask 1 nodes for statistics. Nodes [0]
+INFO:root:Iteration 2902: Coordinator asks node 0 for statistics
+INFO:root:Iteration 2902: Node 0 returns to coordinator with statistics
+INFO:root:Iteration 2902: used 2 nodes in lazy sync. Nodes [8 0]
+INFO:root:Iteration 2902: Coordinator about to sync 2 nodes. Nodes [8 0]
+INFO:root:Iteration 2902: Coordinator syncs node 8
+INFO:root:Iteration 2902: Coordinator syncs node 0
+INFO:root:Iteration 2906: Node 6 notify False Local Violation
+INFO:root:Iteration 2906: 1 nodes with violation
+INFO:root:Iteration 2906: Coordinator about to ask 1 nodes for statistics. Nodes [1]
+INFO:root:Iteration 2906: Coordinator asks node 1 for statistics
+INFO:root:Iteration 2906: Node 1 returns to coordinator with statistics
+INFO:root:Iteration 2906: used 2 nodes in lazy sync. Nodes [6 1]
+INFO:root:Iteration 2906: Coordinator about to sync 2 nodes. Nodes [6 1]
+INFO:root:Iteration 2906: Coordinator syncs node 6
+INFO:root:Iteration 2906: Coordinator syncs node 1
+INFO:root:Iteration 2907: Node 5 notify False Local Violation
+INFO:root:Iteration 2907: 1 nodes with violation
+INFO:root:Iteration 2907: Coordinator about to ask 1 nodes for statistics. Nodes [2]
+INFO:root:Iteration 2907: Coordinator asks node 2 for statistics
+INFO:root:Iteration 2907: Node 2 returns to coordinator with statistics
+INFO:root:Iteration 2907: used 2 nodes in lazy sync. Nodes [5 2]
+INFO:root:Iteration 2907: Coordinator about to sync 2 nodes. Nodes [5 2]
+INFO:root:Iteration 2907: Coordinator syncs node 5
+INFO:root:Iteration 2907: Coordinator syncs node 2
+INFO:root:Iteration 2909: Node 1 notify False Local Violation
+INFO:root:Iteration 2909: 1 nodes with violation
+INFO:root:Iteration 2909: Coordinator about to ask 1 nodes for statistics. Nodes [3]
+INFO:root:Iteration 2909: Coordinator asks node 3 for statistics
+INFO:root:Iteration 2909: Node 3 returns to coordinator with statistics
+INFO:root:Iteration 2909: used 2 nodes in lazy sync. Nodes [1 3]
+INFO:root:Iteration 2909: Coordinator about to sync 2 nodes. Nodes [1 3]
+INFO:root:Iteration 2909: Coordinator syncs node 1
+INFO:root:Iteration 2909: Coordinator syncs node 3
+INFO:root:Iteration 2912: Node 2 notify False Local Violation
+INFO:root:Iteration 2912: Node 6 notify False Local Violation
+INFO:root:Iteration 2912: 2 nodes with violation
+INFO:root:Iteration 2912: Coordinator about to ask 1 nodes for statistics. Nodes [4]
+INFO:root:Iteration 2912: Coordinator asks node 4 for statistics
+INFO:root:Iteration 2912: Node 4 returns to coordinator with statistics
+INFO:root:Iteration 2912: used 3 nodes in lazy sync. Nodes [2 6 4]
+INFO:root:Iteration 2912: Coordinator about to sync 3 nodes. Nodes [2 6 4]
+INFO:root:Iteration 2912: Coordinator syncs node 2
+INFO:root:Iteration 2912: Coordinator syncs node 6
+INFO:root:Iteration 2912: Coordinator syncs node 4
+INFO:root:Iteration 2913: Node 0 notify False Local Violation
+INFO:root:Iteration 2913: Node 3 notify False Local Violation
+INFO:root:Iteration 2913: Node 4 notify False Local Violation
+INFO:root:Iteration 2913: 3 nodes with violation
+INFO:root:Iteration 2913: Coordinator about to ask 1 nodes for statistics. Nodes [7]
+INFO:root:Iteration 2913: Coordinator asks node 7 for statistics
+INFO:root:Iteration 2913: Node 7 returns to coordinator with statistics
+INFO:root:Iteration 2913: used 4 nodes in lazy sync. Nodes [0 3 4 7]
+INFO:root:Iteration 2913: Coordinator about to sync 4 nodes. Nodes [0 3 4 7]
+INFO:root:Iteration 2913: Coordinator syncs node 0
+INFO:root:Iteration 2913: Coordinator syncs node 3
+INFO:root:Iteration 2913: Coordinator syncs node 4
+INFO:root:Iteration 2913: Coordinator syncs node 7
+INFO:root:Iteration 2914: Node 0 notify False Local Violation
+INFO:root:Iteration 2914: Node 2 notify False Local Violation
+INFO:root:Iteration 2914: Node 3 notify False Local Violation
+INFO:root:Iteration 2914: Node 7 notify False Local Violation
+INFO:root:Iteration 2914: 4 nodes with violation
+INFO:root:Iteration 2914: Coordinator about to ask 1 nodes for statistics. Nodes [9]
+INFO:root:Iteration 2914: Coordinator asks node 9 for statistics
+INFO:root:Iteration 2914: Node 9 returns to coordinator with statistics
+INFO:root:Iteration 2914: used 5 nodes in lazy sync. Nodes [0 2 3 7 9]
+INFO:root:Iteration 2914: Coordinator about to sync 5 nodes. Nodes [0 2 3 7 9]
+INFO:root:Iteration 2914: Coordinator syncs node 0
+INFO:root:Iteration 2914: Coordinator syncs node 2
+INFO:root:Iteration 2914: Coordinator syncs node 3
+INFO:root:Iteration 2914: Coordinator syncs node 7
+INFO:root:Iteration 2914: Coordinator syncs node 9
+INFO:root:Iteration 2915: Node 2 notify False Local Violation
+INFO:root:Iteration 2915: Node 7 notify False Local Violation
+INFO:root:Iteration 2915: Node 9 notify False Local Violation
+INFO:root:Iteration 2915: 3 nodes with violation
+INFO:root:Iteration 2915: Coordinator about to ask 1 nodes for statistics. Nodes [5]
+INFO:root:Iteration 2915: Coordinator asks node 5 for statistics
+INFO:root:Iteration 2915: Node 5 returns to coordinator with statistics
+INFO:root:Iteration 2915: Coordinator about to ask 1 nodes for statistics. Nodes [8]
+INFO:root:Iteration 2915: Coordinator asks node 8 for statistics
+INFO:root:Iteration 2915: Node 8 returns to coordinator with statistics
+INFO:root:Iteration 2915: used 5 nodes in lazy sync. Nodes [2 7 9 5 8]
+INFO:root:Iteration 2915: Coordinator about to sync 5 nodes. Nodes [2 7 9 5 8]
+INFO:root:Iteration 2915: Coordinator syncs node 2
+INFO:root:Iteration 2915: Coordinator syncs node 7
+INFO:root:Iteration 2915: Coordinator syncs node 9
+INFO:root:Iteration 2915: Coordinator syncs node 5
+INFO:root:Iteration 2915: Coordinator syncs node 8
+INFO:root:Iteration 2916: Node 5 notify False Local Violation
+INFO:root:Iteration 2916: Node 7 notify False Local Violation
+INFO:root:Iteration 2916: Node 9 notify False Local Violation
+INFO:root:Iteration 2916: 3 nodes with violation
+INFO:root:Iteration 2916: Coordinator about to ask 1 nodes for statistics. Nodes [1]
+INFO:root:Iteration 2916: Coordinator asks node 1 for statistics
+INFO:root:Iteration 2916: Node 1 returns to coordinator with statistics
+INFO:root:Iteration 2916: used 4 nodes in lazy sync. Nodes [5 7 9 1]
+INFO:root:Iteration 2916: Coordinator about to sync 4 nodes. Nodes [5 7 9 1]
+INFO:root:Iteration 2916: Coordinator syncs node 5
+INFO:root:Iteration 2916: Coordinator syncs node 7
+INFO:root:Iteration 2916: Coordinator syncs node 9
+INFO:root:Iteration 2916: Coordinator syncs node 1
+INFO:root:Iteration 2917: Node 2 notify False Local Violation
+INFO:root:Iteration 2917: Node 4 notify False Local Violation
+INFO:root:Iteration 2917: Node 7 notify False Local Violation
+INFO:root:Iteration 2917: Node 8 notify False Local Violation
+INFO:root:Iteration 2917: Node 9 notify False Local Violation
+INFO:root:Iteration 2917: 5 nodes with violation
+INFO:root:Iteration 2917: fallback to eager sync from lazy sync !!!!!!!!!!!!!!!!!!
+INFO:root:Iteration 2917: Coordinator about to ask 5 nodes for statistics. Nodes [0, 1, 3, 5, 6]
+INFO:root:Iteration 2917: Coordinator asks node 0 for statistics
+INFO:root:Iteration 2917: Node 0 returns to coordinator with statistics
+INFO:root:Iteration 2917: Coordinator asks node 1 for statistics
+INFO:root:Iteration 2917: Node 1 returns to coordinator with statistics
+INFO:root:Iteration 2917: Coordinator asks node 3 for statistics
+INFO:root:Iteration 2917: Node 3 returns to coordinator with statistics
+INFO:root:Iteration 2917: Coordinator asks node 5 for statistics
+INFO:root:Iteration 2917: Node 5 returns to coordinator with statistics
+INFO:root:Iteration 2917: Coordinator asks node 6 for statistics
+INFO:root:Iteration 2917: Node 6 returns to coordinator with statistics
+INFO:root:Iteration 2917: About to sync the value [18.2689164]
+INFO:root:Iteration 2917: About to sync the thresholds [-2.04855876],[0.95144124]
+INFO:root:Iteration 2917: Update adaptive domain [(15.268916397041618, 21.268916397041618)]
+INFO:root:Iteration 2917: Minimal eigenvalue of hessian in the domain: -0.9999999876798091
+INFO:root:Iteration 2917: Maximal eigenvalue of hessian in the domain: 0.9999999999961815
+INFO:root:Optimization time: 0.018546299999999682
+INFO:root:Use g,h convex diff with min eigenvalue -0.9999999876798091
+INFO:root:Iteration 2917: Coordinator about to sync 10 nodes. Nodes [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+INFO:root:Iteration 2917: Coordinator syncs node 0
+INFO:root:Iteration 2917: Coordinator syncs node 1
+INFO:root:Iteration 2917: Coordinator syncs node 2
+INFO:root:Iteration 2917: Coordinator syncs node 3
+INFO:root:Iteration 2917: Coordinator syncs node 4
+INFO:root:Iteration 2917: Coordinator syncs node 5
+INFO:root:Iteration 2917: Coordinator syncs node 6
+INFO:root:Iteration 2917: Coordinator syncs node 7
+INFO:root:Iteration 2917: Coordinator syncs node 8
+INFO:root:Iteration 2917: Coordinator syncs node 9
+INFO:root:Iteration 3070: Node 9 notify False Local Violation
+INFO:root:Iteration 3070: 1 nodes with violation
+INFO:root:Iteration 3070: Coordinator about to ask 1 nodes for statistics. Nodes [0]
+INFO:root:Iteration 3070: Coordinator asks node 0 for statistics
+INFO:root:Iteration 3070: Node 0 returns to coordinator with statistics
+INFO:root:Iteration 3070: used 2 nodes in lazy sync. Nodes [9 0]
+INFO:root:Iteration 3070: Coordinator about to sync 2 nodes. Nodes [9 0]
+INFO:root:Iteration 3070: Coordinator syncs node 9
+INFO:root:Iteration 3070: Coordinator syncs node 0
+INFO:root:Iteration 3071: Node 7 notify False Local Violation
+INFO:root:Iteration 3071: 1 nodes with violation
+INFO:root:Iteration 3071: Coordinator about to ask 1 nodes for statistics. Nodes [1]
+INFO:root:Iteration 3071: Coordinator asks node 1 for statistics
+INFO:root:Iteration 3071: Node 1 returns to coordinator with statistics
+INFO:root:Iteration 3071: used 2 nodes in lazy sync. Nodes [7 1]
+INFO:root:Iteration 3071: Coordinator about to sync 2 nodes. Nodes [7 1]
+INFO:root:Iteration 3071: Coordinator syncs node 7
+INFO:root:Iteration 3071: Coordinator syncs node 1
+INFO:root:Iteration 3072: Node 6 notify False Local Violation
+INFO:root:Iteration 3072: Node 7 notify False Local Violation
+INFO:root:Iteration 3072: 2 nodes with violation
+INFO:root:Iteration 3072: Coordinator about to ask 1 nodes for statistics. Nodes [2]
+INFO:root:Iteration 3072: Coordinator asks node 2 for statistics
+INFO:root:Iteration 3072: Node 2 returns to coordinator with statistics
+INFO:root:Iteration 3072: used 3 nodes in lazy sync. Nodes [6 7 2]
+INFO:root:Iteration 3072: Coordinator about to sync 3 nodes. Nodes [6 7 2]
+INFO:root:Iteration 3072: Coordinator syncs node 6
+INFO:root:Iteration 3072: Coordinator syncs node 7
+INFO:root:Iteration 3072: Coordinator syncs node 2
+INFO:root:Iteration 3074: Node 9 notify False Local Violation
+INFO:root:Iteration 3074: 1 nodes with violation
+INFO:root:Iteration 3074: Coordinator about to ask 1 nodes for statistics. Nodes [3]
+INFO:root:Iteration 3074: Coordinator asks node 3 for statistics
+INFO:root:Iteration 3074: Node 3 returns to coordinator with statistics
+INFO:root:Iteration 3074: used 2 nodes in lazy sync. Nodes [9 3]
+INFO:root:Iteration 3074: Coordinator about to sync 2 nodes. Nodes [9 3]
+INFO:root:Iteration 3074: Coordinator syncs node 9
+INFO:root:Iteration 3074: Coordinator syncs node 3
+INFO:root:Iteration 3075: Node 0 notify False Local Violation
+INFO:root:Iteration 3075: Node 5 notify False Local Violation
+INFO:root:Iteration 3075: 2 nodes with violation
+INFO:root:Iteration 3075: Coordinator about to ask 1 nodes for statistics. Nodes [4]
+INFO:root:Iteration 3075: Coordinator asks node 4 for statistics
+INFO:root:Iteration 3075: Node 4 returns to coordinator with statistics
+INFO:root:Iteration 3075: used 3 nodes in lazy sync. Nodes [0 5 4]
+INFO:root:Iteration 3075: Coordinator about to sync 3 nodes. Nodes [0 5 4]
+INFO:root:Iteration 3075: Coordinator syncs node 0
+INFO:root:Iteration 3075: Coordinator syncs node 5
+INFO:root:Iteration 3075: Coordinator syncs node 4
+INFO:root:Iteration 3076: Node 1 notify False Local Violation
+INFO:root:Iteration 3076: Node 2 notify False Local Violation
+INFO:root:Iteration 3076: Node 4 notify False Local Violation
+INFO:root:Iteration 3076: Node 6 notify False Local Violation
+INFO:root:Iteration 3076: 4 nodes with violation
+INFO:root:Iteration 3076: Coordinator about to ask 1 nodes for statistics. Nodes [8]
+INFO:root:Iteration 3076: Coordinator asks node 8 for statistics
+INFO:root:Iteration 3076: Node 8 returns to coordinator with statistics
+INFO:root:Iteration 3076: used 5 nodes in lazy sync. Nodes [1 2 4 6 8]
+INFO:root:Iteration 3076: Coordinator about to sync 5 nodes. Nodes [1 2 4 6 8]
+INFO:root:Iteration 3076: Coordinator syncs node 1
+INFO:root:Iteration 3076: Coordinator syncs node 2
+INFO:root:Iteration 3076: Coordinator syncs node 4
+INFO:root:Iteration 3076: Coordinator syncs node 6
+INFO:root:Iteration 3076: Coordinator syncs node 8
+INFO:root:Iteration 3077: Node 1 notify False Local Violation
+INFO:root:Iteration 3077: Node 3 notify False Local Violation
+INFO:root:Iteration 3077: Node 4 notify False Local Violation
+INFO:root:Iteration 3077: Node 5 notify False Local Violation
+INFO:root:Iteration 3077: Node 8 notify False Local Violation
+INFO:root:Iteration 3077: 5 nodes with violation
+INFO:root:Iteration 3077: fallback to eager sync from lazy sync !!!!!!!!!!!!!!!!!!
+INFO:root:Iteration 3077: Coordinator about to ask 5 nodes for statistics. Nodes [0, 2, 6, 7, 9]
+INFO:root:Iteration 3077: Coordinator asks node 0 for statistics
+INFO:root:Iteration 3077: Node 0 returns to coordinator with statistics
+INFO:root:Iteration 3077: Coordinator asks node 2 for statistics
+INFO:root:Iteration 3077: Node 2 returns to coordinator with statistics
+INFO:root:Iteration 3077: Coordinator asks node 6 for statistics
+INFO:root:Iteration 3077: Node 6 returns to coordinator with statistics
+INFO:root:Iteration 3077: Coordinator asks node 7 for statistics
+INFO:root:Iteration 3077: Node 7 returns to coordinator with statistics
+INFO:root:Iteration 3077: Coordinator asks node 9 for statistics
+INFO:root:Iteration 3077: Node 9 returns to coordinator with statistics
+INFO:root:Iteration 3077: About to sync the value [19.29075751]
+INFO:root:Iteration 3077: About to sync the thresholds [-1.0729737],[1.9270263]
+INFO:root:Iteration 3077: Update adaptive domain [(16.29075751354189, 22.29075751354189)]
+INFO:root:Iteration 3077: Minimal eigenvalue of hessian in the domain: -0.999999986151915
+INFO:root:Iteration 3077: Maximal eigenvalue of hessian in the domain: 0.9999999999996947
+INFO:root:Optimization time: 0.019291500000000017
+INFO:root:Use g,h convex diff with min eigenvalue -0.999999986151915
+INFO:root:Iteration 3077: Coordinator about to sync 10 nodes. Nodes [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+INFO:root:Iteration 3077: Coordinator syncs node 0
+INFO:root:Iteration 3077: Coordinator syncs node 1
+INFO:root:Iteration 3077: Coordinator syncs node 2
+INFO:root:Iteration 3077: Coordinator syncs node 3
+INFO:root:Iteration 3077: Coordinator syncs node 4
+INFO:root:Iteration 3077: Coordinator syncs node 5
+INFO:root:Iteration 3077: Coordinator syncs node 6
+INFO:root:Iteration 3077: Coordinator syncs node 7
+INFO:root:Iteration 3077: Coordinator syncs node 8
+INFO:root:Iteration 3077: Coordinator syncs node 9
+INFO:root:Iteration 3295: Node 0 notify False Local Violation
+INFO:root:Iteration 3295: Node 2 notify False Local Violation
+INFO:root:Iteration 3295: 2 nodes with violation
+INFO:root:Iteration 3295: Coordinator about to ask 1 nodes for statistics. Nodes [1]
+INFO:root:Iteration 3295: Coordinator asks node 1 for statistics
+INFO:root:Iteration 3295: Node 1 returns to coordinator with statistics
+INFO:root:Iteration 3295: Coordinator about to ask 1 nodes for statistics. Nodes [3]
+INFO:root:Iteration 3295: Coordinator asks node 3 for statistics
+INFO:root:Iteration 3295: Node 3 returns to coordinator with statistics
+INFO:root:Iteration 3295: used 4 nodes in lazy sync. Nodes [0 2 1 3]
+INFO:root:Iteration 3295: Coordinator about to sync 4 nodes. Nodes [0 2 1 3]
+INFO:root:Iteration 3295: Coordinator syncs node 0
+INFO:root:Iteration 3295: Coordinator syncs node 2
+INFO:root:Iteration 3295: Coordinator syncs node 1
+INFO:root:Iteration 3295: Coordinator syncs node 3
+INFO:root:Iteration 3297: Node 4 notify False Local Violation
+INFO:root:Iteration 3297: Node 8 notify False Local Violation
+INFO:root:Iteration 3297: 2 nodes with violation
+INFO:root:Iteration 3297: Coordinator about to ask 1 nodes for statistics. Nodes [5]
+INFO:root:Iteration 3297: Coordinator asks node 5 for statistics
+INFO:root:Iteration 3297: Node 5 returns to coordinator with statistics
+INFO:root:Iteration 3297: used 3 nodes in lazy sync. Nodes [4 8 5]
+INFO:root:Iteration 3297: Coordinator about to sync 3 nodes. Nodes [4 8 5]
+INFO:root:Iteration 3297: Coordinator syncs node 4
+INFO:root:Iteration 3297: Coordinator syncs node 8
+INFO:root:Iteration 3297: Coordinator syncs node 5
+INFO:root:Iteration 3298: Node 1 notify False Local Violation
+INFO:root:Iteration 3298: Node 4 notify False Local Violation
+INFO:root:Iteration 3298: Node 8 notify False Local Violation
+INFO:root:Iteration 3298: 3 nodes with violation
+INFO:root:Iteration 3298: Coordinator about to ask 1 nodes for statistics. Nodes [6]
+INFO:root:Iteration 3298: Coordinator asks node 6 for statistics
+INFO:root:Iteration 3298: Node 6 returns to coordinator with statistics
+INFO:root:Iteration 3298: used 4 nodes in lazy sync. Nodes [1 4 8 6]
+INFO:root:Iteration 3298: Coordinator about to sync 4 nodes. Nodes [1 4 8 6]
+INFO:root:Iteration 3298: Coordinator syncs node 1
+INFO:root:Iteration 3298: Coordinator syncs node 4
+INFO:root:Iteration 3298: Coordinator syncs node 8
+INFO:root:Iteration 3298: Coordinator syncs node 6
+INFO:root:Iteration 3299: Node 0 notify False Local Violation
+INFO:root:Iteration 3299: Node 2 notify False Local Violation
+INFO:root:Iteration 3299: 2 nodes with violation
+INFO:root:Iteration 3299: Coordinator about to ask 1 nodes for statistics. Nodes [7]
+INFO:root:Iteration 3299: Coordinator asks node 7 for statistics
+INFO:root:Iteration 3299: Node 7 returns to coordinator with statistics
+INFO:root:Iteration 3299: used 3 nodes in lazy sync. Nodes [0 2 7]
+INFO:root:Iteration 3299: Coordinator about to sync 3 nodes. Nodes [0 2 7]
+INFO:root:Iteration 3299: Coordinator syncs node 0
+INFO:root:Iteration 3299: Coordinator syncs node 2
+INFO:root:Iteration 3299: Coordinator syncs node 7
+INFO:root:Iteration 3300: Node 4 notify False Local Violation
+INFO:root:Iteration 3300: Node 5 notify False Local Violation
+INFO:root:Iteration 3300: Node 6 notify False Local Violation
+INFO:root:Iteration 3300: Node 7 notify False Local Violation
+INFO:root:Iteration 3300: Node 9 notify False Local Violation
+INFO:root:Iteration 3300: 5 nodes with violation
+INFO:root:Iteration 3300: fallback to eager sync from lazy sync !!!!!!!!!!!!!!!!!!
+INFO:root:Iteration 3300: Coordinator about to ask 5 nodes for statistics. Nodes [0, 1, 2, 3, 8]
+INFO:root:Iteration 3300: Coordinator asks node 0 for statistics
+INFO:root:Iteration 3300: Node 0 returns to coordinator with statistics
+INFO:root:Iteration 3300: Coordinator asks node 1 for statistics
+INFO:root:Iteration 3300: Node 1 returns to coordinator with statistics
+INFO:root:Iteration 3300: Coordinator asks node 2 for statistics
+INFO:root:Iteration 3300: Node 2 returns to coordinator with statistics
+INFO:root:Iteration 3300: Coordinator asks node 3 for statistics
+INFO:root:Iteration 3300: Node 3 returns to coordinator with statistics
+INFO:root:Iteration 3300: Coordinator asks node 8 for statistics
+INFO:root:Iteration 3300: Node 8 returns to coordinator with statistics
+INFO:root:Iteration 3300: About to sync the value [20.67380538]
+INFO:root:Iteration 3300: About to sync the thresholds [-0.53194767],[2.46805233]
+INFO:root:Iteration 3300: Update adaptive domain [(17.673805378261235, 23.673805378261235)]
+INFO:root:Iteration 3300: Minimal eigenvalue of hessian in the domain: -0.9999999999999857
+INFO:root:Iteration 3300: Maximal eigenvalue of hessian in the domain: 0.9999999999999714
+INFO:root:Optimization time: 0.02533520000000067
+INFO:root:Use g,h convex diff with min eigenvalue -0.9999999999999857
+INFO:root:Iteration 3300: Coordinator about to sync 10 nodes. Nodes [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+INFO:root:Iteration 3300: Coordinator syncs node 0
+INFO:root:Iteration 3300: Coordinator syncs node 1
+INFO:root:Iteration 3300: Coordinator syncs node 2
+INFO:root:Iteration 3300: Coordinator syncs node 3
+INFO:root:Iteration 3300: Coordinator syncs node 4
+INFO:root:Iteration 3300: Coordinator syncs node 5
+INFO:root:Iteration 3300: Coordinator syncs node 6
+INFO:root:Iteration 3300: Coordinator syncs node 7
+INFO:root:Iteration 3300: Coordinator syncs node 8
+INFO:root:Iteration 3300: Coordinator syncs node 9
+INFO:root:Iteration 3515: Node 3 notify False Local Violation
+INFO:root:Iteration 3515: 1 nodes with violation
+INFO:root:Iteration 3515: Coordinator about to ask 1 nodes for statistics. Nodes [0]
+INFO:root:Iteration 3515: Coordinator asks node 0 for statistics
+INFO:root:Iteration 3515: Node 0 returns to coordinator with statistics
+INFO:root:Iteration 3515: used 2 nodes in lazy sync. Nodes [3 0]
+INFO:root:Iteration 3515: Coordinator about to sync 2 nodes. Nodes [3 0]
+INFO:root:Iteration 3515: Coordinator syncs node 3
+INFO:root:Iteration 3515: Coordinator syncs node 0
+INFO:root:Iteration 3520: Node 0 notify False Local Violation
+INFO:root:Iteration 3520: 1 nodes with violation
+INFO:root:Iteration 3520: Coordinator about to ask 1 nodes for statistics. Nodes [1]
+INFO:root:Iteration 3520: Coordinator asks node 1 for statistics
+INFO:root:Iteration 3520: Node 1 returns to coordinator with statistics
+INFO:root:Iteration 3520: used 2 nodes in lazy sync. Nodes [0 1]
+INFO:root:Iteration 3520: Coordinator about to sync 2 nodes. Nodes [0 1]
+INFO:root:Iteration 3520: Coordinator syncs node 0
+INFO:root:Iteration 3520: Coordinator syncs node 1
+INFO:root:Iteration 3527: Node 6 notify False Local Violation
+INFO:root:Iteration 3527: 1 nodes with violation
+INFO:root:Iteration 3527: Coordinator about to ask 1 nodes for statistics. Nodes [2]
+INFO:root:Iteration 3527: Coordinator asks node 2 for statistics
+INFO:root:Iteration 3527: Node 2 returns to coordinator with statistics
+INFO:root:Iteration 3527: used 2 nodes in lazy sync. Nodes [6 2]
+INFO:root:Iteration 3527: Coordinator about to sync 2 nodes. Nodes [6 2]
+INFO:root:Iteration 3527: Coordinator syncs node 6
+INFO:root:Iteration 3527: Coordinator syncs node 2
+INFO:root:Iteration 3529: Node 2 notify False Local Violation
+INFO:root:Iteration 3529: 1 nodes with violation
+INFO:root:Iteration 3529: Coordinator about to ask 1 nodes for statistics. Nodes [4]
+INFO:root:Iteration 3529: Coordinator asks node 4 for statistics
+INFO:root:Iteration 3529: Node 4 returns to coordinator with statistics
+INFO:root:Iteration 3529: used 2 nodes in lazy sync. Nodes [2 4]
+INFO:root:Iteration 3529: Coordinator about to sync 2 nodes. Nodes [2 4]
+INFO:root:Iteration 3529: Coordinator syncs node 2
+INFO:root:Iteration 3529: Coordinator syncs node 4
+INFO:root:Iteration 3530: Node 6 notify False Local Violation
+INFO:root:Iteration 3530: 1 nodes with violation
+INFO:root:Iteration 3530: Coordinator about to ask 1 nodes for statistics. Nodes [5]
+INFO:root:Iteration 3530: Coordinator asks node 5 for statistics
+INFO:root:Iteration 3530: Node 5 returns to coordinator with statistics
+INFO:root:Iteration 3530: used 2 nodes in lazy sync. Nodes [6 5]
+INFO:root:Iteration 3530: Coordinator about to sync 2 nodes. Nodes [6 5]
+INFO:root:Iteration 3530: Coordinator syncs node 6
+INFO:root:Iteration 3530: Coordinator syncs node 5
+INFO:root:Iteration 3531: Node 1 notify False Local Violation
+INFO:root:Iteration 3531: 1 nodes with violation
+INFO:root:Iteration 3531: Coordinator about to ask 1 nodes for statistics. Nodes [7]
+INFO:root:Iteration 3531: Coordinator asks node 7 for statistics
+INFO:root:Iteration 3531: Node 7 returns to coordinator with statistics
+INFO:root:Iteration 3531: used 2 nodes in lazy sync. Nodes [1 7]
+INFO:root:Iteration 3531: Coordinator about to sync 2 nodes. Nodes [1 7]
+INFO:root:Iteration 3531: Coordinator syncs node 1
+INFO:root:Iteration 3531: Coordinator syncs node 7
+INFO:root:Iteration 3533: Node 7 notify False Local Violation
+INFO:root:Iteration 3533: 1 nodes with violation
+INFO:root:Iteration 3533: Coordinator about to ask 1 nodes for statistics. Nodes [8]
+INFO:root:Iteration 3533: Coordinator asks node 8 for statistics
+INFO:root:Iteration 3533: Node 8 returns to coordinator with statistics
+INFO:root:Iteration 3533: used 2 nodes in lazy sync. Nodes [7 8]
+INFO:root:Iteration 3533: Coordinator about to sync 2 nodes. Nodes [7 8]
+INFO:root:Iteration 3533: Coordinator syncs node 7
+INFO:root:Iteration 3533: Coordinator syncs node 8
+INFO:root:Iteration 3535: Node 4 notify False Local Violation
+INFO:root:Iteration 3535: 1 nodes with violation
+INFO:root:Iteration 3535: Coordinator about to ask 1 nodes for statistics. Nodes [9]
+INFO:root:Iteration 3535: Coordinator asks node 9 for statistics
+INFO:root:Iteration 3535: Node 9 returns to coordinator with statistics
+INFO:root:Iteration 3535: used 2 nodes in lazy sync. Nodes [4 9]
+INFO:root:Iteration 3535: Coordinator about to sync 2 nodes. Nodes [4 9]
+INFO:root:Iteration 3535: Coordinator syncs node 4
+INFO:root:Iteration 3535: Coordinator syncs node 9
+INFO:root:Iteration 3536: Node 0 notify False Local Violation
+INFO:root:Iteration 3536: Node 4 notify False Local Violation
+INFO:root:Iteration 3536: Node 5 notify False Local Violation
+INFO:root:Iteration 3536: 3 nodes with violation
+INFO:root:Iteration 3536: Coordinator about to ask 1 nodes for statistics. Nodes [3]
+INFO:root:Iteration 3536: Coordinator asks node 3 for statistics
+INFO:root:Iteration 3536: Node 3 returns to coordinator with statistics
+INFO:root:Iteration 3536: used 4 nodes in lazy sync. Nodes [0 4 5 3]
+INFO:root:Iteration 3536: Coordinator about to sync 4 nodes. Nodes [0 4 5 3]
+INFO:root:Iteration 3536: Coordinator syncs node 0
+INFO:root:Iteration 3536: Coordinator syncs node 4
+INFO:root:Iteration 3536: Coordinator syncs node 5
+INFO:root:Iteration 3536: Coordinator syncs node 3
+INFO:root:Iteration 3537: Node 4 notify False Local Violation
+INFO:root:Iteration 3537: Node 6 notify False Local Violation
+INFO:root:Iteration 3537: 2 nodes with violation
+INFO:root:Iteration 3537: Coordinator about to ask 1 nodes for statistics. Nodes [8]
+INFO:root:Iteration 3537: Coordinator asks node 8 for statistics
+INFO:root:Iteration 3537: Node 8 returns to coordinator with statistics
+INFO:root:Iteration 3537: used 3 nodes in lazy sync. Nodes [4 6 8]
+INFO:root:Iteration 3537: Coordinator about to sync 3 nodes. Nodes [4 6 8]
+INFO:root:Iteration 3537: Coordinator syncs node 4
+INFO:root:Iteration 3537: Coordinator syncs node 6
+INFO:root:Iteration 3537: Coordinator syncs node 8
+INFO:root:Iteration 3538: Node 3 notify False Local Violation
+INFO:root:Iteration 3538: Node 5 notify False Local Violation
+INFO:root:Iteration 3538: Node 8 notify False Local Violation
+INFO:root:Iteration 3538: 3 nodes with violation
+INFO:root:Iteration 3538: Coordinator about to ask 1 nodes for statistics. Nodes [9]
+INFO:root:Iteration 3538: Coordinator asks node 9 for statistics
+INFO:root:Iteration 3538: Node 9 returns to coordinator with statistics
+INFO:root:Iteration 3538: Coordinator about to ask 1 nodes for statistics. Nodes [1]
+INFO:root:Iteration 3538: Coordinator asks node 1 for statistics
+INFO:root:Iteration 3538: Node 1 returns to coordinator with statistics
+INFO:root:Iteration 3538: used 5 nodes in lazy sync. Nodes [3 5 8 9 1]
+INFO:root:Iteration 3538: Coordinator about to sync 5 nodes. Nodes [3 5 8 9 1]
+INFO:root:Iteration 3538: Coordinator syncs node 3
+INFO:root:Iteration 3538: Coordinator syncs node 5
+INFO:root:Iteration 3538: Coordinator syncs node 8
+INFO:root:Iteration 3538: Coordinator syncs node 9
+INFO:root:Iteration 3538: Coordinator syncs node 1
+INFO:root:Iteration 3539: Node 1 notify False Local Violation
+INFO:root:Iteration 3539: Node 4 notify False Local Violation
+INFO:root:Iteration 3539: Node 8 notify False Local Violation
+INFO:root:Iteration 3539: Node 9 notify False Local Violation
+INFO:root:Iteration 3539: 4 nodes with violation
+INFO:root:Iteration 3539: Coordinator about to ask 1 nodes for statistics. Nodes [2]
+INFO:root:Iteration 3539: Coordinator asks node 2 for statistics
+INFO:root:Iteration 3539: Node 2 returns to coordinator with statistics
+INFO:root:Iteration 3539: fallback to eager sync from lazy sync !!!!!!!!!!!!!!!!!!
+INFO:root:Iteration 3539: Coordinator about to ask 5 nodes for statistics. Nodes [0, 3, 5, 6, 7]
+INFO:root:Iteration 3539: Coordinator asks node 0 for statistics
+INFO:root:Iteration 3539: Node 0 returns to coordinator with statistics
+INFO:root:Iteration 3539: Coordinator asks node 3 for statistics
+INFO:root:Iteration 3539: Node 3 returns to coordinator with statistics
+INFO:root:Iteration 3539: Coordinator asks node 5 for statistics
+INFO:root:Iteration 3539: Node 5 returns to coordinator with statistics
+INFO:root:Iteration 3539: Coordinator asks node 6 for statistics
+INFO:root:Iteration 3539: Node 6 returns to coordinator with statistics
+INFO:root:Iteration 3539: Coordinator asks node 7 for statistics
+INFO:root:Iteration 3539: Node 7 returns to coordinator with statistics
+INFO:root:Iteration 3539: About to sync the value [22.15937063]
+INFO:root:Iteration 3539: About to sync the thresholds [-1.66742977],[1.33257023]
+INFO:root:Iteration 3539: Update adaptive domain [(19.159370630549247, 25.159370630549247)]
+INFO:root:Iteration 3539: Minimal eigenvalue of hessian in the domain: -0.9999812668529776
+INFO:root:Iteration 3539: Maximal eigenvalue of hessian in the domain: 0.9999999998780513
+INFO:root:Optimization time: 0.023063599999999518
+INFO:root:Use g,h convex diff with min eigenvalue -0.9999812668529776
+INFO:root:Iteration 3539: Coordinator about to sync 10 nodes. Nodes [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+INFO:root:Iteration 3539: Coordinator syncs node 0
+INFO:root:Iteration 3539: Coordinator syncs node 1
+INFO:root:Iteration 3539: Coordinator syncs node 2
+INFO:root:Iteration 3539: Coordinator syncs node 3
+INFO:root:Iteration 3539: Coordinator syncs node 4
+INFO:root:Iteration 3539: Coordinator syncs node 5
+INFO:root:Iteration 3539: Coordinator syncs node 6
+INFO:root:Iteration 3539: Coordinator syncs node 7
+INFO:root:Iteration 3539: Coordinator syncs node 8
+INFO:root:Iteration 3539: Coordinator syncs node 9
+INFO:root:Iteration 3682: Node 1 notify False Local Violation
+INFO:root:Iteration 3682: 1 nodes with violation
+INFO:root:Iteration 3682: Coordinator about to ask 1 nodes for statistics. Nodes [0]
+INFO:root:Iteration 3682: Coordinator asks node 0 for statistics
+INFO:root:Iteration 3682: Node 0 returns to coordinator with statistics
+INFO:root:Iteration 3682: used 2 nodes in lazy sync. Nodes [1 0]
+INFO:root:Iteration 3682: Coordinator about to sync 2 nodes. Nodes [1 0]
+INFO:root:Iteration 3682: Coordinator syncs node 1
+INFO:root:Iteration 3682: Coordinator syncs node 0
+INFO:root:Iteration 3684: Node 1 notify False Local Violation
+INFO:root:Iteration 3684: 1 nodes with violation
+INFO:root:Iteration 3684: Coordinator about to ask 1 nodes for statistics. Nodes [2]
+INFO:root:Iteration 3684: Coordinator asks node 2 for statistics
+INFO:root:Iteration 3684: Node 2 returns to coordinator with statistics
+INFO:root:Iteration 3684: used 2 nodes in lazy sync. Nodes [1 2]
+INFO:root:Iteration 3684: Coordinator about to sync 2 nodes. Nodes [1 2]
+INFO:root:Iteration 3684: Coordinator syncs node 1
+INFO:root:Iteration 3684: Coordinator syncs node 2
+INFO:root:Iteration 3685: Node 0 notify False Local Violation
+INFO:root:Iteration 3685: 1 nodes with violation
+INFO:root:Iteration 3685: Coordinator about to ask 1 nodes for statistics. Nodes [3]
+INFO:root:Iteration 3685: Coordinator asks node 3 for statistics
+INFO:root:Iteration 3685: Node 3 returns to coordinator with statistics
+INFO:root:Iteration 3685: used 2 nodes in lazy sync. Nodes [0 3]
+INFO:root:Iteration 3685: Coordinator about to sync 2 nodes. Nodes [0 3]
+INFO:root:Iteration 3685: Coordinator syncs node 0
+INFO:root:Iteration 3685: Coordinator syncs node 3
+INFO:root:Iteration 3687: Node 9 notify False Local Violation
+INFO:root:Iteration 3687: 1 nodes with violation
+INFO:root:Iteration 3687: Coordinator about to ask 1 nodes for statistics. Nodes [4]
+INFO:root:Iteration 3687: Coordinator asks node 4 for statistics
+INFO:root:Iteration 3687: Node 4 returns to coordinator with statistics
+INFO:root:Iteration 3687: used 2 nodes in lazy sync. Nodes [9 4]
+INFO:root:Iteration 3687: Coordinator about to sync 2 nodes. Nodes [9 4]
+INFO:root:Iteration 3687: Coordinator syncs node 9
+INFO:root:Iteration 3687: Coordinator syncs node 4
+INFO:root:Iteration 3689: Node 8 notify False Local Violation
+INFO:root:Iteration 3689: 1 nodes with violation
+INFO:root:Iteration 3689: Coordinator about to ask 1 nodes for statistics. Nodes [5]
+INFO:root:Iteration 3689: Coordinator asks node 5 for statistics
+INFO:root:Iteration 3689: Node 5 returns to coordinator with statistics
+INFO:root:Iteration 3689: used 2 nodes in lazy sync. Nodes [8 5]
+INFO:root:Iteration 3689: Coordinator about to sync 2 nodes. Nodes [8 5]
+INFO:root:Iteration 3689: Coordinator syncs node 8
+INFO:root:Iteration 3689: Coordinator syncs node 5
+INFO:root:Iteration 3690: Node 0 notify False Local Violation
+INFO:root:Iteration 3690: 1 nodes with violation
+INFO:root:Iteration 3690: Coordinator about to ask 1 nodes for statistics. Nodes [6]
+INFO:root:Iteration 3690: Coordinator asks node 6 for statistics
+INFO:root:Iteration 3690: Node 6 returns to coordinator with statistics
+INFO:root:Iteration 3690: used 2 nodes in lazy sync. Nodes [0 6]
+INFO:root:Iteration 3690: Coordinator about to sync 2 nodes. Nodes [0 6]
+INFO:root:Iteration 3690: Coordinator syncs node 0
+INFO:root:Iteration 3690: Coordinator syncs node 6
+INFO:root:Iteration 3691: Node 5 notify False Local Violation
+INFO:root:Iteration 3691: 1 nodes with violation
+INFO:root:Iteration 3691: Coordinator about to ask 1 nodes for statistics. Nodes [7]
+INFO:root:Iteration 3691: Coordinator asks node 7 for statistics
+INFO:root:Iteration 3691: Node 7 returns to coordinator with statistics
+INFO:root:Iteration 3691: used 2 nodes in lazy sync. Nodes [5 7]
+INFO:root:Iteration 3691: Coordinator about to sync 2 nodes. Nodes [5 7]
+INFO:root:Iteration 3691: Coordinator syncs node 5
+INFO:root:Iteration 3691: Coordinator syncs node 7
+INFO:root:Iteration 3692: Node 8 notify False Local Violation
+INFO:root:Iteration 3692: 1 nodes with violation
+INFO:root:Iteration 3692: Coordinator about to ask 1 nodes for statistics. Nodes [2]
+INFO:root:Iteration 3692: Coordinator asks node 2 for statistics
+INFO:root:Iteration 3692: Node 2 returns to coordinator with statistics
+INFO:root:Iteration 3692: used 2 nodes in lazy sync. Nodes [8 2]
+INFO:root:Iteration 3692: Coordinator about to sync 2 nodes. Nodes [8 2]
+INFO:root:Iteration 3692: Coordinator syncs node 8
+INFO:root:Iteration 3692: Coordinator syncs node 2
+INFO:root:Iteration 3693: Node 2 notify False Local Violation
+INFO:root:Iteration 3693: Node 5 notify False Local Violation
+INFO:root:Iteration 3693: 2 nodes with violation
+INFO:root:Iteration 3693: Coordinator about to ask 1 nodes for statistics. Nodes [3]
+INFO:root:Iteration 3693: Coordinator asks node 3 for statistics
+INFO:root:Iteration 3693: Node 3 returns to coordinator with statistics
+INFO:root:Iteration 3693: Coordinator about to ask 1 nodes for statistics. Nodes [4]
+INFO:root:Iteration 3693: Coordinator asks node 4 for statistics
+INFO:root:Iteration 3693: Node 4 returns to coordinator with statistics
+INFO:root:Iteration 3693: Coordinator about to ask 1 nodes for statistics. Nodes [6]
+INFO:root:Iteration 3693: Coordinator asks node 6 for statistics
+INFO:root:Iteration 3693: Node 6 returns to coordinator with statistics
+INFO:root:Iteration 3693: fallback to eager sync from lazy sync !!!!!!!!!!!!!!!!!!
+INFO:root:Iteration 3693: Coordinator about to ask 5 nodes for statistics. Nodes [0, 1, 7, 8, 9]
+INFO:root:Iteration 3693: Coordinator asks node 0 for statistics
+INFO:root:Iteration 3693: Node 0 returns to coordinator with statistics
+INFO:root:Iteration 3693: Coordinator asks node 1 for statistics
+INFO:root:Iteration 3693: Node 1 returns to coordinator with statistics
+INFO:root:Iteration 3693: Coordinator asks node 7 for statistics
+INFO:root:Iteration 3693: Node 7 returns to coordinator with statistics
+INFO:root:Iteration 3693: Coordinator asks node 8 for statistics
+INFO:root:Iteration 3693: Node 8 returns to coordinator with statistics
+INFO:root:Iteration 3693: Coordinator asks node 9 for statistics
+INFO:root:Iteration 3693: Node 9 returns to coordinator with statistics
+INFO:root:Iteration 3693: About to sync the value [23.14809764]
+INFO:root:Iteration 3693: About to sync the thresholds [-2.41558048],[0.58441952]
+INFO:root:Iteration 3693: Update adaptive domain [(20.148097639228965, 26.148097639228965)]
+INFO:root:Iteration 3693: Minimal eigenvalue of hessian in the domain: -0.9999999999973407
+INFO:root:Iteration 3693: Maximal eigenvalue of hessian in the domain: 0.9999999999821351
+INFO:root:Optimization time: 0.024232899999999447
+INFO:root:Use g,h convex diff with min eigenvalue -0.9999999999973407
+INFO:root:Iteration 3693: Coordinator about to sync 10 nodes. Nodes [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+INFO:root:Iteration 3693: Coordinator syncs node 0
+INFO:root:Iteration 3693: Coordinator syncs node 1
+INFO:root:Iteration 3693: Coordinator syncs node 2
+INFO:root:Iteration 3693: Coordinator syncs node 3
+INFO:root:Iteration 3693: Coordinator syncs node 4
+INFO:root:Iteration 3693: Coordinator syncs node 5
+INFO:root:Iteration 3693: Coordinator syncs node 6
+INFO:root:Iteration 3693: Coordinator syncs node 7
+INFO:root:Iteration 3693: Coordinator syncs node 8
+INFO:root:Iteration 3693: Coordinator syncs node 9
+INFO:root:Iteration 3894: Node 3 notify False Local Violation
+INFO:root:Iteration 3894: 1 nodes with violation
+INFO:root:Iteration 3894: Coordinator about to ask 1 nodes for statistics. Nodes [0]
+INFO:root:Iteration 3894: Coordinator asks node 0 for statistics
+INFO:root:Iteration 3894: Node 0 returns to coordinator with statistics
+INFO:root:Iteration 3894: used 2 nodes in lazy sync. Nodes [3 0]
+INFO:root:Iteration 3894: Coordinator about to sync 2 nodes. Nodes [3 0]
+INFO:root:Iteration 3894: Coordinator syncs node 3
+INFO:root:Iteration 3894: Coordinator syncs node 0
+INFO:root:Iteration 3897: Node 7 notify False Local Violation
+INFO:root:Iteration 3897: 1 nodes with violation
+INFO:root:Iteration 3897: Coordinator about to ask 1 nodes for statistics. Nodes [1]
+INFO:root:Iteration 3897: Coordinator asks node 1 for statistics
+INFO:root:Iteration 3897: Node 1 returns to coordinator with statistics
+INFO:root:Iteration 3897: used 2 nodes in lazy sync. Nodes [7 1]
+INFO:root:Iteration 3897: Coordinator about to sync 2 nodes. Nodes [7 1]
+INFO:root:Iteration 3897: Coordinator syncs node 7
+INFO:root:Iteration 3897: Coordinator syncs node 1
+INFO:root:Iteration 3904: Node 1 notify False Local Violation
+INFO:root:Iteration 3904: 1 nodes with violation
+INFO:root:Iteration 3904: Coordinator about to ask 1 nodes for statistics. Nodes [2]
+INFO:root:Iteration 3904: Coordinator asks node 2 for statistics
+INFO:root:Iteration 3904: Node 2 returns to coordinator with statistics
+INFO:root:Iteration 3904: used 2 nodes in lazy sync. Nodes [1 2]
+INFO:root:Iteration 3904: Coordinator about to sync 2 nodes. Nodes [1 2]
+INFO:root:Iteration 3904: Coordinator syncs node 1
+INFO:root:Iteration 3904: Coordinator syncs node 2
+INFO:root:Iteration 3905: Node 3 notify False Local Violation
+INFO:root:Iteration 3905: Node 6 notify False Local Violation
+INFO:root:Iteration 3905: 2 nodes with violation
+INFO:root:Iteration 3905: Coordinator about to ask 1 nodes for statistics. Nodes [4]
+INFO:root:Iteration 3905: Coordinator asks node 4 for statistics
+INFO:root:Iteration 3905: Node 4 returns to coordinator with statistics
+INFO:root:Iteration 3905: used 3 nodes in lazy sync. Nodes [3 6 4]
+INFO:root:Iteration 3905: Coordinator about to sync 3 nodes. Nodes [3 6 4]
+INFO:root:Iteration 3905: Coordinator syncs node 3
+INFO:root:Iteration 3905: Coordinator syncs node 6
+INFO:root:Iteration 3905: Coordinator syncs node 4
+INFO:root:Iteration 3906: Node 4 notify False Local Violation
+INFO:root:Iteration 3906: 1 nodes with violation
+INFO:root:Iteration 3906: Coordinator about to ask 1 nodes for statistics. Nodes [5]
+INFO:root:Iteration 3906: Coordinator asks node 5 for statistics
+INFO:root:Iteration 3906: Node 5 returns to coordinator with statistics
+INFO:root:Iteration 3906: used 2 nodes in lazy sync. Nodes [4 5]
+INFO:root:Iteration 3906: Coordinator about to sync 2 nodes. Nodes [4 5]
+INFO:root:Iteration 3906: Coordinator syncs node 4
+INFO:root:Iteration 3906: Coordinator syncs node 5
+INFO:root:Iteration 3908: Node 7 notify False Local Violation
+INFO:root:Iteration 3908: 1 nodes with violation
+INFO:root:Iteration 3908: Coordinator about to ask 1 nodes for statistics. Nodes [8]
+INFO:root:Iteration 3908: Coordinator asks node 8 for statistics
+INFO:root:Iteration 3908: Node 8 returns to coordinator with statistics
+INFO:root:Iteration 3908: used 2 nodes in lazy sync. Nodes [7 8]
+INFO:root:Iteration 3908: Coordinator about to sync 2 nodes. Nodes [7 8]
+INFO:root:Iteration 3908: Coordinator syncs node 7
+INFO:root:Iteration 3908: Coordinator syncs node 8
+INFO:root:Iteration 3910: Node 0 notify False Local Violation
+INFO:root:Iteration 3910: Node 2 notify False Local Violation
+INFO:root:Iteration 3910: Node 4 notify False Local Violation
+INFO:root:Iteration 3910: Node 6 notify False Local Violation
+INFO:root:Iteration 3910: 4 nodes with violation
+INFO:root:Iteration 3910: Coordinator about to ask 1 nodes for statistics. Nodes [9]
+INFO:root:Iteration 3910: Coordinator asks node 9 for statistics
+INFO:root:Iteration 3910: Node 9 returns to coordinator with statistics
+INFO:root:Iteration 3910: fallback to eager sync from lazy sync !!!!!!!!!!!!!!!!!!
+INFO:root:Iteration 3910: Coordinator about to ask 5 nodes for statistics. Nodes [1, 3, 5, 7, 8]
+INFO:root:Iteration 3910: Coordinator asks node 1 for statistics
+INFO:root:Iteration 3910: Node 1 returns to coordinator with statistics
+INFO:root:Iteration 3910: Coordinator asks node 3 for statistics
+INFO:root:Iteration 3910: Node 3 returns to coordinator with statistics
+INFO:root:Iteration 3910: Coordinator asks node 5 for statistics
+INFO:root:Iteration 3910: Node 5 returns to coordinator with statistics
+INFO:root:Iteration 3910: Coordinator asks node 7 for statistics
+INFO:root:Iteration 3910: Node 7 returns to coordinator with statistics
+INFO:root:Iteration 3910: Coordinator asks node 8 for statistics
+INFO:root:Iteration 3910: Node 8 returns to coordinator with statistics
+INFO:root:Iteration 3910: About to sync the value [24.50237996]
+INFO:root:Iteration 3910: About to sync the thresholds [-2.08943663],[0.91056337]
+INFO:root:Iteration 3910: Update adaptive domain [(21.502379962134416, 27.502379962134416)]
+INFO:root:Iteration 3910: Minimal eigenvalue of hessian in the domain: -0.9999998780958308
+INFO:root:Iteration 3910: Maximal eigenvalue of hessian in the domain: 0.9999999999997851
+INFO:root:Optimization time: 0.018679500000000182
+INFO:root:Use g,h convex diff with min eigenvalue -0.9999998780958308
+INFO:root:Iteration 3910: Coordinator about to sync 10 nodes. Nodes [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+INFO:root:Iteration 3910: Coordinator syncs node 0
+INFO:root:Iteration 3910: Coordinator syncs node 1
+INFO:root:Iteration 3910: Coordinator syncs node 2
+INFO:root:Iteration 3910: Coordinator syncs node 3
+INFO:root:Iteration 3910: Coordinator syncs node 4
+INFO:root:Iteration 3910: Coordinator syncs node 5
+INFO:root:Iteration 3910: Coordinator syncs node 6
+INFO:root:Iteration 3910: Coordinator syncs node 7
+INFO:root:Iteration 3910: Coordinator syncs node 8
+INFO:root:Iteration 3910: Coordinator syncs node 9
+INFO:root:The test took: 5.0994775 seconds
+INFO:root:Coordinator AutoMonConvex statistics:
+INFO:root:True violations msg counter 0
+INFO:root:False Global violations msg counter 300
+INFO:root:False Local violations msg counter 300
+INFO:root:Sync broadcast msg counter 163
+INFO:root:Sync msg counter 573
+INFO:root:Get node statistics broadcast msg counter 200
+INFO:root:Get node statistics msg counter 273
+INFO:root:Miss violations counter 0
+INFO:root:Rounds with violations counter 164
+INFO:root:Total violations msg counter 300
+INFO:root:Node return statistics msg counter 273
+INFO:root:Total msgs broadcast enabled 936, and disabled 1419
+INFO:root:Num violations caused by local vector outside safe zone 300
+INFO:root:Num violations caused by local vector outside domain 0
+INFO:root:Optimization counter 20
+INFO:root:Avg optimization time 0.023307090000000023
+DEBUG:matplotlib.backends.backend_pdf:Assigning font /b'F1' = 'C:\\Users\\hadarsivan\\AppData\\Local\\Continuum\\anaconda3\\lib\\site-packages\\matplotlib\\mpl-data\\fonts\\ttf\\DejaVuSans.ttf'
+DEBUG:matplotlib.backends.backend_pdf:Embedding font C:\Users\hadarsivan\AppData\Local\Continuum\anaconda3\lib\site-packages\matplotlib\mpl-data\fonts\ttf\DejaVuSans.ttf.
+DEBUG:matplotlib.backends.backend_pdf:Writing TrueType font.
+DEBUG:matplotlib.backends.backend_pdf:Assigning font /b'F1' = 'C:\\Users\\hadarsivan\\AppData\\Local\\Continuum\\anaconda3\\lib\\site-packages\\matplotlib\\mpl-data\\fonts\\ttf\\DejaVuSans.ttf'
+DEBUG:matplotlib.backends.backend_pdf:Embedding font C:\Users\hadarsivan\AppData\Local\Continuum\anaconda3\lib\site-packages\matplotlib\mpl-data\fonts\ttf\DejaVuSans.ttf.
+DEBUG:matplotlib.backends.backend_pdf:Writing TrueType font.
+INFO:root:Finished test

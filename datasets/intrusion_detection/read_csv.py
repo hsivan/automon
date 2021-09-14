@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import Normalizer
+import importlib.resources as pkg_resources
 
 
 def get_data(file):
@@ -45,13 +46,15 @@ def get_data(file):
 
 
 # Data taken from http://kdd.ics.uci.edu/databases/kddcup99/kddcup99.html kddcup.data_10_percent.gz
-def get_training_data(relative_folder='./'):
-    return get_data(relative_folder + 'kddcup.data_10_percent_corrected')
+def get_training_data():
+    data_stream = pkg_resources.open_text('datasets.intrusion_detection', 'kddcup.data_10_percent_corrected')
+    return get_data(data_stream)
 
 
 # Data taken from http://kdd.ics.uci.edu/databases/kddcup99/kddcup99.html corrected.gz
-def get_testing_data(relative_folder='./'):
-    return get_data(relative_folder + 'corrected')
+def get_testing_data():
+    data_stream = pkg_resources.open_text('datasets.intrusion_detection', 'corrected')
+    return get_data(data_stream)
 
 
 def set_nodes_data(df_, app_idx, node_indices, nodes):
@@ -71,11 +74,11 @@ def set_nodes_data(df_, app_idx, node_indices, nodes):
     return node_indices
 
 
-def prepare_intrusion_detection_data(relative_folder='./', num_rows_to_drop_from_beginning=0):
+def prepare_intrusion_detection_data(num_rows_to_drop_from_beginning=0):
     sliding_window_size = 20
     num_nodes = 9
 
-    df = get_testing_data(relative_folder)
+    df = get_testing_data()
     apps, counts = np.unique(df[3], return_counts=True)
     # Divide 164352 rows with application index 51 to 5 nodes (32870 rows per node).
     # Divide 78510 rows with application index 21 to 2 nodes (39255 rows per node).
@@ -88,7 +91,7 @@ def prepare_intrusion_detection_data(relative_folder='./', num_rows_to_drop_from
 
     node_indices = np.zeros(df.shape[0])
 
-    train_data = get_training_data(relative_folder)
+    train_data = get_training_data()
     train_x = train_data.iloc[:, 1:42].values
     scaler = Normalizer().fit(train_x)
 
@@ -98,9 +101,9 @@ def prepare_intrusion_detection_data(relative_folder='./', num_rows_to_drop_from
     rest_app_indices = [i for i in range(len(apps)) if i != 51 and i != 21 and i != 0]
     node_indices = set_nodes_data(df, rest_app_indices, node_indices, [8])[num_rows_to_drop_from_beginning:]
 
-    nodes_data = df.values[num_rows_to_drop_from_beginning:]
+    nodes_data = df.values[num_rows_to_drop_from_beginning:][:, 1:42]
     nodes_data = scaler.transform(nodes_data)
-    nodes_data = np.append(np.expand_dims(node_indices, -1), nodes_data[:, 1:42], axis=1)
+    nodes_data = np.append(np.expand_dims(node_indices, -1), nodes_data, axis=1)
     max_index_of_full_window = 0
     for node_idx in range(num_nodes):
         index_of_full_window = np.argwhere(nodes_data[:, 0] == node_idx)[sliding_window_size][0]
