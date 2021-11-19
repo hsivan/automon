@@ -1,6 +1,6 @@
 # AutoMon
 
-AutoMon library for distributed function monitoring.
+AutoMon library for distributed functional monitoring.
 
 AutoMon is an easy-to-use algorithmic building block for automatically approximating arbitrary real
 multivariate functions over distributed data streams.
@@ -37,7 +37,11 @@ pip install <automon_root>
 
 ## Features
 
-### Automatic differentiation tool
+### Lightweight design -- a library, not a framework
+AutoMon is designed to be integrated easily into distributed applications. 
+It focuses on managing the distributed approximation algorithm, and does not impose (nor use) any specific underlying messaging fabric.
+
+### Choice of automatic differentiation tool
 We support two automatic differentiation tools: [JAX](https://github.com/google/jax) and [Autograd](https://github.com/HIPS/autograd).
 We use JAX as the default tool, and in case it is not installed (e.g. on Windows), we use Autograd.
 It is possible to force using Autograd by adding at the beginning of the experiment:
@@ -50,7 +54,7 @@ os.environ['AUTO_GRAD_TOOL'] = 'AutoGrad'
 We support two lazy sync techniques: least recently used (LRU) and random.
 You can set the technique by calling `automon.test_utils.get_config()` with the required `sync_type` value.
 
-### AutoMon, GM, CB, and RLV
+### Geometric monitoring protocol support for AutoMon, GM, CB, and RLV
 The implementation in this project separates between the code of the basic Geometric Monitoring protocol and the code of 
 a specific monitoring technique that adopts this protocol (such as AutoMon, GM, and CB).
 The Geometric Monitoring protocol code is implemented in `automon/coordinator_common.py` and `automon/node_common.py`.
@@ -146,7 +150,7 @@ sudo docker run --env HOST=192.68.36.202 --env NODE_IDX=0 --env NODE_TYPE=inner_
 If setting the container environment variable `S3_WRITE` to `1`, the results are written to AWS S3 bucket named `automon-experiment-results`.
 Otherwise, it is advisable to run the container with `-v /home/ubuntu/test_results:<automon_root>/test_results`, so the results are written to the computer filesystem.
 
-## Reproduce experimental results
+## Reproduce experimental results from the paper
 
 Before running the experiments, download AutoMon's source code and then download the external datasets:
 1. [Air Quality](https://archive.ics.uci.edu/ml/datasets/Beijing+Multi-Site+Air-Quality+Data):
@@ -225,13 +229,12 @@ python test_ablation_study_quadratic_inverse.py
 You will find the output files and figures in `<automon_root>/tests/test_results/results_ablation_study_xxx` folders.
 
 
-## Distributed experiment on a real-world WAN
-We verified our simulation through a series of cross-region experiments on AWS.
-We conducted each run in our experiments on two clusters:
+### Distributed experiment on a real-world WAN
+We include code for a series of cross-region experiments on AWS using two clusters:
 one cluster is located in US-West (Oregon) region and is comprised of a single coordinator using 16 virtual CPUs and 32GB of memory;
 the other one is located in US-East (Ohio) region and includes all the node tasks, each of them with 1 virtual CPU and 4GB of memory.
 
-To run such a distributed experiments you will need an AWS account, docker engine, docker cli, and aws cli.
+To run these distributed experiments you will need an AWS account, docker engine, docker cli, and aws cli.
 After having these tools installed and configured follow these steps:
 1. Download AutoMon's source code and the external datasets.
 2. Create AWS IAM user with  AdministratorAccess permissions and download the csv file `new_user_credentials.csv` that contains the key ID and the secret key.
