@@ -4,8 +4,7 @@ from matplotlib.lines import Line2D
 from automon.automon.coordinator_automon import AdcdHelper
 from utils.nodes_automon import NodeEntropyAutoMon, NodeVarianceAutoMon, NodeRozenbrockAutoMon, NodeInnerProductAutoMon
 from utils.functions_to_monitor import func_entropy, func_variance, func_inner_product, func_rozenbrock
-from utils.functions_to_update_local_vector import update_local_vector_frequency, update_local_vector_first_and_second_momentum, update_local_vector_average
-from utils.node_stream import NodeStream
+from utils.node_stream import NodeStreamFrequency, NodeStreamFirstAndSecondMomentum, NodeStreamAverage
 
 
 def entropy_automon_draw_constraints(node):
@@ -332,7 +331,7 @@ def visualize_entropy():
     node3.sync(x0, slack, 0.7, 1, -1, dc_type, extreme_lambda)
     entropy_automon_draw_constraints(node3)
     # Fill sliding window
-    node_stream = NodeStream(2, sliding_window_size, 1, update_local_vector_frequency, x0)
+    node_stream = NodeStreamFrequency(2, sliding_window_size, 1, x0.shape[0])
     for i in range(sliding_window_size):
         node_stream.set_new_data_point(0, node_idx)
     local_vector = node_stream.get_local_vector(node_idx)
@@ -375,7 +374,7 @@ def visualize_entropy():
     node2.sync(x0, slack, 0.5, 0.6, -1, dc_type, extreme_lambda)
     entropy_automon_draw_constraints(node2)
     # Fill sliding window
-    node_stream = NodeStream(2, sliding_window_size, 1, update_local_vector_frequency, x0)
+    node_stream = NodeStreamFrequency(2, sliding_window_size, 1, x0.shape[0])
     for i in range(sliding_window_size):
         node_stream.set_new_data_point(0, node_idx)
     local_vector = node_stream.get_local_vector(node_idx)
@@ -418,7 +417,7 @@ def visualize_variance():
     node = NodeVarianceAutoMon(idx=node_idx)
     node.sync(x0, slack, 0.08, 3, -1, dc_type, extreme_lambda)
     # Fill sliding window
-    node_stream = NodeStream(2, sliding_window_size, 1, update_local_vector_first_and_second_momentum, x0)
+    node_stream = NodeStreamFirstAndSecondMomentum(2, sliding_window_size, 1, x0.shape[0])
     for i in range(sliding_window_size):
         node_stream.set_new_data_point(0, node_idx)
     local_vector = node_stream.get_local_vector(node_idx)
@@ -449,7 +448,7 @@ def visualize_rozenbrock():
     node = NodeRozenbrockAutoMon(idx=node_idx)
     node.sync(x0, slack, 0.08, 3, -1, dc_type, extreme_lambda)
     # Fill sliding window
-    node_stream = NodeStream(2, sliding_window_size, 1, update_local_vector_average, x0)
+    node_stream = NodeStreamAverage(2, sliding_window_size, 1, 1)
     for i in range(sliding_window_size):
         node_stream.set_new_data_point(0, node_idx)
     local_vector = node_stream.get_local_vector(node_idx)
@@ -470,7 +469,7 @@ def visualize_inner_product():
     node = NodeInnerProductAutoMon(idx=node_idx)
     node.sync(x0, slack, 0.08, 3, -1, dc_type, extreme_lambda)
     # Fill sliding window
-    node_stream = NodeStream(2, sliding_window_size, 1, update_local_vector_average, x0)
+    node_stream = NodeStreamAverage(2, sliding_window_size, 1, 1)
     for i in range(sliding_window_size):
         node_stream.set_new_data_point(0, node_idx)
     local_vector = node_stream.get_local_vector(node_idx)

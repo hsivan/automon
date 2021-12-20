@@ -2,10 +2,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
 from utils.functions_to_monitor import func_entropy
-from utils.functions_to_update_local_vector import update_local_vector_first_and_second_momentum,  update_local_vector_frequency
 from automon.gm.node_entropy_gm import NodeEntropyGM
 from automon.gm.node_variance_gm import NodeVarianceGM
-from utils.node_stream import NodeStream
+from utils.node_stream import NodeStreamFrequency, NodeStreamFirstAndSecondMomentum
 
 
 def variance_gm_draw_constraints(node):
@@ -260,7 +259,7 @@ def visualize_entropy():
     node3.sync(x0, slack, 0.7, 1)
     entropy_gm_draw_constraints(node3)
     # Fill sliding window
-    node_stream = NodeStream(2, sliding_window_size, 1, update_local_vector_frequency, x0)
+    node_stream = NodeStreamFrequency(2, sliding_window_size, 1, x0.shape[0])
     for i in range(sliding_window_size):
         node_stream.set_new_data_point(0, node_idx)
     local_vector = node_stream.get_local_vector(node_idx)
@@ -299,7 +298,7 @@ def visualize_entropy():
     node2.sync(x0, slack, 0.5, 0.6)
     entropy_gm_draw_constraints(node2)
     # Fill sliding window
-    node_stream = NodeStream(2, sliding_window_size, 1, update_local_vector_frequency, x0)
+    node_stream = NodeStreamFrequency(2, sliding_window_size, 1, x0.shape[0])
     for i in range(sliding_window_size):
         node_stream.set_new_data_point(0, node_idx)
     local_vector = node_stream.get_local_vector(node_idx)
@@ -339,7 +338,7 @@ def visualize_variance():
     node = NodeVarianceGM(idx=node_idx)
     node.sync(x0, slack, 0.08, 3)
     # Fill sliding window
-    node_stream = NodeStream(2, sliding_window_size, 1, update_local_vector_first_and_second_momentum, x0)
+    node_stream = NodeStreamFirstAndSecondMomentum(2, sliding_window_size, 1, x0.shape[0])
     for i in range(sliding_window_size):
         node_stream.set_new_data_point(0, node_idx)
     local_vector = node_stream.get_local_vector(node_idx)

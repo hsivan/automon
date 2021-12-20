@@ -1,5 +1,5 @@
 from utils.nodes_automon import NodeKLDAutoMon
-from automon.automon.tune_neighborhood_size import tune_neighborhood_size
+from utils.tune_neighborhood_size import tune_neighborhood_size
 from automon.automon.coordinator_automon import CoordinatorAutoMon
 from utils.data_generator import DataGeneratorKldAirQuality
 from utils.test_utils import start_test, end_test, run_test, write_config_to_file, read_config_file

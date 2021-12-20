@@ -1,5 +1,5 @@
 from utils.nodes_automon import NodeKLDAutoMon
-from automon.automon.tune_neighborhood_size import tune_neighborhood_size
+from utils.tune_neighborhood_size import tune_neighborhood_size
 from automon.automon.coordinator_automon import CoordinatorAutoMon
 from automon.rlv.coordinator_rlv import CoordinatorRLV
 from utils.data_generator import DataGeneratorKldAirQuality

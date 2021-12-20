@@ -1,5 +1,5 @@
 from utils.nodes_automon import NodeDnnIntrusionDetectionAutoMon
-from automon.automon.tune_neighborhood_size import tune_neighborhood_size
+from utils.tune_neighborhood_size import tune_neighborhood_size
 from automon.automon.coordinator_automon import CoordinatorAutoMon
 from utils.data_generator import DataGeneratorDnnIntrusionDetection
 from utils.jax_dnn_intrusion_detection import load_net
