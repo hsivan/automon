@@ -2,6 +2,9 @@ import numpy as np
 
 
 class Fifo:
+    """
+    Used by the NodeStream class to maintain the sliding windows of the nodes efficiently.
+    """
     
     def __init__(self, max_elements, num_attributes=1):
         self.max_elements = max_elements

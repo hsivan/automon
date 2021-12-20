@@ -1,22 +1,22 @@
 import os
-from automon.automon.nodes_automon import NodeMlpAutoMon
-from automon.data_generator import DataGeneratorMlp
+from utils.nodes_automon import NodeMlpAutoMon
+from utils.data_generator import DataGeneratorMlp
 from automon.automon.coordinator_automon import CoordinatorAutoMon
 from tests.test_neighborhood_impact_on_communication_rozenbrock import get_optimal_neighborhood_sizes_from_full_test
-from automon.test_utils import start_test, end_test, run_test, write_config_to_file, read_config_file
-from automon.stats_analysis_utils import plot_monitoring_stats
+from utils.test_utils import start_test, end_test, run_test, write_config_to_file, read_config_file
+from utils.stats_analysis_utils import plot_monitoring_stats
 import logging
 import traceback
-from automon.object_factory import get_objects
-from automon.functions_to_monitor import set_net_params
-from automon.jax_mlp import load_net
+from utils.object_factory import get_objects
+from utils.functions_to_monitor import set_net_params
+from utils.jax_mlp import load_net
 from tests.visualization.plot_neighborhood_impact import plot_communication_or_violation_error_bound_connection
 
 
 def neighborhood_size_impact(experiment_folder, test_folder, neighborhood_sizes, prefixes):
     conf = read_config_file(test_folder)
     data_generator = DataGeneratorMlp(num_iterations=conf["num_iterations"], num_nodes=conf["num_nodes"],
-                                      data_file_name="data_file.txt", test_folder=experiment_folder, d=conf["d"], num_iterations_for_tuning=conf["num_iterations_for_tuning"])
+                                      data_file_name="data_file.txt", test_folder=experiment_folder, d=conf["d"], num_iterations_for_tuning=conf["num_iterations_for_tuning"], sliding_window_size=conf["sliding_window_size"])
 
     data_folder = '../datasets/MLP_2/'
     net_params, net_apply = load_net(data_folder)
@@ -35,7 +35,7 @@ def neighborhood_size_impact(experiment_folder, test_folder, neighborhood_sizes,
             coordinator, nodes = get_objects(NodeMlpAutoMon, CoordinatorAutoMon, conf)
             if prefixes[i] != "tuned":
                 coordinator.b_fix_neighborhood_dynamically = False  # Should not change neighborhood size dynamically for optimal and fixed neighborhood sizes
-            run_test(data_generator, coordinator, nodes, sub_test_folder, conf["sliding_window_size"])
+            run_test(data_generator, coordinator, nodes, sub_test_folder)
 
             plot_monitoring_stats(sub_test_folder)
             end_test()
@@ -68,7 +68,7 @@ if __name__ == "__main__":
         # Generate data and save to file
         data_generator = DataGeneratorMlp(num_iterations=conf["num_iterations"], num_nodes=conf["num_nodes"],
                                           data_file_name="data_file.txt", d=conf["d"], test_folder=full_tuning_test_experiment_folders[experiment_idx],
-                                          num_iterations_for_tuning=conf["num_iterations_for_tuning"])
+                                          num_iterations_for_tuning=conf["num_iterations_for_tuning"], sliding_window_size=conf["sliding_window_size"])
         data_generator.data_file_name = experiment_folder + "/data_file.txt"
         data_generator._save_data_to_file()
 

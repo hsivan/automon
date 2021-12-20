@@ -1,11 +1,11 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
-from automon.functions_to_monitor import func_entropy
-from automon.functions_to_update_local_vector import update_local_vector_first_and_second_momentum,  update_local_vector_frequency
+from utils.functions_to_monitor import func_entropy
+from utils.functions_to_update_local_vector import update_local_vector_first_and_second_momentum,  update_local_vector_frequency
 from automon.gm.node_entropy_gm import NodeEntropyGM
 from automon.gm.node_variance_gm import NodeVarianceGM
-from automon.node_stream import NodeStream
+from utils.node_stream import NodeStream
 
 
 def variance_gm_draw_constraints(node):

@@ -1,10 +1,10 @@
-from automon.fifo import Fifo
+from utils.fifo import Fifo
 import numpy as np
 
 
 class NodeStream:
     """
-    The data streams of all the nodes in the system.
+    The data streams of all the nodes in the system. Used by the DataGenerator class.
     Receives data points and updates the local vector of the nodes.
     Updates the global vector of the verifier with every new data point.
     """

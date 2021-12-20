@@ -1,19 +1,18 @@
-from automon.automon.nodes_automon import NodeInnerProductAutoMon
+from utils.nodes_automon import NodeInnerProductAutoMon
 from automon.cb.node_inner_product_cb import NodeInnerProductCB
 from automon.automon.coordinator_automon import CoordinatorAutoMon
 from automon.cb.coordinator_cb import CoordinatorCB
-from automon.data_generator import DataGeneratorInnerProduct
-from automon.coordinator_common import SlackType, SyncType
-from automon.test_utils import start_test, end_test, run_test, get_config, write_config_to_file, read_config_file
-from automon.stats_analysis_utils import plot_monitoring_stats
+from utils.data_generator import DataGeneratorInnerProduct
+from utils.test_utils import start_test, end_test, run_test, write_config_to_file, read_config_file
+from utils.stats_analysis_utils import plot_monitoring_stats
 import logging
-from automon.object_factory import get_objects
+from utils.object_factory import get_objects
 from tests.visualization.plot_error_communication_tradeoff import plot_max_error_vs_communication
 
 
 def test_error_bounds(error_bound, parent_test_folder):
     conf = read_config_file(parent_test_folder)
-    data_generator = DataGeneratorInnerProduct(num_iterations=conf["num_iterations"], num_nodes=conf["num_nodes"], data_file_name="data_file.txt", d=conf["d"], test_folder=parent_test_folder)
+    data_generator = DataGeneratorInnerProduct(num_iterations=conf["num_iterations"], num_nodes=conf["num_nodes"], data_file_name="data_file.txt", d=conf["d"], test_folder=parent_test_folder, sliding_window_size=conf["sliding_window_size"])
 
     try:
         test_folder = parent_test_folder + "/threshold_" + str(error_bound)
@@ -25,12 +24,12 @@ def test_error_bounds(error_bound, parent_test_folder):
         logging.info("\n###################### Start CB test ######################")
         data_generator.reset()
         coordinator, nodes = get_objects(NodeInnerProductCB, CoordinatorCB, conf)
-        run_test(data_generator, coordinator, nodes, test_folder, conf["sliding_window_size"])
+        run_test(data_generator, coordinator, nodes, test_folder)
 
         logging.info("\n###################### Start AutoMon test ######################")
         data_generator.reset()
         coordinator, nodes = get_objects(NodeInnerProductAutoMon, CoordinatorAutoMon, conf)
-        run_test(data_generator, coordinator, nodes, test_folder, conf["sliding_window_size"])
+        run_test(data_generator, coordinator, nodes, test_folder)
 
         plot_monitoring_stats(test_folder)
 
@@ -45,12 +44,12 @@ if __name__ == "__main__":
 
     '''conf = get_config(num_nodes=10, num_iterations=1020, sliding_window_size=20, d=40, slack_type=SlackType.Drift.value, sync_type=SyncType.LazyLRU.value)
     write_config_to_file(parent_test_folder, conf)
-    data_generator = DataGeneratorInnerProduct(num_iterations=conf["num_iterations"], num_nodes=conf["num_nodes"], d=conf["d"], test_folder=parent_test_folder)'''
+    data_generator = DataGeneratorInnerProduct(num_iterations=conf["num_iterations"], num_nodes=conf["num_nodes"], d=conf["d"], test_folder=parent_test_folder, sliding_window_size=conf["sliding_window_size"])'''
 
     data_folder = '../datasets/inner_product/'
     conf = read_config_file(data_folder)
     write_config_to_file(parent_test_folder, conf)
-    data_generator = DataGeneratorInnerProduct(num_iterations=conf["num_iterations"], num_nodes=conf["num_nodes"], d=conf["d"], data_file_name=data_folder + "data_file.txt")
+    data_generator = DataGeneratorInnerProduct(num_iterations=conf["num_iterations"], num_nodes=conf["num_nodes"], d=conf["d"], data_file_name=data_folder + "data_file.txt", sliding_window_size=conf["sliding_window_size"])
     data_generator.data_file_name = parent_test_folder + "/data_file.txt"
     data_generator._save_data_to_file()
 

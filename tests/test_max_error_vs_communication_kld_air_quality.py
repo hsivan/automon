@@ -1,11 +1,11 @@
-from automon.automon.nodes_automon import NodeKLDAutoMon
+from utils.nodes_automon import NodeKLDAutoMon
 from automon.automon.tune_neighborhood_size import tune_neighborhood_size
 from automon.automon.coordinator_automon import CoordinatorAutoMon
-from automon.data_generator import DataGeneratorKldAirQuality
-from automon.test_utils import start_test, end_test, run_test, write_config_to_file, read_config_file
-from automon.stats_analysis_utils import plot_monitoring_stats
+from utils.data_generator import DataGeneratorKldAirQuality
+from utils.test_utils import start_test, end_test, run_test, write_config_to_file, read_config_file
+from utils.stats_analysis_utils import plot_monitoring_stats
 import logging
-from automon.object_factory import get_objects
+from utils.object_factory import get_objects
 from tests.visualization.plot_error_communication_tradeoff import plot_max_error_vs_communication
 
 
@@ -13,7 +13,7 @@ def test_error_bounds(error_bound, parent_test_folder):
     conf = read_config_file(parent_test_folder)
     data_generator = DataGeneratorKldAirQuality(num_iterations=conf["num_iterations"], num_nodes=conf["num_nodes"],
                                                 data_file_name="data_file.txt", test_folder=parent_test_folder, d=conf["d"],
-                                                num_iterations_for_tuning=conf["num_iterations_for_tuning"])
+                                                num_iterations_for_tuning=conf["num_iterations_for_tuning"], sliding_window_size=conf["sliding_window_size"])
 
     try:
         test_folder = parent_test_folder + "/threshold_" + str(error_bound)
@@ -26,7 +26,7 @@ def test_error_bounds(error_bound, parent_test_folder):
         data_generator.reset()
         coordinator, nodes = get_objects(NodeKLDAutoMon, CoordinatorAutoMon, conf)
         tune_neighborhood_size(coordinator, nodes, conf, data_generator)
-        run_test(data_generator, coordinator, nodes, test_folder, conf["sliding_window_size"])
+        run_test(data_generator, coordinator, nodes, test_folder)
 
         plot_monitoring_stats(test_folder)
 

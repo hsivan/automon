@@ -9,7 +9,6 @@ from zmq import ContextTerminated, ZMQError
 from zmq.utils.monitor import recv_monitor_message
 from automon.node_common import State
 from automon.messages_common import prepare_message_data_update
-from automon.node_stream import NodeStream
 
 # Use ZMQ Client-Server pattern  (https://zguide.zeromq.org/docs/chapter3/#The-Asynchronous-Client-Server-Pattern)
 # Between the coordinator and the nodes. Coordinator uses ROUTER socket and the nodes use DEALER socket.
@@ -36,7 +35,7 @@ def event_monitor_client(monitor):
 
 
 class NodeDataLoop(threading.Thread):
-    def __init__(self, context, condition, data_generator, host, port, node, node_idx, node_stream, b_single_sample_per_round):
+    def __init__(self, context, condition, data_generator, host, port, node, node_idx, b_single_sample_per_round):
         self.context = context
         self.condition = condition
         self.node_idx = node_idx
@@ -44,7 +43,6 @@ class NodeDataLoop(threading.Thread):
         self.host = host
         self.port = port
         self.node = node
-        self.node_stream = node_stream
         self.num_data_updates = 0
         self.num_detected_full_sync = 0
         self.b_single_sample_per_round = b_single_sample_per_round
@@ -58,7 +56,7 @@ class NodeDataLoop(threading.Thread):
         latency_diff_between_full_and_lazy_sync = full_sync_latency_seconds - lazy_sync_latency_seconds
 
         if idx == self.node_idx:
-            local_vector = self.node_stream.get_local_vector(self.node_idx)
+            local_vector = self.data_generator.get_local_vector(self.node_idx)
             message_data_update = prepare_message_data_update(self.node_idx, local_vector)
             message_violation = self.node.parse_message(message_data_update)
             if message_violation is not None and len(message_violation) > 0:
@@ -102,8 +100,7 @@ class NodeDataLoop(threading.Thread):
                 # Check if the monitor thread finished
                 if not t.is_alive():
                     break
-                data_point, idx = self.data_generator.get_next_data_point()
-                self.node_stream.set_new_data_point(data_point, int(idx))
+                _, idx = self.data_generator.get_next_data_point()
                 if self.b_single_sample_per_round:
                     self.data_update(data_client, idx)
                 else:
@@ -124,16 +121,10 @@ class NodeDataLoop(threading.Thread):
             logging.info("Node " + str(self.node_idx) + ": closed data_client socket")
 
 
-def run_node(host, port, node, node_idx, data_generator, num_nodes, sliding_window_size, test_folder, b_single_sample_per_round=False):
-    logging.info("Node " + str(node_idx) + ": num_nodes " + str(num_nodes) + ", num_iterations " + str(data_generator.get_num_iterations()) + ", data_generator state " + str(data_generator.state))
+def run_node(host, port, node, node_idx, data_generator, test_folder, b_single_sample_per_round=False):
+    logging.info("Node " + str(node_idx) + ": num_iterations " + str(data_generator.get_num_iterations()) + ", data_generator state " + str(data_generator.state))
 
-    node_stream = NodeStream(num_nodes, sliding_window_size, data_generator.get_data_point_len(), data_generator.get_local_vec_update_func(), initial_x0=data_generator.get_initial_x0())
     condition = threading.Condition()
-
-    # Fill all sliding windows
-    while not node_stream.all_windows_full():
-        data_point, idx = data_generator.get_next_data_point()
-        node_stream.set_new_data_point(data_point, int(idx))
 
     context = zmq.Context()
     client = context.socket(zmq.DEALER)
@@ -144,7 +135,7 @@ def run_node(host, port, node, node_idx, data_generator, num_nodes, sliding_wind
     logging.info('Node %s started' % identity)
 
     try:
-        node_data_loop = NodeDataLoop(context, condition, data_generator, host, port, node, node_idx, node_stream, b_single_sample_per_round)
+        node_data_loop = NodeDataLoop(context, condition, data_generator, host, port, node, node_idx, b_single_sample_per_round)
         node_data_loop.start()
 
         # Send ready message to server socket
@@ -191,6 +182,41 @@ def run_node(host, port, node, node_idx, data_generator, num_nodes, sliding_wind
         node.dump_stats(test_folder)
 
 
+def init_client_socket(node_idx, host='127.0.0.1', port=6400):
+    context = zmq.Context()
+    client_socket = context.socket(zmq.DEALER)
+    client_socket.setsockopt(zmq.LINGER, 0)
+    identity = '%d' % node_idx
+    client_socket.identity = identity.encode('ascii')
+    client_socket.connect('tcp://' + host + ':' + str(port))
+    logging.info('Node %s started' % identity)
+
+    try:
+        # Send ready message to server socket
+        client_socket.send("ready".encode())
+
+        # Wait for start message from the server socket
+        message = client_socket.recv()
+        while message != b'start':
+            message = client_socket.recv()
+
+        logging.info("Node " + str(node_idx) + " got start message from the coordinator")
+    except Exception as e:
+        logging.info(traceback.print_exc())
+    return client_socket
+
+
+def init_client_data_socket(node_idx, host='127.0.0.1', port=6400):
+    context = zmq.Context()
+    client_socket = context.socket(zmq.DEALER)
+    client_socket.setsockopt(zmq.LINGER, 0)
+    identity = 'data_loop-%d' % node_idx
+    client_socket.identity = identity.encode('ascii')
+    client_socket.connect('tcp://' + host + ':' + str(port))
+    logging.info('Node %s started' % identity)
+    return client_socket
+
+
 def event_monitor_server(monitor):
     num_connections = 0
     num_disconnections = 0
@@ -218,7 +244,6 @@ def event_monitor_server(monitor):
 
 
 def run_coordinator(coordinator, port, num_nodes, test_folder):
-    coordinator.b_simulation = False
     start_time = timer()
     context = zmq.Context()
     server = context.socket(zmq.ROUTER)
@@ -242,7 +267,7 @@ def run_coordinator(coordinator, port, num_nodes, test_folder):
 
         start_time = timer()
 
-        # After all node sockets are ready, send start signal to all the node to start the data loop
+        # After all node sockets are ready, send start signal to all the nodes to start the data loop
         for node_idx in range(num_nodes):
             server.send_multipart([str(node_idx).encode('ascii'), "start".encode()])
 
@@ -280,3 +305,42 @@ def run_coordinator(coordinator, port, num_nodes, test_folder):
         end = timer()
         logging.info("The test took: " + str(end - start_time) + " seconds")
         coordinator.dump_stats(test_folder)
+
+
+def init_server_socket(port=6400, num_nodes=10):
+    # Opens server socket. Waits for all the nodes to connect and then sends 'start' signal to all the nodes to start the data loop
+    context = zmq.Context()
+    server_socket = context.socket(zmq.ROUTER)
+    server_socket.setsockopt(zmq.LINGER, 0)
+    server_socket.bind('tcp://0.0.0.0:' + str(port))
+
+    logging.info("Coordinator server socket started")
+
+    try:
+        monitor = server_socket.get_monitor_socket()
+        t = threading.Thread(target=event_monitor_server, args=(monitor,))
+        t.start()
+
+        # Wait for ready message from all the node sockets
+        b_ready_nodes = np.zeros(num_nodes, dtype=bool)
+        while not np.all(b_ready_nodes):
+            ident, message = server_socket.recv_multipart()
+            logging.info("Got message: " + message.decode() + " from node " + ident.decode())
+            if message == b'ready':
+                b_ready_nodes[int(ident)] = True
+
+        # After all node sockets are ready, send start signal to all the nodes to start the data loop
+        for node_idx in range(num_nodes):
+            server_socket.send_multipart([str(node_idx).encode('ascii'), "start".encode()])
+    except Exception as e:
+        logging.info(traceback.print_exc())
+    return server_socket
+
+
+def get_next_message(server_socket):
+    ident, message = server_socket.recv_multipart()
+    return message
+
+
+def send_message(server_socket, node_idx, reply):
+    server_socket.send_multipart([str(node_idx).encode('ascii'), reply])

@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 from matplotlib import rcParams, rcParamsDefault
 import numpy as np
 from tests.visualization.utils import get_figsize, reformat_large_tick_values
-from automon.test_utils import read_config_file
+from utils.test_utils import read_config_file
 import os
 import matplotlib.ticker as tick
 

@@ -2,10 +2,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
 from automon.automon.coordinator_automon import AdcdHelper
-from automon.automon.nodes_automon import NodeEntropyAutoMon, NodeVarianceAutoMon, NodeRozenbrockAutoMon, NodeInnerProductAutoMon
-from automon.functions_to_monitor import func_entropy, func_variance, func_inner_product, func_rozenbrock
-from automon.functions_to_update_local_vector import update_local_vector_frequency, update_local_vector_first_and_second_momentum, update_local_vector_average
-from automon.node_stream import NodeStream
+from utils.nodes_automon import NodeEntropyAutoMon, NodeVarianceAutoMon, NodeRozenbrockAutoMon, NodeInnerProductAutoMon
+from utils.functions_to_monitor import func_entropy, func_variance, func_inner_product, func_rozenbrock
+from utils.functions_to_update_local_vector import update_local_vector_frequency, update_local_vector_first_and_second_momentum, update_local_vector_average
+from utils.node_stream import NodeStream
 
 
 def entropy_automon_draw_constraints(node):

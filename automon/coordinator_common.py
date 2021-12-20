@@ -1,5 +1,4 @@
 import enum
-import time
 import numpy as np
 import logging
 from timeit import default_timer as timer
@@ -211,7 +210,7 @@ class State(enum.Enum):
 
 class CoordinatorCommon:
     
-    def __init__(self, verifier, func_to_monitor, num_nodes, error_bound=2, slack_type=SlackType.Drift, sync_type=SyncType.Eager, lazy_sync_max_S=0.5, b_simulation=True):
+    def __init__(self, verifier, num_nodes, error_bound=2, slack_type=SlackType.Drift, sync_type=SyncType.Eager, lazy_sync_max_S=0.5, b_simulation=False):
         # Override these fields by inherent class
         self.coordinator_name = "Common"
         self.b_violation_strict = True
@@ -219,7 +218,7 @@ class CoordinatorCommon:
         self.lock = threading.Semaphore()
         
         self.verifier = verifier  # Node that is used in lazy sync (to verify constraints) and for violation statistics.
-        self.func_to_monitor = func_to_monitor
+        self.func_to_monitor = verifier.func_to_monitor
         self.error_bound = error_bound
         self.slack_type = slack_type
         self.sync_type = sync_type
@@ -476,8 +475,8 @@ class CoordinatorCommon:
                 raise Exception
             logging.warning("Iteration " + str(self.iteration) + ": Found true violation without any node violation.")
 
-    # Override by inherent class. The specific coordinator specifies here its special condition for eager sync.
-    # By default, there is not special condition for eager sync and the coordinator uses lazy sync.
+    # Override by inherent class. The specific coordinator specifies here its special condition for full sync.
+    # By default, there is no special condition for eager sync and the coordinator uses lazy sync and falls to full sync when resolving violation fails.
     def _is_eager_sync_required(self):
         return False
 

@@ -54,13 +54,6 @@ if AUTO_DIFFERENTIATION_TOOL == "AutoGrad":
         return np.max(eigs)
 
 
-class DomainType(enum.Enum):
-    # The domain is simply the given domain.
-    Absolute = 0
-    # The domain is relative to the reference point x0: a neighborhood around x0.
-    Relative = 1
-
-
 # Use HIPS AutoGrad or Jax for minimization/maximization of eigenvalues
 class ExtremeEigenvalueHelper:
     
@@ -185,26 +178,24 @@ class AdcdHelper:
 
 class CoordinatorAutoMon(CoordinatorCommon):
     
-    def __init__(self, verifier, func_to_monitor, num_nodes, error_bound=2,
-                 slack_type=SlackType.Drift, sync_type=SyncType.Eager, lazy_sync_max_S=0.5, domain=None,
-                 domain_type=DomainType.Absolute, neighborhood_size=1.0):
-        CoordinatorCommon.__init__(self, verifier, func_to_monitor, num_nodes, error_bound, slack_type, sync_type, lazy_sync_max_S)
-        logging.info("CoordinatorAutoMon initialization: domain " + str(domain) + ", domain_type " + str(domain_type) + ", AUTO_DIFFERENTIATION_TOOL " + AUTO_DIFFERENTIATION_TOOL + ", neighborhood_size " + str(neighborhood_size))
+    def __init__(self, verifier, num_nodes, error_bound=2, slack_type=SlackType.Drift, sync_type=SyncType.LazyLRU,
+                 lazy_sync_max_S=0.5, domain=None, neighborhood_size=None):
+        CoordinatorCommon.__init__(self, verifier, num_nodes, error_bound, slack_type, sync_type, lazy_sync_max_S)
+        logging.info("CoordinatorAutoMon initialization: domain " + str(domain) + ", AUTO_DIFFERENTIATION_TOOL " + AUTO_DIFFERENTIATION_TOOL + ", neighborhood_size " + str(neighborhood_size))
         self.coordinator_name = "AutoMon"
         self.b_violation_strict = False
-        self.adcd_helper = AdcdHelper(func_to_monitor)
+        self.adcd_helper = AdcdHelper(verifier.func_to_monitor)
 
-        self.domain = domain
-        self.domain_type = domain_type
-        # If domain_type is relative, then neighborhood is updated according to x0. Otherwise it remains domain.
+        self.domain = domain  # If None, the domain is the entire R^d
+        # If neighborhood_size is not None, then neighborhood is updated according to x0. Otherwise it remains the entire domain.
         self.neighborhood = [domain] * self.x0_len if domain is not None else None
         # Check if the Hessian is constant. If the Hessian const there is no need to find the min and max eigenvalues for every x0 update.
         # Also, for constant hessian the neighborhood remains the entire domain during the test.
         self.b_hessian_const = self._is_hessian_const(self.x0_len)
-        if self.b_hessian_const or self.domain_type == DomainType.Absolute:
+        if self.b_hessian_const or neighborhood_size is None:
             self.initial_neighborhood_size = -1
         else:
-            # Relevant only if domain_type is Relative and Hessian is not constant
+            # Relevant only if neighborhood_size is given and Hessian is not constant
             self.initial_neighborhood_size = neighborhood_size
         # Relevant only if self.b_fix_neighborhood_dynamically is True:
         # If more than this threshold consecutive neighborhood violations (without safe-zone violations), need to
@@ -216,9 +207,9 @@ class CoordinatorAutoMon(CoordinatorCommon):
     def _init(self):
         super()._init()
         self.consecutive_neighborhood_violations_counter = 0
-        # If domain_type is relative (fixed or adaptive), then neighborhood is updated according to x0. Otherwise it remains domain.
+        # If initial_neighborhood_size is not -1 (neighborhood_size is given), then neighborhood is updated according to x0. Otherwise it remains the entire domain.
         self.neighborhood = [self.domain] * self.x0_len if self.domain is not None else None
-        # Relevant only if domain_type is Relative and Hessian is not constant
+        # Relevant only if neighborhood_size is given and Hessian is not constant
         self.neighborhood_size = self.initial_neighborhood_size
         # This flag is set to True only during neighborhood size tuning procedure
         self.b_tune_neighborhood_mode = False
@@ -233,11 +224,11 @@ class CoordinatorAutoMon(CoordinatorCommon):
     def _update_neighborhood(self):
         # Using neighborhood helps mitigating the constraints if the extreme eigenvalues are "less extreme" in smaller neighborhood.
         # However, for fixed Hessian (and therefore fixed eigenvalues) the neighborhood should be the entire domain size.
-        # Moreover, if the domain type is Absolute, the neighborhood should be the entire domain.
-        if self.b_hessian_const or self.domain_type == DomainType.Absolute:
+        # Moreover, if no neighborhood_size was given in initialization, the neighborhood should be the entire domain.
+        if self.b_hessian_const or self.initial_neighborhood_size == -1:
             return
 
-        # Domain type is DomainType.Relative. Update the neighborhood around x0.
+        # Update the neighborhood around x0.
 
         if self._is_neighborhood_size_update_required():
             self.neighborhood_size *= 2

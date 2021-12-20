@@ -2,9 +2,9 @@ import jax.numpy as jnp
 import matplotlib.pyplot as plt
 from matplotlib import rcParams, rcParamsDefault
 from matplotlib import cm
-from automon.test_utils import read_config_file
-from automon.jax_mlp import get_net_arch_large_dim
-from automon.data_generator import DataGeneratorMlp
+from utils.test_utils import read_config_file
+from utils.jax_mlp import get_net_arch_large_dim
+from utils.data_generator import DataGeneratorMlp
 from tests.visualization.utils import get_figsize
 from jax.config import config
 config.update("jax_platform_name", 'cpu')

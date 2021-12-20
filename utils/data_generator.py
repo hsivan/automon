@@ -1,9 +1,10 @@
 import numpy as np
 import enum
 import os
-from automon.functions_to_update_local_vector import LocalVectorUpdateType, get_initial_x0, get_local_vec_update_func
+from utils.functions_to_update_local_vector import LocalVectorUpdateType, get_initial_x0, get_local_vec_update_func
 from datasets.air_quality.read_csv import prepare_pm_data
 from datasets.intrusion_detection.read_csv import prepare_intrusion_detection_data
+from utils.node_stream import NodeStream
 
 
 class DataGeneratorState(enum.Enum):
@@ -12,12 +13,13 @@ class DataGeneratorState(enum.Enum):
 
 
 class DataGenerator:
-    def __init__(self, num_iterations, num_nodes, data_file_name=None, d=1, test_folder="./", num_iterations_for_tuning=0, local_vector_update_type=LocalVectorUpdateType.Average):
+    def __init__(self, num_iterations, num_nodes, data_file_name=None, d=1, test_folder="./", num_iterations_for_tuning=0, local_vector_update_type=LocalVectorUpdateType.Average, sliding_window_size=100):
         self.num_iterations = num_iterations
         self.num_nodes = num_nodes
         self.d = d
         self.num_iterations_for_tuning = num_iterations_for_tuning
         self.local_vector_update_type = local_vector_update_type
+        self.sliding_window_size = sliding_window_size
         self.state = DataGeneratorState.Monitoring
         self.node_schedule_file_name = test_folder + "/node_schedule_file.txt"
 
@@ -31,6 +33,11 @@ class DataGenerator:
 
         self.data_ptr_tuning = 0
         self.data_ptr_monitoring = 0
+
+        # Create data stream for each node. Each data stream sample is the activation of local_vector_update function on the samples in the sliding window of the specific node.
+        # Before the first sample is retrieved from the stream, the sliding window must be full.
+        self.node_stream = NodeStream(self.num_nodes, self.sliding_window_size, self.get_data_point_len(), self.get_local_vec_update_func(), initial_x0=self.get_initial_x0())
+        self.fill_all_sliding_windows()
 
     def _get_data_from_file(self):
         self.data = np.genfromtxt(self.data_file_name)
@@ -68,7 +75,7 @@ class DataGenerator:
     def _generate_data(self, number_of_data_point, data_type):
         raise NotImplementedError("To be implemented by inherent class")
 
-    def get_next_data_point(self):
+    def _get_next_data_point(self):
         if self.state == DataGeneratorState.NeighborhoodTuning:
             data_point = self.tuning_data[self.data_ptr_tuning]
             node_idx = self.tuning_node_schedule[self.data_ptr_tuning]
@@ -79,10 +86,26 @@ class DataGenerator:
             self.data_ptr_monitoring += 1
         return data_point, node_idx
 
+    def get_next_data_point(self):
+        data_point, node_idx = self._get_next_data_point()
+        self.node_stream.set_new_data_point(data_point, node_idx)
+        local_vector = self.node_stream.get_local_vector(node_idx)
+        return local_vector, node_idx
+
+    def get_global_vector(self):
+        return self.node_stream.get_global_vector()
+
+    def get_local_vector(self, node_idx):
+        return self.node_stream.get_local_vector(node_idx)
+
     # Reset the read ptr
     def reset(self):
         self.data_ptr_tuning = 0
         self.data_ptr_monitoring = 0
+        # Create data stream for each node. Each data stream sample is the activation of local_vector_update function on the samples in the sliding window of the specific node.
+        # Before the first sample is retrieved from the stream, the sliding window must be full.
+        self.node_stream = NodeStream(self.num_nodes, self.sliding_window_size, self.get_data_point_len(), self.get_local_vec_update_func(), initial_x0=self.get_initial_x0())
+        self.fill_all_sliding_windows()
 
     def get_num_samples(self):
         if self.state == DataGeneratorState.NeighborhoodTuning:
@@ -98,9 +121,11 @@ class DataGenerator:
 
     def set_neighborhood_tuning_state(self):
         self.state = DataGeneratorState.NeighborhoodTuning
+        self.reset()
 
     def set_monitoring_state(self):
         self.state = DataGeneratorState.Monitoring
+        self.reset()
 
     def get_data_point_len(self):
         data_point_len = 1 if len(self.data.shape) == 1 else self.data.shape[1]
@@ -119,12 +144,18 @@ class DataGenerator:
     def get_local_vec_update_func(self):
         return get_local_vec_update_func(self.local_vector_update_type)
 
+    def fill_all_sliding_windows(self):
+        # Fill all sliding windows
+        while not self.node_stream.all_windows_full():
+            data_point, idx = self._get_next_data_point()
+            self.node_stream.set_new_data_point(data_point, int(idx))
+
 
 class DataGeneratorVariance(DataGenerator):
-    def __init__(self, num_iterations, num_nodes, data_file_name=None, test_folder="./", num_iterations_for_tuning=0):
+    def __init__(self, num_iterations, num_nodes, data_file_name=None, test_folder="./", num_iterations_for_tuning=0, sliding_window_size=100):
         # In variance d here is the dimension (length of the nodes' local vector), which is 2 - first and second moments.
         # However, the length of the data vector is 1.
-        DataGenerator.__init__(self, num_iterations, num_nodes, data_file_name, 2, test_folder, num_iterations_for_tuning, LocalVectorUpdateType.FirstAndSecondMomentum)
+        DataGenerator.__init__(self, num_iterations, num_nodes, data_file_name, 2, test_folder, num_iterations_for_tuning, LocalVectorUpdateType.FirstAndSecondMomentum, sliding_window_size)
 
     def _generate_data(self, number_of_data_point, data_type="testing"):
         data = np.random.randn(number_of_data_point)
@@ -132,8 +163,8 @@ class DataGeneratorVariance(DataGenerator):
 
 
 class DataGeneratorEntropy(DataGenerator):
-    def __init__(self, num_iterations, num_nodes, data_file_name=None, d=2, test_folder="./", num_iterations_for_tuning=0):
-        DataGenerator.__init__(self, num_iterations, num_nodes, data_file_name, d, test_folder, num_iterations_for_tuning, LocalVectorUpdateType.Frequency)
+    def __init__(self, num_iterations, num_nodes, data_file_name=None, d=2, test_folder="./", num_iterations_for_tuning=0, sliding_window_size=100):
+        DataGenerator.__init__(self, num_iterations, num_nodes, data_file_name, d, test_folder, num_iterations_for_tuning, LocalVectorUpdateType.Frequency, sliding_window_size)
 
     def _generate_data(self, number_of_data_point, data_type="testing"):
         a = np.arange(self.d)
@@ -154,9 +185,9 @@ class DataGeneratorEntropy(DataGenerator):
 
 
 class DataGeneratorInnerProduct(DataGenerator):
-    def __init__(self, num_iterations, num_nodes, data_file_name=None, d=2, test_folder="./", num_iterations_for_tuning=0):
+    def __init__(self, num_iterations, num_nodes, data_file_name=None, d=2, test_folder="./", num_iterations_for_tuning=0, sliding_window_size=100):
         assert d % 2 == 0
-        DataGenerator.__init__(self, num_iterations, num_nodes, data_file_name, d, test_folder, num_iterations_for_tuning, LocalVectorUpdateType.Average)
+        DataGenerator.__init__(self, num_iterations, num_nodes, data_file_name, d, test_folder, num_iterations_for_tuning, LocalVectorUpdateType.Average, sliding_window_size)
 
     def _generate_data(self, number_of_data_point, data_type="testing"):
         data = np.zeros((number_of_data_point, self.d))
@@ -190,9 +221,9 @@ class DataGeneratorInnerProduct(DataGenerator):
 
 
 class DataGeneratorCosineSimilarity(DataGenerator):
-    def __init__(self, num_iterations, num_nodes, data_file_name=None, d=2, test_folder="./", num_iterations_for_tuning=0):
+    def __init__(self, num_iterations, num_nodes, data_file_name=None, d=2, test_folder="./", num_iterations_for_tuning=0, sliding_window_size=100):
         assert d % 2 == 0
-        DataGenerator.__init__(self, num_iterations, num_nodes, data_file_name, d, test_folder, num_iterations_for_tuning, LocalVectorUpdateType.Average)
+        DataGenerator.__init__(self, num_iterations, num_nodes, data_file_name, d, test_folder, num_iterations_for_tuning, LocalVectorUpdateType.Average, sliding_window_size)
 
     def _generate_data(self, number_of_data_point, data_type="testing"):
         data_x = np.random.randn(number_of_data_point, self.d // 2) + 2
@@ -202,8 +233,8 @@ class DataGeneratorCosineSimilarity(DataGenerator):
 
 
 class DataGeneratorQuadratic(DataGenerator):
-    def __init__(self, num_iterations, num_nodes, data_file_name=None, d=1, test_folder="./", num_iterations_for_tuning=0):
-        DataGenerator.__init__(self, num_iterations, num_nodes, data_file_name, d, test_folder, num_iterations_for_tuning, LocalVectorUpdateType.Average)
+    def __init__(self, num_iterations, num_nodes, data_file_name=None, d=1, test_folder="./", num_iterations_for_tuning=0, sliding_window_size=100):
+        DataGenerator.__init__(self, num_iterations, num_nodes, data_file_name, d, test_folder, num_iterations_for_tuning, LocalVectorUpdateType.Average, sliding_window_size)
 
     def _generate_data(self, number_of_data_point, data_type="testing"):
         data = np.zeros((number_of_data_point, self.d))
@@ -222,9 +253,9 @@ class DataGeneratorQuadratic(DataGenerator):
 
 
 class DataGeneratorRozenbrock(DataGenerator):
-    def __init__(self, num_iterations, num_nodes, data_file_name=None, d=2, test_folder="./", num_iterations_for_tuning=0):
+    def __init__(self, num_iterations, num_nodes, data_file_name=None, d=2, test_folder="./", num_iterations_for_tuning=0, sliding_window_size=100):
         assert d % 2 == 0
-        DataGenerator.__init__(self, num_iterations, num_nodes, data_file_name, d, test_folder, num_iterations_for_tuning, LocalVectorUpdateType.Average)
+        DataGenerator.__init__(self, num_iterations, num_nodes, data_file_name, d, test_folder, num_iterations_for_tuning, LocalVectorUpdateType.Average, sliding_window_size)
 
     def _generate_data(self, number_of_data_point, data_type="testing"):
         data_x = np.random.normal(loc=0.0, scale=0.2, size=(number_of_data_point, self.d // 2))
@@ -234,12 +265,12 @@ class DataGeneratorRozenbrock(DataGenerator):
 
 
 class DataGeneratorKldAirQuality(DataGenerator):
-    def __init__(self, num_iterations, num_nodes, data_file_name=None, d=52, test_folder="./", num_iterations_for_tuning=0):
+    def __init__(self, num_iterations, num_nodes, data_file_name=None, d=52, test_folder="./", num_iterations_for_tuning=0, sliding_window_size=100):
         assert d % 2 == 0
         if data_file_name is None:
             # Binning the data into d//2 bins. Q has d//2 bins and P has d//2 bins, and overall the dimension is d.
             self.station_data_arr = prepare_pm_data(step=500/((d // 2) - 1))
-        DataGenerator.__init__(self, num_iterations, num_nodes, data_file_name, d, test_folder, num_iterations_for_tuning, LocalVectorUpdateType.ConcatenatedFrequencyVectors)
+        DataGenerator.__init__(self, num_iterations, num_nodes, data_file_name, d, test_folder, num_iterations_for_tuning, LocalVectorUpdateType.ConcatenatedFrequencyVectors, sliding_window_size)
 
     def _generate_data(self, number_of_data_point, data_type="testing"):
         num_stations = len(self.station_data_arr)
@@ -266,8 +297,8 @@ class DataGeneratorKldAirQuality(DataGenerator):
 
 
 class DataGeneratorMlp(DataGenerator):
-    def __init__(self, num_iterations, num_nodes, data_file_name=None, d=5, test_folder="./", num_iterations_for_tuning=0):
-        DataGenerator.__init__(self, num_iterations, num_nodes, data_file_name, d, test_folder, num_iterations_for_tuning, LocalVectorUpdateType.Average)
+    def __init__(self, num_iterations, num_nodes, data_file_name=None, d=5, test_folder="./", num_iterations_for_tuning=0, sliding_window_size=100):
+        DataGenerator.__init__(self, num_iterations, num_nodes, data_file_name, d, test_folder, num_iterations_for_tuning, LocalVectorUpdateType.Average, sliding_window_size)
 
     def _generate_data(self, number_of_data_point, data_type="testing"):
         # The global maximum of the function is at (1/sqrt(2), 0), and the global minimum (-1/sqrt(2), 0).
@@ -315,8 +346,8 @@ class DataGeneratorMlp(DataGenerator):
 
 
 class DataGeneratorSine(DataGenerator):
-    def __init__(self, num_iterations, num_nodes, data_file_name=None, d=1, test_folder="./", num_iterations_for_tuning=0):
-        DataGenerator.__init__(self, num_iterations, num_nodes, data_file_name, d, test_folder, num_iterations_for_tuning, LocalVectorUpdateType.Average)
+    def __init__(self, num_iterations, num_nodes, data_file_name=None, d=1, test_folder="./", num_iterations_for_tuning=0, sliding_window_size=100):
+        DataGenerator.__init__(self, num_iterations, num_nodes, data_file_name, d, test_folder, num_iterations_for_tuning, LocalVectorUpdateType.Average, sliding_window_size)
 
     def _generate_data(self, number_of_data_point, data_type="testing"):
         data = np.zeros((number_of_data_point, self.d))
@@ -328,8 +359,8 @@ class DataGeneratorSine(DataGenerator):
 
 
 class DataGeneratorDnnIntrusionDetection(DataGenerator):
-    def __init__(self, num_iterations, num_nodes, data_file_name=None, d=41, test_folder="./", num_iterations_for_tuning=0):
-        DataGenerator.__init__(self, num_iterations, num_nodes, data_file_name, d, test_folder, num_iterations_for_tuning, LocalVectorUpdateType.Average)
+    def __init__(self, num_iterations, num_nodes, data_file_name=None, d=41, test_folder="./", num_iterations_for_tuning=0, sliding_window_size=100):
+        DataGenerator.__init__(self, num_iterations, num_nodes, data_file_name, d, test_folder, num_iterations_for_tuning, LocalVectorUpdateType.Average, sliding_window_size)
 
     def _generate_data(self, number_of_data_point, data_type="testing"):
         data = np.zeros((number_of_data_point, self.d + 1))  # Index 0 in every sample is the node idx that this sample goes to
@@ -352,8 +383,8 @@ class DataGeneratorDnnIntrusionDetection(DataGenerator):
 
 
 class DataGeneratorQuadraticInverse(DataGenerator):
-    def __init__(self, num_iterations, num_nodes=4, data_file_name=None, d=2, test_folder="./", num_iterations_for_tuning=0):
-        DataGenerator.__init__(self, num_iterations, num_nodes, data_file_name, d, test_folder, num_iterations_for_tuning, LocalVectorUpdateType.Average)
+    def __init__(self, num_iterations, num_nodes=4, data_file_name=None, d=2, test_folder="./", num_iterations_for_tuning=0, sliding_window_size=100):
+        DataGenerator.__init__(self, num_iterations, num_nodes, data_file_name, d, test_folder, num_iterations_for_tuning, LocalVectorUpdateType.Average, sliding_window_size)
 
     def _generate_data(self, number_of_data_point, data_type="testing"):
         number_of_data_point_per_node = number_of_data_point // self.num_nodes

@@ -2,8 +2,8 @@ import matplotlib.pyplot as plt
 from matplotlib import rcParams, rcParamsDefault
 from matplotlib.lines import Line2D
 import numpy as np
-from automon.automon.nodes_automon import NodeInnerProductAutoMon
-from automon.functions_to_monitor import func_inner_product
+from utils.nodes_automon import NodeInnerProductAutoMon
+from utils.functions_to_monitor import func_inner_product
 from tests.visualization.utils import get_figsize
 from automon.automon.coordinator_automon import AdcdHelper
 

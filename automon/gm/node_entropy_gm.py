@@ -1,7 +1,7 @@
 import numpy as np
 from automon.gm.node_common_gm import NodeCommonGM
 import cvxpy as cp
-from automon.functions_to_monitor import func_entropy
+from utils.functions_to_monitor import func_entropy
 
 # Implementation according to https://dl.acm.org/doi/pdf/10.1145/3097983.3098092
 

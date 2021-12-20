@@ -1,13 +1,13 @@
-from automon.automon.nodes_automon import NodeDnnIntrusionDetectionAutoMon
+from utils.nodes_automon import NodeDnnIntrusionDetectionAutoMon
 from automon.automon.tune_neighborhood_size import tune_neighborhood_size
 from automon.automon.coordinator_automon import CoordinatorAutoMon
-from automon.data_generator import DataGeneratorDnnIntrusionDetection
-from automon.jax_dnn_intrusion_detection import load_net
-from automon.test_utils import start_test, end_test, run_test, write_config_to_file, read_config_file
-from automon.stats_analysis_utils import plot_monitoring_stats
+from utils.data_generator import DataGeneratorDnnIntrusionDetection
+from utils.jax_dnn_intrusion_detection import load_net
+from utils.test_utils import start_test, end_test, run_test, write_config_to_file, read_config_file
+from utils.stats_analysis_utils import plot_monitoring_stats
 import logging
-from automon.object_factory import get_objects
-from automon.functions_to_monitor import set_net_params
+from utils.object_factory import get_objects
+from utils.functions_to_monitor import set_net_params
 from tests.visualization.plot_error_communication_tradeoff import plot_max_error_vs_communication
 
 
@@ -15,7 +15,7 @@ def test_error_bounds(error_bound, parent_test_folder):
     conf = read_config_file(parent_test_folder)
     data_generator = DataGeneratorDnnIntrusionDetection(num_iterations=conf["num_iterations"], num_nodes=conf["num_nodes"],
                                                         data_file_name="data_file.txt", test_folder=parent_test_folder, d=conf["d"],
-                                                        num_iterations_for_tuning=conf["num_iterations_for_tuning"])
+                                                        num_iterations_for_tuning=conf["num_iterations_for_tuning"], sliding_window_size=conf["sliding_window_size"])
 
     try:
         test_folder = parent_test_folder + "/threshold_" + str(error_bound)
@@ -28,7 +28,7 @@ def test_error_bounds(error_bound, parent_test_folder):
         data_generator.reset()
         coordinator, nodes = get_objects(NodeDnnIntrusionDetectionAutoMon, CoordinatorAutoMon, conf)
         tune_neighborhood_size(coordinator, nodes, conf, data_generator, b_single_sample_per_round=True)
-        run_test(data_generator, coordinator, nodes, test_folder, conf["sliding_window_size"], b_single_sample_per_round=True)
+        run_test(data_generator, coordinator, nodes, test_folder, b_single_sample_per_round=True)
 
         plot_monitoring_stats(test_folder)
 
@@ -50,7 +50,7 @@ if __name__ == "__main__":
     write_config_to_file(parent_test_folder, conf)
     data_generator = DataGeneratorDnnIntrusionDetection(num_iterations=conf["num_iterations"], num_nodes=conf["num_nodes"],
                                                         d=conf["d"], test_folder=parent_test_folder,
-                                                        num_iterations_for_tuning=conf["num_iterations_for_tuning"])
+                                                        num_iterations_for_tuning=conf["num_iterations_for_tuning"], sliding_window_size=conf["sliding_window_size"])
 
     error_bounds = [0.001, 0.002, 0.0027, 0.003, 0.005, 0.007, 0.01, 0.016, 0.025, 0.05]
 

@@ -1,7 +1,7 @@
 import os
 import subprocess
 import numpy as np
-from automon.test_utils import read_config_file
+from utils.test_utils import read_config_file
 from matplotlib import pyplot as plt
 import matplotlib as mpl
 mpl.use('Agg')

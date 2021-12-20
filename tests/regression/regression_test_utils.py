@@ -1,8 +1,8 @@
 import numpy as np
 import pickle
-from automon.object_factory import get_objects
+from utils.object_factory import get_objects
 from automon.coordinator_common import SyncType, SlackType
-from automon.test_utils import run_test
+from utils.test_utils import run_test
 
 
 def compare_sync_history_lists(sync_history_1, sync_history_2):
@@ -33,7 +33,7 @@ def test_func_slack_sync_variations(coordinator_class, func_name, NodeClass, dat
     data_generator.reset()
     conf["slack_type"], conf["sync_type"] = SlackType.Drift.value, SyncType.Eager.value
     coordinator, nodes = get_objects(NodeClass, coordinator_class, conf)
-    sync_history, msg_counters = run_test(data_generator, coordinator, nodes, test_folder, conf["sliding_window_size"])
+    sync_history, msg_counters = run_test(data_generator, coordinator, nodes, test_folder)
     compare_results(regression_test_files_folder, sync_history, msg_counters, func_name, "drift", "eager")
 
     print("\nRun " + func_name + " test with Drift Slack and Lazy Random Sync")
@@ -41,7 +41,7 @@ def test_func_slack_sync_variations(coordinator_class, func_name, NodeClass, dat
     data_generator.reset()
     conf["slack_type"], conf["sync_type"] = SlackType.Drift.value, SyncType.LazyRandom.value
     coordinator, nodes = get_objects(NodeClass, coordinator_class, conf)
-    sync_history, msg_counters = run_test(data_generator, coordinator, nodes, test_folder, conf["sliding_window_size"])
+    sync_history, msg_counters = run_test(data_generator, coordinator, nodes, test_folder)
     compare_results(regression_test_files_folder, sync_history, msg_counters, func_name, "drift", "lazy_random")
 
     print("\nRun " + func_name + " test with Drift Slack and Lazy LRU Sync")
@@ -49,7 +49,7 @@ def test_func_slack_sync_variations(coordinator_class, func_name, NodeClass, dat
     data_generator.reset()
     conf["slack_type"], conf["sync_type"] = SlackType.Drift.value, SyncType.LazyLRU.value
     coordinator, nodes = get_objects(NodeClass, coordinator_class, conf)
-    sync_history, msg_counters = run_test(data_generator, coordinator, nodes, test_folder, conf["sliding_window_size"])
+    sync_history, msg_counters = run_test(data_generator, coordinator, nodes, test_folder)
     compare_results(regression_test_files_folder, sync_history, msg_counters, func_name, "drift", "lazy_lru")
 
     print("\nRun " + func_name + " test with No Slack and Lazy Random Sync")
@@ -67,5 +67,5 @@ def test_func_slack_sync_variations(coordinator_class, func_name, NodeClass, dat
     data_generator.reset()
     conf["slack_type"], conf["sync_type"] = SlackType.NoSlack.value, SyncType.Eager.value
     coordinator, nodes = get_objects(NodeClass, coordinator_class, conf)
-    sync_history, msg_counters = run_test(data_generator, coordinator, nodes, test_folder, conf["sliding_window_size"])
+    sync_history, msg_counters = run_test(data_generator, coordinator, nodes, test_folder)
     compare_results(regression_test_files_folder, sync_history, msg_counters, func_name, "no", "eager")

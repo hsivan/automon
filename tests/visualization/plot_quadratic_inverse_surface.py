@@ -2,10 +2,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import rcParams, rcParamsDefault
 from matplotlib import cm
-from automon.test_utils import read_config_file
-from automon.data_generator import DataGeneratorQuadraticInverse
+from utils.test_utils import read_config_file
+from utils.data_generator import DataGeneratorQuadraticInverse
 from tests.visualization.utils import get_figsize
-from automon.functions_to_monitor import func_quadratic_inverse
+from utils.functions_to_monitor import func_quadratic_inverse
 
 low = -2
 high = 2
@@ -96,6 +96,6 @@ def draw_f_contour_and_node_trail(nodes_data, test_folder):
 if __name__ == "__main__":
     data_folder = "../test_results/results_ablation_study_quadratic_inverse_2021-07-08_15-40-37"
     conf = read_config_file(data_folder)
-    data_generator = DataGeneratorQuadraticInverse(num_iterations=conf["num_iterations"], num_nodes=conf["num_nodes"], data_file_name="data_file.txt", test_folder=data_folder, d=conf["d"])
+    data_generator = DataGeneratorQuadraticInverse(num_iterations=conf["num_iterations"], num_nodes=conf["num_nodes"], data_file_name="data_file.txt", test_folder=data_folder, d=conf["d"], sliding_window_size=conf["sliding_window_size"])
     draw_f_contour_and_node_trail(data_generator.data, "./")
     draw_f("./")

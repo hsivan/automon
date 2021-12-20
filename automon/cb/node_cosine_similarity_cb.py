@@ -1,6 +1,6 @@
 import numpy as np
 from automon.cb.node_common_cb import NodeCommonCB
-from automon.functions_to_monitor import func_cosine_similarity
+from utils.functions_to_monitor import func_cosine_similarity
 
 # Implementation according to https://dl.acm.org/doi/pdf/10.1145/3226113
 

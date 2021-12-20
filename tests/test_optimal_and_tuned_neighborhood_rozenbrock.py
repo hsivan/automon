@@ -1,17 +1,17 @@
 import os
 os.environ['AUTO_DIFFERENTIATION_TOOL'] = 'AutoGrad'
-from automon.automon.nodes_automon import NodeRozenbrockAutoMon
+from utils.nodes_automon import NodeRozenbrockAutoMon
 from automon.automon.tune_neighborhood_size import tune_neighborhood_size
-from automon.data_generator import DataGeneratorRozenbrock
+from utils.data_generator import DataGeneratorRozenbrock
 from automon.coordinator_common import SlackType, SyncType
-from automon.automon.coordinator_automon import CoordinatorAutoMon, DomainType
-from automon.test_utils import start_test, end_test, run_test, get_config, write_config_to_file, read_config_file
-from automon.stats_analysis_utils import plot_monitoring_stats, plot_impact_of_neighborhood_size_on_violations
+from automon.automon.coordinator_automon import CoordinatorAutoMon
+from utils.test_utils import start_test, end_test, run_test, get_config, write_config_to_file, read_config_file
+from utils.stats_analysis_utils import plot_monitoring_stats, plot_impact_of_neighborhood_size_on_violations
 import logging
 import numpy as np
 import traceback
 from concurrent.futures import ProcessPoolExecutor
-from automon.object_factory import get_objects
+from utils.object_factory import get_objects
 from tests.visualization.plot_neighborhood_impact import plot_neighborhood_size_error_bound_connection_avg
 
 
@@ -26,7 +26,7 @@ def neighborhood_size_impact(experiment_folder, error_bound):
 
     # Create data generator from file
     data_generator = DataGeneratorRozenbrock(num_iterations=conf["num_iterations"], num_nodes=conf["num_nodes"],
-                                             data_file_name="data_file.txt", d=conf["d"], test_folder=experiment_folder, num_iterations_for_tuning=conf["num_iterations_for_tuning"])
+                                             data_file_name="data_file.txt", d=conf["d"], test_folder=experiment_folder, num_iterations_for_tuning=conf["num_iterations_for_tuning"], sliding_window_size=conf["sliding_window_size"])
 
     coordinator, nodes = get_objects(NodeRozenbrockAutoMon, CoordinatorAutoMon, conf)
     tune_neighborhood_size(coordinator, nodes, conf, data_generator)
@@ -47,7 +47,7 @@ def neighborhood_size_impact(experiment_folder, error_bound):
             data_generator.reset()
             coordinator, nodes = get_objects(NodeRozenbrockAutoMon, CoordinatorAutoMon, conf)
             coordinator.b_fix_neighborhood_dynamically = False  # Should not change neighborhood size dynamically in this experiment
-            run_test(data_generator, coordinator, nodes, sub_test_folder, conf["sliding_window_size"])
+            run_test(data_generator, coordinator, nodes, sub_test_folder)
 
             plot_monitoring_stats(sub_test_folder)
             end_test()
@@ -75,10 +75,10 @@ if __name__ == "__main__":
         # Generate basic config (each test should change the error bound and neighborhood size accordingly), and save it to file
         conf = get_config(num_nodes=10, num_iterations=1020, sliding_window_size=20, d=2,
                           slack_type=SlackType.Drift.value, sync_type=SyncType.LazyLRU.value,
-                          domain_type=DomainType.Relative.value, num_iterations_for_tuning=200)
+                          neighborhood_size=1.0, num_iterations_for_tuning=200)
         write_config_to_file(experiment_folder, conf)
         data_generator = DataGeneratorRozenbrock(num_iterations=conf["num_iterations"], num_nodes=conf["num_nodes"],
-                                                 d=conf["d"], test_folder=experiment_folder, num_iterations_for_tuning=conf["num_iterations_for_tuning"])
+                                                 d=conf["d"], test_folder=experiment_folder, num_iterations_for_tuning=conf["num_iterations_for_tuning"], sliding_window_size=conf["sliding_window_size"])
 
         executor = ProcessPoolExecutor(max_workers=20)
 

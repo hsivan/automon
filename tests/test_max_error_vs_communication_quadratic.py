@@ -1,12 +1,11 @@
-from automon.automon.nodes_automon import NodeQuadraticAutoMon
+from utils.nodes_automon import NodeQuadraticAutoMon
 from automon.automon.coordinator_automon import CoordinatorAutoMon
-from automon.data_generator import DataGeneratorQuadratic
-from automon.coordinator_common import SlackType, SyncType
-from automon.test_utils import start_test, end_test, run_test, get_config, write_config_to_file, read_config_file
-from automon.stats_analysis_utils import plot_monitoring_stats
+from utils.data_generator import DataGeneratorQuadratic
+from utils.test_utils import start_test, end_test, run_test, write_config_to_file, read_config_file
+from utils.stats_analysis_utils import plot_monitoring_stats
 import logging
-from automon.object_factory import get_objects
-from automon.functions_to_monitor import set_H, get_H
+from utils.object_factory import get_objects
+from utils.functions_to_monitor import set_H
 import numpy as np
 from tests.visualization.plot_error_communication_tradeoff import plot_max_error_vs_communication
 
@@ -15,7 +14,7 @@ def test_error_bounds(error_bound, parent_test_folder):
     conf = read_config_file(parent_test_folder)
     H = np.loadtxt(parent_test_folder + '/H_matrix.txt', dtype=np.float32)
     set_H(conf["d"], H)
-    data_generator = DataGeneratorQuadratic(num_iterations=conf["num_iterations"], num_nodes=conf["num_nodes"], data_file_name="data_file.txt", test_folder=parent_test_folder, d=conf["d"])
+    data_generator = DataGeneratorQuadratic(num_iterations=conf["num_iterations"], num_nodes=conf["num_nodes"], data_file_name="data_file.txt", test_folder=parent_test_folder, d=conf["d"], sliding_window_size=conf["sliding_window_size"])
 
     try:
         test_folder = parent_test_folder + "/threshold_" + str(error_bound)
@@ -27,7 +26,7 @@ def test_error_bounds(error_bound, parent_test_folder):
         logging.info("\n###################### Start AutoMon test ######################")
         data_generator.reset()
         coordinator, nodes = get_objects(NodeQuadraticAutoMon, CoordinatorAutoMon, conf)
-        run_test(data_generator, coordinator, nodes, test_folder, conf["sliding_window_size"])
+        run_test(data_generator, coordinator, nodes, test_folder)
 
         plot_monitoring_stats(test_folder)
 
@@ -45,7 +44,7 @@ if __name__ == "__main__":
     set_H(conf["d"])
     H = get_H().copy()
     np.savetxt(parent_test_folder + '/H_matrix.txt', H, fmt='%f')
-    data_generator = DataGeneratorQuadratic(num_iterations=conf["num_iterations"], num_nodes=conf["num_nodes"], d=conf["d"], test_folder=parent_test_folder)'''
+    data_generator = DataGeneratorQuadratic(num_iterations=conf["num_iterations"], num_nodes=conf["num_nodes"], d=conf["d"], test_folder=parent_test_folder, sliding_window_size=conf["sliding_window_size"])'''
 
     data_folder = '../datasets/quadratic/'
     conf = read_config_file(data_folder)
@@ -53,7 +52,7 @@ if __name__ == "__main__":
     set_H(conf["d"], H)
     np.savetxt(parent_test_folder + '/H_matrix.txt', H, fmt='%f')
     write_config_to_file(parent_test_folder, conf)
-    data_generator = DataGeneratorQuadratic(num_iterations=conf["num_iterations"], num_nodes=conf["num_nodes"], d=conf["d"], data_file_name=data_folder + "data_file.txt")
+    data_generator = DataGeneratorQuadratic(num_iterations=conf["num_iterations"], num_nodes=conf["num_nodes"], d=conf["d"], data_file_name=data_folder + "data_file.txt", sliding_window_size=conf["sliding_window_size"])
     data_generator.data_file_name = parent_test_folder + "/data_file.txt"
     data_generator._save_data_to_file()
 

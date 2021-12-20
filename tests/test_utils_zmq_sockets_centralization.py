@@ -7,8 +7,7 @@ import logging
 from timeit import default_timer as timer
 import numpy as np
 from automon.messages_common import MessageType, prepare_message_header
-from automon.node_stream import NodeStream
-from automon.test_utils_zmq_sockets import event_monitor_client, event_monitor_server
+from utils.test_utils_zmq_sockets import event_monitor_client, event_monitor_server
 
 # Use ZMQ Client-Server pattern  (https://zguide.zeromq.org/docs/chapter3/#The-Asynchronous-Client-Server-Pattern)
 # Between the coordinator and the nodes. Coordinator uses ROUTER socket and the nodes use DEALER socket.
@@ -21,7 +20,7 @@ def prepare_message_local_vector_info_centralization(node_idx: int, local_vector
     return message
 
 
-def centralization_node_data_loop(data_client, data_generator, node_idx, node_stream):
+def centralization_node_data_loop(data_client, data_generator, node_idx):
     monitor = data_client.get_monitor_socket()
     t = threading.Thread(target=event_monitor_client, args=(monitor,))
     t.start()
@@ -31,7 +30,7 @@ def centralization_node_data_loop(data_client, data_generator, node_idx, node_st
         logging.info('data-loop started')
 
         # First data update after the sliding window of the node is full
-        local_vector = node_stream.get_local_vector(node_idx)
+        local_vector = data_generator.get_local_vector(node_idx)
         message = prepare_message_local_vector_info_centralization(node_idx, local_vector)
         data_client.send(message)
 
@@ -41,10 +40,8 @@ def centralization_node_data_loop(data_client, data_generator, node_idx, node_st
             # Check if the monitor thread finished
             if not t.is_alive():
                 break
-            data_point, idx = data_generator.get_next_data_point()
-            node_stream.set_new_data_point(data_point, int(idx))
+            local_vector, idx = data_generator.get_next_data_point()
             if idx == node_idx:
-                local_vector = node_stream.get_local_vector(node_idx)
                 message = prepare_message_local_vector_info_centralization(node_idx, local_vector)
                 data_client.send(message)
                 time.sleep(0.01)
@@ -59,15 +56,8 @@ def centralization_node_data_loop(data_client, data_generator, node_idx, node_st
         logging.info("Node " + str(node_idx) + ": disabled event monitor")
 
 
-def run_centralization_node(host, port, node_idx, data_generator, num_nodes, sliding_window_size):
-    logging.info("Node " + str(node_idx) + ": num_nodes " + str(num_nodes) + ", num_iterations " + str(data_generator.get_num_iterations()) + ", data_generator state " + str(data_generator.state))
-
-    node_stream = NodeStream(num_nodes, sliding_window_size, data_generator.get_data_point_len(), data_generator.get_local_vec_update_func(), initial_x0=data_generator.get_initial_x0())
-
-    # Fill all sliding windows
-    while not node_stream.all_windows_full():
-        data_point, idx = data_generator.get_next_data_point()
-        node_stream.set_new_data_point(data_point, int(idx))
+def run_centralization_node(host, port, node_idx, data_generator):
+    logging.info("Node " + str(node_idx) + ": num_iterations " + str(data_generator.get_num_iterations()) + ", data_generator state " + str(data_generator.state))
 
     context = zmq.Context()
     client = context.socket(zmq.DEALER)
@@ -89,7 +79,7 @@ def run_centralization_node(host, port, node_idx, data_generator, num_nodes, sli
         logging.info("Node " + str(node_idx) + " got start message from the coordinator")
 
         # Start the data loop
-        centralization_node_data_loop(client, data_generator, node_idx, node_stream)
+        centralization_node_data_loop(client, data_generator, node_idx)
         logging.info("Node " + str(node_idx) + ": main loop ended after data loop ended")
     finally:
         logging.info("Node " + str(node_idx) + ": main loop ended")

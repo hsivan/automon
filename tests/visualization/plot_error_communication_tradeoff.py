@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 from matplotlib import rcParams, rcParamsDefault
-from automon.stats_analysis_utils import get_period_approximation_error
-from automon.test_utils import read_config_file, write_config_to_file
+from utils.stats_analysis_utils import get_period_approximation_error
+from utils.test_utils import read_config_file, write_config_to_file
 import os
 import numpy as np
 import matplotlib.ticker as tick

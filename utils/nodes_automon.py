@@ -1,6 +1,6 @@
 import numpy as np
 from automon.automon.node_common_automon import NodeCommonAutoMon
-from automon.functions_to_monitor import func_cosine_similarity, func_dnn_intrusion_detection, func_entropy, func_inner_product, \
+from utils.functions_to_monitor import func_cosine_similarity, func_dnn_intrusion_detection, func_entropy, func_inner_product, \
     func_kld, func_mlp, func_quadratic, func_quadratic_inverse, func_rozenbrock, func_sine, func_variance
 
 

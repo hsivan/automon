@@ -4,8 +4,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import rcParams, rcParamsDefault
 import matplotlib.ticker as tick
-from automon.stats_analysis_utils import get_period_approximation_error
-from automon.test_utils import read_config_file
+from utils.stats_analysis_utils import get_period_approximation_error
+from utils.test_utils import read_config_file
 from tests.visualization.plot_dimensions_stats import get_num_messages
 from tests.visualization.utils import get_figsize, reformat_large_tick_values
 

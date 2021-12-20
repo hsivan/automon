@@ -2,7 +2,7 @@ import numpy as np
 from automon.gm.node_common_gm import NodeCommonGM
 import scipy as sp
 from scipy.optimize import NonlinearConstraint
-from automon.functions_to_monitor import func_variance
+from utils.functions_to_monitor import func_variance
 
 # Implementation according to https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=6877240
 

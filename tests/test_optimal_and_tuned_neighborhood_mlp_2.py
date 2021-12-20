@@ -1,16 +1,16 @@
-from automon.automon.nodes_automon import NodeMlpAutoMon
+from utils.nodes_automon import NodeMlpAutoMon
 from automon.automon.tune_neighborhood_size import tune_neighborhood_size
-from automon.data_generator import DataGeneratorMlp
+from utils.data_generator import DataGeneratorMlp
 from automon.automon.coordinator_automon import CoordinatorAutoMon
 from tests.visualization.plot_neighborhood_impact import plot_neighborhood_size_error_bound_connection_avg
-from automon.test_utils import start_test, end_test, run_test, write_config_to_file, read_config_file
-from automon.stats_analysis_utils import plot_monitoring_stats, plot_impact_of_neighborhood_size_on_violations
+from utils.test_utils import start_test, end_test, run_test, write_config_to_file, read_config_file
+from utils.stats_analysis_utils import plot_monitoring_stats, plot_impact_of_neighborhood_size_on_violations
 import logging
 import numpy as np
 import traceback
-from automon.object_factory import get_objects
-from automon.functions_to_monitor import set_net_params
-from automon.jax_mlp import load_net
+from utils.object_factory import get_objects
+from utils.functions_to_monitor import set_net_params
+from utils.jax_mlp import load_net
 
 
 def neighborhood_size_impact(experiment_folder, error_bound):
@@ -28,7 +28,7 @@ def neighborhood_size_impact(experiment_folder, error_bound):
 
     # Create data generator from file
     data_generator = DataGeneratorMlp(num_iterations=conf["num_iterations"], num_nodes=conf["num_nodes"],
-                                      data_file_name="data_file.txt", test_folder=experiment_folder, d=conf["d"], num_iterations_for_tuning=conf["num_iterations_for_tuning"])
+                                      data_file_name="data_file.txt", test_folder=experiment_folder, d=conf["d"], num_iterations_for_tuning=conf["num_iterations_for_tuning"], sliding_window_size=conf["sliding_window_size"])
 
     coordinator, nodes = get_objects(NodeMlpAutoMon, CoordinatorAutoMon, conf)
     tune_neighborhood_size(coordinator, nodes, conf, data_generator)
@@ -49,7 +49,7 @@ def neighborhood_size_impact(experiment_folder, error_bound):
             data_generator.reset()
             coordinator, nodes = get_objects(NodeMlpAutoMon, CoordinatorAutoMon, conf)
             coordinator.b_fix_neighborhood_dynamically = False  # Should not change neighborhood size dynamically in this experiment
-            run_test(data_generator, coordinator, nodes, sub_test_folder, conf["sliding_window_size"])
+            run_test(data_generator, coordinator, nodes, sub_test_folder)
 
             plot_monitoring_stats(sub_test_folder)
             end_test()
@@ -80,7 +80,7 @@ if __name__ == "__main__":
         write_config_to_file(experiment_folder, conf)
         # Generate data and save to file
         data_generator = DataGeneratorMlp(num_iterations=conf["num_iterations"], num_nodes=conf["num_nodes"],
-                                          d=conf["d"], test_folder=experiment_folder, num_iterations_for_tuning=conf["num_iterations_for_tuning"])
+                                          d=conf["d"], test_folder=experiment_folder, num_iterations_for_tuning=conf["num_iterations_for_tuning"], sliding_window_size=conf["sliding_window_size"])
 
         for idx, error_bound in enumerate(error_bounds):
             neighborhood_size_impact(experiment_folder, error_bound)

@@ -1,4 +1,4 @@
-from automon.functions_to_monitor import func_dnn_intrusion_detection, func_inner_product, func_kld, func_mlp, \
+from utils.functions_to_monitor import func_dnn_intrusion_detection, func_inner_product, func_kld, func_mlp, \
     func_quadratic_inverse, func_quadratic, func_rozenbrock
 from automon.rlv.node_common_rlv import NodeCommonRLV
 
