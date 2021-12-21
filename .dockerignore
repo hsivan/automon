@@ -1,6 +1,6 @@
 # Test folder and test output
 temp
-0001-GM-change-all-pathes-to-be-relative-to-the-script-lo.patch
+*.patch
 tests
 examples/test_results
 nethogs_out.txt

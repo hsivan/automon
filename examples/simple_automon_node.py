@@ -1,5 +1,5 @@
 import sys
-sys.path.append('C:/Personal/AutoMonBitbucket')
+from importlib import reload
 import logging
 import threading
 import time
@@ -8,10 +8,7 @@ import numpy as np
 from automon.automon.node_common_automon import NodeCommonAutoMon
 from automon.messages_common import prepare_message_data_update
 from automon_utils.utils_zmq_sockets import init_client_socket, init_client_data_socket, get_next_coordinator_message, send_message_to_coordinator
-
-
-def func_inner_product(x):
-    return x[:x.shape[0] // 2] @ x[x.shape[0] // 2:]
+from examples.function_def import func_inner_product
 
 
 def data_loop(node_idx, host, port):
@@ -30,6 +27,7 @@ def data_loop(node_idx, host, port):
 
 
 if __name__ == "__main__":
+    reload(logging)
     logging.basicConfig(stream=sys.stdout, level=logging.INFO)
     args = {'node_idx': 0, 'host': '127.0.0.1', 'port': 6400}  # Change node index for different nodes
 

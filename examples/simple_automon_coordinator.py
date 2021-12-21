@@ -1,15 +1,13 @@
 import sys
+from importlib import reload
 import logging
 from automon.automon.coordinator_automon import CoordinatorAutoMon
 from automon.automon.node_common_automon import NodeCommonAutoMon
 from automon_utils.utils_zmq_sockets import init_server_socket, get_next_node_message, send_message_to_node
-
-
-def func_inner_product(x):
-    return x[:x.shape[0] // 2] @ x[x.shape[0] // 2:]
-
+from examples.function_def import func_inner_product
 
 if __name__ == "__main__":
+    reload(logging)
     logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
     # Create dummy node for the coordinator that uses it in the process of resolving violations.

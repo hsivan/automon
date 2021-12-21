@@ -59,7 +59,7 @@ class Statistics:
         self.true_violations_msg_counter = 0
         self.false_global_violation_msg_counter = 0
         self.false_local_violation_msg_counter = 0
-        self.miss_violations_counter = 0
+        self.missed_violations_counter = 0
         self.rounds_with_violation_counter = 0
 
         # Violation statistics
@@ -120,7 +120,7 @@ class Statistics:
         logging.info("Sync msg counter " + str(self.sync_msg_counter))
         logging.info("Get node statistics broadcast msg counter " + str(self.get_node_local_vector_broadcast_msg_counter))
         logging.info("Get node statistics msg counter " + str(self.get_node_local_vector_msg_counter))
-        logging.info("Miss violations counter " + str(self.miss_violations_counter))
+        logging.info("Missed violations counter " + str(self.missed_violations_counter))
         logging.info("Rounds with violations counter " + str(self.rounds_with_violation_counter))
         logging.info("Total violations msg counter " + str(self.total_violations_msg_counter))
         logging.info("Node return statistics msg counter " + str(self.node_return_local_vector_msg_counter))
@@ -150,7 +150,7 @@ class Statistics:
                 f.write("\nSync msg counter " + str(self.sync_msg_counter))
                 f.write("\nGet node statistics broadcast msg counter " + str(self.get_node_local_vector_broadcast_msg_counter))
                 f.write("\nGet node statistics msg counter " + str(self.get_node_local_vector_msg_counter))
-                f.write("\nMiss violations counter " + str(self.miss_violations_counter))
+                f.write("\nMissed violations counter " + str(self.missed_violations_counter))
                 f.write("\nRounds with violations counter " + str(self.rounds_with_violation_counter))
                 f.write("\nTotal violations msg counter " + str(self.total_violations_msg_counter))
                 f.write("\nNode return statistics msg counter " + str(self.node_return_local_vector_msg_counter))
@@ -191,7 +191,7 @@ class Statistics:
                 self.sync_msg_counter,
                 self.get_node_local_vector_broadcast_msg_counter,
                 self.get_node_local_vector_msg_counter,
-                self.miss_violations_counter,
+                self.missed_violations_counter,
                 self.rounds_with_violation_counter,
                 self.total_violations_msg_counter,
                 self.node_return_local_vector_msg_counter,
@@ -463,13 +463,13 @@ class CoordinatorCommon:
         self.nodes_lazy_lru_sync_counter[S] += 1
         return messages_out
 
-    def _check_miss_violations(self):
+    def _check_missed_violations(self):
         # Check for miss violations (false negative). It is only possible to have miss violations in CoordinatorAutoMon
         # in case the coordinator didn't find the real min/max eigenvalue, and in CoordinatorRLV.
         # In that case there is violation of the admissible region, but no violation from any of the nodes.
         # We check it here, since this function is called after each round of set_new_data_point() for all the nodes.
         if (not np.any(self.b_nodes_have_violation)) and (not self._global_vector_inside_admissible_region()):
-            self.statistics.miss_violations_counter += 1
+            self.statistics.missed_violations_counter += 1
             if self.b_violation_strict:
                 logging.error("Iteration " + str(self.iteration) + ": Found true violation without any node violation when running in strict mode.")
                 raise Exception
@@ -559,7 +559,7 @@ class CoordinatorCommon:
     # This function should be called after every data round by the test util loop (in a simulation, not in a real distributed experiment). This is for statistics only.
     def update_statistics(self):
         self.iteration += 1
-        self._check_miss_violations()
+        self._check_missed_violations()
 
         self.statistics.update_sync_statistics(self.func_to_monitor(self.verifier.get_local_vector()),
                                                self.func_to_monitor(self.x0), self.b_violation, self.b_eager_sync)

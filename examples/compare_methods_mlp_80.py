@@ -39,7 +39,7 @@ if __name__ == "__main__":
 
         logging.info("\n###################### Start MLP RLV test ######################")
         data_generator.reset()
-        coordinator, nodes = get_objects(NodeCommonRLV, CoordinatorRLV, func_mlp)
+        coordinator, nodes = get_objects(NodeCommonRLV, CoordinatorRLV, conf, func_mlp)
         run_test(data_generator, coordinator, nodes, test_folder)
 
         logging.info("\n###################### Start MLP AutoMon test ######################")

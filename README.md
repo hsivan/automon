@@ -8,11 +8,12 @@ Given a source code snippet of an arbitrary function of the global aggregate, Au
 provides communication-efficient distributed monitoring of the function approximation,
 without requiring any manual analysis by the user.
 For more information regarding AutoMon see [AutoMon: Automatic Distributed Monitoring for Arbitrary
-Multivariate Functions](TODO: add link)
+Multivariate Functions](https://assaf.net.technion.ac.il/files/2021/12/SIGMOD2022_AutoMon_revision.pdf).
 
 ## Installation
 
-AutoMon is written in pure Python. Use the following instructions to install a
+AutoMon is written in pure Python.
+Use the following instructions to install a
 binary package with `pip`, or to download AutoMon's source code.
 We support installing `automon` package on Linux (Ubuntu 18.04 or later) and
 Windows (10 or later) platforms. Since [JAX](https://github.com/google/jax) is not fully supported on Windows, we use
@@ -21,16 +22,15 @@ JAX when running on Linux.
 
 To download AutoMon's source code run:
 ```bash
-git clone https://github.com/<user_name>/automon
+git clone https://github.com/hsivan/automon
 ```
 Let `automon_root` be the root folder of the project on your local computer, for example `/home/username/automon`.
 
-To install AutoMon run (will work after the project is public):
+To install AutoMon run:
 ```bash
-pip install git+https://github.com/<user_name>/automon
+pip install git+https://github.com/hsivan/automon
 ```
-The above installation will work after the project is public.
-In the meantime, download the code and then use:
+Or, download the code and then run:
 ```bash
 pip install <automon_root>
 ```
@@ -72,68 +72,97 @@ based on [Gabel et al., 2014](https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&ar
 
 ### Distributed experiment
 
-Initiate and run the coordinator on a designated server.
+The following example shows how to monitor the inner product function with AutoMon.
+In this example, the data for the nodes is randomly generated - a new sample is randomly sampled every second until the
+user terminates the node.
+
+The first step is to define the function.
+For example, we the define inner product function in a file called `function_def.py`:
+```python
+import jax.numpy as np  # the user could use autograd.numpy instead of JAX
+
+def func_inner_product(x):
+    return np.matmul(x[:x.shape[0] // 2], x[x.shape[0] // 2:])
+```
+
+Next, initiate and run the coordinator on a designated server.
 You could change the listening port of the coordinator.
 ```python
-import automon as am
+import sys
+import logging
 from automon.automon.coordinator_automon import CoordinatorAutoMon
 from automon.automon.node_common_automon import NodeCommonAutoMon
-from automon_utils.functions_to_monitor import func_inner_product
+from automon_utils.utils_zmq_sockets import init_server_socket, get_next_node_message, send_message_to_node
+from function_def.py import func_inner_product
 
-coordinator_port = 64000
-data_folder = "../datasets/inner_product/"
+if __name__ == "__main__":
+    logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
-test_folder = am.test_utils.start_test("inner_product_coordinator")
-conf = am.test_utils.read_config_file(data_folder)
-coordinator = am.test_utils.get_coordinator(CoordinatorAutoMon, NodeCommonAutoMon, conf, func_inner_product)
-am.test_utils.run_coordinator(coordinator, coordinator_port, conf["num_nodes"], test_folder)
-am.test_utils.end_test()
+    # Create dummy node for the coordinator that uses it in the process of resolving violations.
+    verifier = NodeCommonAutoMon(idx=-1, x0_len=40, func_to_monitor=func_inner_product)
+    coordinator = CoordinatorAutoMon(verifier, num_nodes=4, error_bound=0.5)
+    # Open server socket. Wait for all nodes to connect and send 'start' signal to all nodes to start their data loop.
+    server_socket = init_server_socket(port=6400, num_nodes=4)
+
+    while True:
+        msg = get_next_node_message(server_socket)
+        replies = coordinator.parse_message(msg)
+        for node_idx, reply in replies:
+            send_message_to_node(server_socket, node_idx, reply)
 ```
 
-Initiate and run a node. The node can run on any computer or device with internet access.
-Make sure the `coordinator_ip` and `coordinator_port` are set to the IP and port of the coordinator.
+Lastly, initiate and run a node. The node can run on any computer or device with internet access.
+Make sure the `host` and `port` are set to the IP and port of the coordinator.
 ```python
-import automon as am
+import sys
+import logging
+import threading
+import time
+from timeit import default_timer as timer
+import numpy as np
 from automon.automon.node_common_automon import NodeCommonAutoMon
-from automon_utils.functions_to_monitor import func_inner_product
+from automon.messages_common import prepare_message_data_update
+from automon_utils.utils_zmq_sockets import init_client_socket, init_client_data_socket, get_next_coordinator_message, send_message_to_coordinator
+from function_def.py import func_inner_product
 
-coordinator_ip = '192.68.36.202'  # Replace this with the IP of the server that runs the coordinator
-coordinator_port = 64000
-node_idx = 0
-data_folder = "../datasets/inner_product/"
+def data_loop(node_idx, host, port):
+    # Open a client socket and connect to the server socket. This socket is used for reporting violations to the coordinator.
+    client_data_socket = init_client_data_socket(node_idx, host, port=port)
 
-test_folder = am.test_utils.start_test("inner_product_node")
-conf = am.test_utils.read_config_file(data_folder)
-data_generator = am.data_generator.DataGeneratorInnerProduct(num_iterations=conf["num_iterations"], num_nodes=conf["num_nodes"], data_file_name=data_folder+"data_file.txt", d=conf["d"])
-node = am.object_factory.get_node(NodeCommonAutoMon, conf["domain"], conf["d"], node_idx, func_inner_product)
-am.test_utils.run_node(coordinator_ip, coordinator_port, node, node_idx, data_generator, conf["num_nodes"], conf["sliding_window_size"], test_folder)
-am.test_utils.end_test()
+    # Read data sample every 1 second and update the node local vector. Report violations to the coordinator.
+    while True:
+        start = timer()
+        data = np.random.normal(loc=1, scale=0.1, size=(40,))
+        message_data_update = prepare_message_data_update(node_idx, data)
+        message_violation = node.parse_message(message_data_update)
+        if message_violation:
+            send_message_to_coordinator(client_data_socket, message_violation)
+        time.sleep(1 - (timer() - start))
+
+if __name__ == "__main__":
+    logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+    args = {'node_idx': 0, 'host': '127.0.0.1', 'port': 6400}  # Change node index for different nodes
+
+    node = NodeCommonAutoMon(idx=args['node_idx'], x0_len=40, func_to_monitor=func_inner_product)
+    # Open a client socket and connect to the server socket. Wait for 'start' message from the server.
+    client_socket = init_client_socket(args['node_idx'], host=args['host'], port=args['port'])
+
+    # Run the data loop in a different thread.
+    threading.Thread(target=data_loop, kwargs=args).start()
+
+    # Wait for message from the coordinator (local data requests or local constraint updates) and send the reply to the coordinator.
+    while True:
+        message = get_next_coordinator_message(client_socket)
+        reply = node.parse_message(message)
+        if reply:
+            send_message_to_coordinator(client_socket, reply)
 ```
-Initiate all 9 other nodes similarly.
+Initiate all 3 other nodes similarly.
 Don't forget to update the node_idx for every new instance.
-After all the nodes and the coordinator are initiated the experiment begins automatically.
+After all the nodes and the coordinator are initiated, the experiment begins automatically.
 
-### Monitoring simulation
-```python
-import automon as am
-from automon.automon.coordinator_automon import CoordinatorAutoMon
-from automon.automon.node_common_automon import NodeCommonAutoMon
-from automon_utils.functions_to_monitor import func_inner_product
-
-test_folder = am.test_utils.start_test("inner_product_simulation")
-conf = am.test_utils.get_config(num_nodes=10, num_iterations=1020, sliding_window_size=20, d=40, error_bound=0.3)
-data_generator = am.data_generator.DataGeneratorInnerProduct(num_iterations=conf["num_iterations"], num_nodes=conf["num_nodes"], d=conf["d"], test_folder=test_folder)
-coordinator, nodes = am.object_factory.get_objects(NodeCommonAutoMon, CoordinatorAutoMon, conf, func_inner_product)
-am.test_utils.run_test(data_generator, coordinator, nodes, test_folder, conf["sliding_window_size"])
-am.test_utils.end_test()
-```
 
 Find more examples under `<automon_root>/examples` folder.
-
-To add a new function to monitor, follow these steps:
-1. Add your function implementation to `<automon_root>/automon/functions_to_monitor.py`
-3. Add a new AutoMon node class with the new function to `<automon_root>/automon/automon/nodes_automon.py`
-2. Add your DataGenerator (which generates data or read from file) to `<automon_root>/automon/data_generator.py`
 
 ### Run as a docker container
 We provide Dockerfile to support building the project as a docker image.
@@ -274,13 +303,15 @@ This option is suitable for cases that require heavy computations (e.g. DNN moni
 If `automon` has been useful for your research and you would like to cite it in an academic
 publication, please use the following Bibtex entry:
 ```bibtex
-@article{automon,
-  author  = {Anonymous Authors},
-  title   = {AutoMon: Automatic Distributed Monitoring for Arbitrary Multivariate Functions},
-  journal = {TODO},
-  year    = {TODO},
-  volume  = {TODO},
-  number  = {TODO},
-  pages   = {TODO-TODO},
-  url     = {TODO}
+@inproceedings{automon,
+  author    = {Sivan, Hadar and Gabel, Moshe and Schuster, Assaf},
+  title     = {AutoMon: Automatic Distributed Monitoring for Arbitrary Multivariate Functions},
+  year      = {2022},
+  pages     = {TODO-TODO},
+  numpages  = {TODO},
+  url       = {TODO},
+  doi       = {TODO},
+  isbn      = {TODO},
+  series    = {SIGMOD '22}
+  booktitle = {Proceedings of the 2022 ACM SIGMOD International Conference on Management of Data}
 }
