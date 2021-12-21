@@ -2,7 +2,7 @@ import sys
 import logging
 from automon.automon.coordinator_automon import CoordinatorAutoMon
 from automon.automon.node_common_automon import NodeCommonAutoMon
-from utils.utils_zmq_sockets import init_server_socket, get_next_node_message, send_message_to_node
+from automon_utils.utils_zmq_sockets import init_server_socket, get_next_node_message, send_message_to_node
 
 
 def func_inner_product(x):

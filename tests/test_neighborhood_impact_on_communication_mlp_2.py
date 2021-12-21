@@ -1,16 +1,16 @@
 import os
 
 from automon.automon.node_common_automon import NodeCommonAutoMon
-from utils.data_generator import DataGeneratorMlp
+from automon_utils.data_generator import DataGeneratorMlp
 from automon.automon.coordinator_automon import CoordinatorAutoMon
 from tests.test_neighborhood_impact_on_communication_rozenbrock import get_optimal_neighborhood_sizes_from_full_test
-from utils.test_utils import start_test, end_test, run_test, write_config_to_file, read_config_file
-from utils.stats_analysis_utils import plot_monitoring_stats
+from automon_utils.test_utils import start_test, end_test, run_test, write_config_to_file, read_config_file
+from automon_utils.stats_analysis_utils import plot_monitoring_stats
 import logging
 import traceback
-from utils.object_factory import get_objects
-from utils.functions_to_monitor import set_net_params, func_mlp
-from utils.jax_mlp import load_net
+from automon_utils.object_factory import get_objects
+from automon_utils.functions_to_monitor import set_net_params, func_mlp
+from automon_utils.jax_mlp import load_net
 from tests.visualization.plot_neighborhood_impact import plot_communication_or_violation_error_bound_connection
 
 

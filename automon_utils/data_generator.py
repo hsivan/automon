@@ -3,7 +3,7 @@ import enum
 import os
 from datasets.air_quality.read_csv import prepare_pm_data
 from datasets.intrusion_detection.read_csv import prepare_intrusion_detection_data
-from utils.node_stream import NodeStreamAverage, NodeStreamFirstAndSecondMomentum, NodeStreamFrequency, NodeStreamConcatenatedFrequencyVectors
+from automon_utils.node_stream import NodeStreamAverage, NodeStreamFirstAndSecondMomentum, NodeStreamFrequency, NodeStreamConcatenatedFrequencyVectors
 
 
 class DataGeneratorState(enum.Enum):

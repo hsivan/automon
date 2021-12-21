@@ -1,8 +1,8 @@
 import matplotlib.pyplot as plt
 from matplotlib import rcParams, rcParamsDefault
 from tests.visualization.utils import get_figsize, reformat_large_tick_values
-from utils.test_utils import read_config_file
-from utils.stats_analysis_utils import get_violations_per_neighborhood_size, get_neighborhood_size_error_bound_connection, \
+from automon_utils.test_utils import read_config_file
+from automon_utils.stats_analysis_utils import get_violations_per_neighborhood_size, get_neighborhood_size_error_bound_connection, \
     get_optimal_neighborhood_size
 import os
 import numpy as np

@@ -3,11 +3,11 @@ import os
 import time
 
 import numpy as np
-from utils.data_generator import DataGeneratorQuadratic, DataGeneratorKldAirQuality, DataGeneratorDnnIntrusionDetection, DataGeneratorInnerProduct
-from utils.functions_to_monitor import set_H, set_net_params
-from utils.jax_dnn_intrusion_detection import load_net
-from utils.stats_analysis_utils import log_num_packets_sent_and_received
-from utils.test_utils import start_test, end_test, write_config_to_file, read_config_file
+from automon_utils.data_generator import DataGeneratorQuadratic, DataGeneratorKldAirQuality, DataGeneratorDnnIntrusionDetection, DataGeneratorInnerProduct
+from automon_utils.functions_to_monitor import set_H, set_net_params
+from automon_utils.jax_dnn_intrusion_detection import load_net
+from automon_utils.stats_analysis_utils import log_num_packets_sent_and_received
+from automon_utils.test_utils import start_test, end_test, write_config_to_file, read_config_file
 from tests.test_utils_zmq_sockets_centralization import run_centralization_node, run_dummy_coordinator
 
 if __name__ == "__main__":

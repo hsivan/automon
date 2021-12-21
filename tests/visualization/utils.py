@@ -1,4 +1,4 @@
-from utils.test_utils import read_config_file
+from automon_utils.test_utils import read_config_file
 
 
 def get_figsize(columnwidth=241.14749, wf=1.0, hf=(5. ** 0.5 - 1.0) / 2.0, b_fixed_height=False):

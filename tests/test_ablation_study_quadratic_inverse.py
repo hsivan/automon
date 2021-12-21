@@ -1,15 +1,15 @@
 from automon.automon.node_common_automon import NodeCommonAutoMon
 from automon.rlv.node_common_rlv import NodeCommonRLV
-from utils.functions_to_monitor import func_quadratic_inverse
+from automon_utils.functions_to_monitor import func_quadratic_inverse
 from automon.automon.coordinator_automon import CoordinatorAutoMon
 from automon.rlv.coordinator_rlv import CoordinatorRLV
-from utils.data_generator import DataGeneratorQuadraticInverse
+from automon_utils.data_generator import DataGeneratorQuadraticInverse
 from automon.coordinator_common import SlackType, SyncType
 from tests.visualization.plot_monitoring_stats_ablation_study import plot_monitoring_stats_graph_and_barchart
-from utils.test_utils import start_test, end_test, run_test, get_config, write_config_to_file
-from utils.stats_analysis_utils import plot_monitoring_stats
+from automon_utils.test_utils import start_test, end_test, run_test, get_config, write_config_to_file
+from automon_utils.stats_analysis_utils import plot_monitoring_stats
 import logging
-from utils.object_factory import get_objects
+from automon_utils.object_factory import get_objects
 import numpy as np
 from tests.visualization.plot_quadratic_inverse_surface import draw_f_contour_and_node_trail, draw_f
 

@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 from matplotlib import rcParams, rcParamsDefault
 import numpy as np
 from tests.visualization.utils import get_figsize, get_function_value_offset
-from utils.test_utils import read_config_file
+from automon_utils.test_utils import read_config_file
 import os
 
 

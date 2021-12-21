@@ -2,10 +2,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import rcParams, rcParamsDefault
 from matplotlib import cm
-from utils.test_utils import read_config_file
-from utils.data_generator import DataGeneratorQuadraticInverse
+from automon_utils.test_utils import read_config_file
+from automon_utils.data_generator import DataGeneratorQuadraticInverse
 from tests.visualization.utils import get_figsize
-from utils.functions_to_monitor import func_quadratic_inverse
+from automon_utils.functions_to_monitor import func_quadratic_inverse
 
 low = -2
 high = 2

@@ -1,14 +1,14 @@
 from automon.automon.node_common_automon import NodeCommonAutoMon
-from utils.functions_to_monitor import func_entropy
+from automon_utils.functions_to_monitor import func_entropy
 from automon.automon.coordinator_automon import CoordinatorAutoMon
 from automon.gm.coordinator_gm import CoordinatorGM
-from utils.data_generator import DataGeneratorEntropy
+from automon_utils.data_generator import DataGeneratorEntropy
 from automon.coordinator_common import SlackType, SyncType
 from automon.gm.node_entropy_gm import NodeEntropyGM
-from utils.test_utils import start_test, end_test, run_test, get_config, write_config_to_file
-from utils.stats_analysis_utils import plot_monitoring_stats
+from automon_utils.test_utils import start_test, end_test, run_test, get_config, write_config_to_file
+from automon_utils.stats_analysis_utils import plot_monitoring_stats
 import logging
-from utils.object_factory import get_objects
+from automon_utils.object_factory import get_objects
 import numpy as np
 
 if __name__ == "__main__":

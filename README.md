@@ -78,7 +78,7 @@ You could change the listening port of the coordinator.
 import automon as am
 from automon.automon.coordinator_automon import CoordinatorAutoMon
 from automon.automon.node_common_automon import NodeCommonAutoMon
-from utils.functions_to_monitor import func_inner_product
+from automon_utils.functions_to_monitor import func_inner_product
 
 coordinator_port = 64000
 data_folder = "../datasets/inner_product/"
@@ -95,7 +95,7 @@ Make sure the `coordinator_ip` and `coordinator_port` are set to the IP and port
 ```python
 import automon as am
 from automon.automon.node_common_automon import NodeCommonAutoMon
-from utils.functions_to_monitor import func_inner_product
+from automon_utils.functions_to_monitor import func_inner_product
 
 coordinator_ip = '192.68.36.202'  # Replace this with the IP of the server that runs the coordinator
 coordinator_port = 64000
@@ -118,7 +118,7 @@ After all the nodes and the coordinator are initiated the experiment begins auto
 import automon as am
 from automon.automon.coordinator_automon import CoordinatorAutoMon
 from automon.automon.node_common_automon import NodeCommonAutoMon
-from utils.functions_to_monitor import func_inner_product
+from automon_utils.functions_to_monitor import func_inner_product
 
 test_folder = am.test_utils.start_test("inner_product_simulation")
 conf = am.test_utils.get_config(num_nodes=10, num_iterations=1020, sliding_window_size=20, d=40, error_bound=0.3)

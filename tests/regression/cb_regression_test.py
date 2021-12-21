@@ -2,9 +2,9 @@ from automon.cb.node_cosine_similarity_cb import NodeCosineSimilarityCB
 from automon.cb.node_inner_product_cb import NodeInnerProductCB
 from automon.cb.coordinator_cb import CoordinatorCB
 from automon.coordinator_common import SlackType, SyncType
-from utils.data_generator import DataGeneratorCosineSimilarity, DataGeneratorInnerProduct
-from utils.functions_to_monitor import func_cosine_similarity, func_inner_product
-from utils.test_utils import start_test, end_test, get_config
+from automon_utils.data_generator import DataGeneratorCosineSimilarity, DataGeneratorInnerProduct
+from automon_utils.functions_to_monitor import func_cosine_similarity, func_inner_product
+from automon_utils.test_utils import start_test, end_test, get_config
 from tests.regression.regression_test_utils import test_func_slack_sync_variations
 
 regression_test_files_folder = "./regression_test_files_cb/"

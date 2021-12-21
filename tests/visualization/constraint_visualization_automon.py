@@ -3,8 +3,8 @@ import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
 from automon.automon.coordinator_automon import AdcdHelper
 from automon.automon.node_common_automon import NodeCommonAutoMon
-from utils.functions_to_monitor import func_entropy, func_variance, func_inner_product, func_rozenbrock
-from utils.node_stream import NodeStreamFrequency, NodeStreamFirstAndSecondMomentum, NodeStreamAverage
+from automon_utils.functions_to_monitor import func_entropy, func_variance, func_inner_product, func_rozenbrock
+from automon_utils.node_stream import NodeStreamFrequency, NodeStreamFirstAndSecondMomentum, NodeStreamAverage
 
 
 def entropy_automon_draw_constraints(node):
@@ -414,7 +414,7 @@ def visualize_variance():
     node_idx = 1
 
     dc_type, extreme_lambda = adcd_helper.adcd_x(x0, None, 0)
-    node = NodeCommonAutoMon(idx=node_idx, func_to_monitor=func_variance, min_f_val=0.0)
+    node = NodeCommonAutoMon(idx=node_idx, x0_len=2, func_to_monitor=func_variance, min_f_val=0.0)
     node.sync(x0, slack, 0.08, 3, -1, dc_type, extreme_lambda)
     # Fill sliding window
     node_stream = NodeStreamFirstAndSecondMomentum(2, sliding_window_size, 1, x0.shape[0])
@@ -445,10 +445,10 @@ def visualize_rozenbrock():
     node_idx = 1
 
     dc_type, extreme_lambda = adcd_helper.adcd_x(x0, None, 0)
-    node = NodeCommonAutoMon(idx=node_idx, func_to_monitor=func_rozenbrock)
+    node = NodeCommonAutoMon(idx=node_idx, x0_len=x0.shape[0], func_to_monitor=func_rozenbrock)
     node.sync(x0, slack, 0.08, 3, -1, dc_type, extreme_lambda)
     # Fill sliding window
-    node_stream = NodeStreamAverage(2, sliding_window_size, 1, 1)
+    node_stream = NodeStreamAverage(2, sliding_window_size, x0.shape[0], x0.shape[0])
     for i in range(sliding_window_size):
         node_stream.set_new_data_point(0, node_idx)
     local_vector = node_stream.get_local_vector(node_idx)
@@ -466,12 +466,12 @@ def visualize_inner_product():
     node_idx = 1
 
     dc_type, extreme_lambda = adcd_helper.adcd_x(x0, None, 0)
-    node = NodeCommonAutoMon(idx=node_idx, func_to_monitor=func_inner_product)
+    node = NodeCommonAutoMon(idx=node_idx, x0_len=x0.shape[0], func_to_monitor=func_inner_product)
     node.sync(x0, slack, 0.08, 3, -1, dc_type, extreme_lambda)
     # Fill sliding window
-    node_stream = NodeStreamAverage(2, sliding_window_size, 1, 1)
+    node_stream = NodeStreamAverage(2, sliding_window_size, x0.shape[0], x0.shape[0])
     for i in range(sliding_window_size):
-        node_stream.set_new_data_point(0, node_idx)
+        node_stream.set_new_data_point(np.array([0, 0]), node_idx)
     local_vector = node_stream.get_local_vector(node_idx)
     b_inside_safe_zone = node.set_new_data_point(local_vector)
     automon_draw_constraints(node, func_inner_product)

@@ -1,15 +1,15 @@
 import os
 os.environ['AUTO_DIFFERENTIATION_TOOL'] = 'AutoGrad'
 from automon.automon.node_common_automon import NodeCommonAutoMon
-from utils.functions_to_monitor import func_rozenbrock
-from utils.data_generator import DataGeneratorRozenbrock
+from automon_utils.functions_to_monitor import func_rozenbrock
+from automon_utils.data_generator import DataGeneratorRozenbrock
 from automon.automon.coordinator_automon import CoordinatorAutoMon
-from utils.test_utils import start_test, end_test, run_test, write_config_to_file, read_config_file
-from utils.stats_analysis_utils import plot_monitoring_stats, get_neighborhood_size_error_bound_connection
+from automon_utils.test_utils import start_test, end_test, run_test, write_config_to_file, read_config_file
+from automon_utils.stats_analysis_utils import plot_monitoring_stats, get_neighborhood_size_error_bound_connection
 import logging
 import traceback
 from concurrent.futures import ProcessPoolExecutor
-from utils.object_factory import get_objects
+from automon_utils.object_factory import get_objects
 from tests.visualization.plot_neighborhood_impact import plot_communication_or_violation_error_bound_connection
 
 

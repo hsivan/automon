@@ -1,4 +1,4 @@
-from utils.test_utils import run_test
+from automon_utils.test_utils import run_test
 import logging
 import numpy as np
 import traceback

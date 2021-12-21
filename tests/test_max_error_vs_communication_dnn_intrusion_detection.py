@@ -1,13 +1,13 @@
 from automon.automon.node_common_automon import NodeCommonAutoMon
-from utils.tune_neighborhood_size import tune_neighborhood_size
+from automon_utils.tune_neighborhood_size import tune_neighborhood_size
 from automon.automon.coordinator_automon import CoordinatorAutoMon
-from utils.data_generator import DataGeneratorDnnIntrusionDetection
-from utils.jax_dnn_intrusion_detection import load_net
-from utils.test_utils import start_test, end_test, run_test, write_config_to_file, read_config_file
-from utils.stats_analysis_utils import plot_monitoring_stats
+from automon_utils.data_generator import DataGeneratorDnnIntrusionDetection
+from automon_utils.jax_dnn_intrusion_detection import load_net
+from automon_utils.test_utils import start_test, end_test, run_test, write_config_to_file, read_config_file
+from automon_utils.stats_analysis_utils import plot_monitoring_stats
 import logging
-from utils.object_factory import get_objects
-from utils.functions_to_monitor import set_net_params, func_dnn_intrusion_detection
+from automon_utils.object_factory import get_objects
+from automon_utils.functions_to_monitor import set_net_params, func_dnn_intrusion_detection
 from tests.visualization.plot_error_communication_tradeoff import plot_max_error_vs_communication
 
 

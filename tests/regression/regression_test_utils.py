@@ -1,8 +1,8 @@
 import numpy as np
 import pickle
-from utils.object_factory import get_objects
+from automon_utils.object_factory import get_objects
 from automon.coordinator_common import SyncType, SlackType
-from utils.test_utils import run_test
+from automon_utils.test_utils import run_test
 
 
 def compare_sync_history_lists(sync_history_1, sync_history_2):

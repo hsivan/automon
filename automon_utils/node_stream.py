@@ -1,5 +1,5 @@
 import numpy as np
-from utils.fifo import Fifo
+from automon_utils.fifo import Fifo
 
 
 class NodeStream:

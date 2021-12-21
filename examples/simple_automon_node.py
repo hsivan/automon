@@ -7,7 +7,7 @@ from timeit import default_timer as timer
 import numpy as np
 from automon.automon.node_common_automon import NodeCommonAutoMon
 from automon.messages_common import prepare_message_data_update
-from utils.utils_zmq_sockets import init_client_socket, init_client_data_socket, get_next_coordinator_message, send_message_to_coordinator
+from automon_utils.utils_zmq_sockets import init_client_socket, init_client_data_socket, get_next_coordinator_message, send_message_to_coordinator
 
 
 def func_inner_product(x):

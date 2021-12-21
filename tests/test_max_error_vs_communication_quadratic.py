@@ -1,11 +1,11 @@
 from automon.automon.coordinator_automon import CoordinatorAutoMon
 from automon.automon.node_common_automon import NodeCommonAutoMon
-from utils.data_generator import DataGeneratorQuadratic
-from utils.test_utils import start_test, end_test, run_test, write_config_to_file, read_config_file
-from utils.stats_analysis_utils import plot_monitoring_stats
+from automon_utils.data_generator import DataGeneratorQuadratic
+from automon_utils.test_utils import start_test, end_test, run_test, write_config_to_file, read_config_file
+from automon_utils.stats_analysis_utils import plot_monitoring_stats
 import logging
-from utils.object_factory import get_objects
-from utils.functions_to_monitor import set_H, func_quadratic
+from automon_utils.object_factory import get_objects
+from automon_utils.functions_to_monitor import set_H, func_quadratic
 import numpy as np
 from tests.visualization.plot_error_communication_tradeoff import plot_max_error_vs_communication
 

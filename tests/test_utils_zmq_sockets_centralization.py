@@ -7,7 +7,7 @@ import logging
 from timeit import default_timer as timer
 import numpy as np
 from automon.messages_common import MessageType, prepare_message_header
-from utils.test_utils_zmq_sockets import event_monitor_client, event_monitor_server
+from automon_utils.test_utils_zmq_sockets import event_monitor_client, event_monitor_server
 
 # Use ZMQ Client-Server pattern  (https://zguide.zeromq.org/docs/chapter3/#The-Asynchronous-Client-Server-Pattern)
 # Between the coordinator and the nodes. Coordinator uses ROUTER socket and the nodes use DEALER socket.
