@@ -1,4 +1,4 @@
-from utils.nodes_automon import NodeDnnIntrusionDetectionAutoMon
+from automon.automon.node_common_automon import NodeCommonAutoMon
 from utils.tune_neighborhood_size import tune_neighborhood_size
 from automon.automon.coordinator_automon import CoordinatorAutoMon
 from utils.data_generator import DataGeneratorDnnIntrusionDetection
@@ -7,7 +7,7 @@ from utils.test_utils import start_test, end_test, run_test, write_config_to_fil
 from utils.stats_analysis_utils import plot_monitoring_stats
 import logging
 from utils.object_factory import get_objects
-from utils.functions_to_monitor import set_net_params
+from utils.functions_to_monitor import set_net_params, func_dnn_intrusion_detection
 from tests.visualization.plot_error_communication_tradeoff import plot_max_error_vs_communication
 
 
@@ -26,7 +26,7 @@ def test_error_bounds(error_bound, parent_test_folder):
 
         logging.info("\n###################### Start AutoMon test ######################")
         data_generator.reset()
-        coordinator, nodes = get_objects(NodeDnnIntrusionDetectionAutoMon, CoordinatorAutoMon, conf)
+        coordinator, nodes = get_objects(NodeCommonAutoMon, CoordinatorAutoMon, conf, func_dnn_intrusion_detection)
         tune_neighborhood_size(coordinator, nodes, conf, data_generator, b_single_sample_per_round=True)
         run_test(data_generator, coordinator, nodes, test_folder, b_single_sample_per_round=True)
 

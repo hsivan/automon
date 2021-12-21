@@ -2,7 +2,8 @@ import matplotlib.pyplot as plt
 from matplotlib import rcParams, rcParamsDefault
 from matplotlib.lines import Line2D
 import numpy as np
-from utils.nodes_automon import NodeInnerProductAutoMon
+
+from automon.automon.node_common_automon import NodeCommonAutoMon
 from utils.functions_to_monitor import func_inner_product
 from tests.visualization.utils import get_figsize
 from automon.automon.coordinator_automon import AdcdHelper
@@ -131,7 +132,7 @@ if __name__ == "__main__":
     x = np.array([0.65, 0.65])
 
     dc_type, signed_H = adcd_helper.adcd_e(x0)
-    node = NodeInnerProductAutoMon(idx=1)
+    node = NodeCommonAutoMon(idx=1, func_to_monitor=func_inner_product)
     node.sync(x0, slack, func_inner_product(x0)-0.5, func_inner_product(x0)+0.5, -1, dc_type, signed_H)
     b_inside_safe_zone = node.set_new_data_point(x)
     # Inside safe zone
@@ -140,7 +141,7 @@ if __name__ == "__main__":
     assert b_inside_safe_zone
 
     dc_type, extreme_lambda = adcd_helper.adcd_x(x0, None, 0)
-    node = NodeInnerProductAutoMon(idx=1)
+    node = NodeCommonAutoMon(idx=1, func_to_monitor=func_inner_product)
     node.sync(x0, slack, func_inner_product(x0) - 0.5, func_inner_product(x0) + 0.5, -1, dc_type, extreme_lambda)
     b_inside_safe_zone = node.set_new_data_point(x)
     # Not inside safe zone

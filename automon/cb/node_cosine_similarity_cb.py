@@ -1,14 +1,14 @@
 import numpy as np
 from automon.cb.node_common_cb import NodeCommonCB
-from utils.functions_to_monitor import func_cosine_similarity
 
 # Implementation according to https://dl.acm.org/doi/pdf/10.1145/3226113
 
 
 class NodeCosineSimilarityCB(NodeCommonCB):
     
-    def __init__(self, idx=0, x0_len=2, domain=None):
-        NodeCommonCB.__init__(self, idx, x0_len=x0_len, domain=domain, func_to_monitor=func_cosine_similarity)
+    def __init__(self, idx=0, x0_len=2, domain=None, func_to_monitor=None):
+        # func_to_monitor must be func_cosine_similarity; however we keep function implementations outside of automon core.
+        NodeCommonCB.__init__(self, idx, x0_len=x0_len, domain=domain, func_to_monitor=func_to_monitor)
 
     def _func_convexing_part(self, X, threshold):
         if len(X.shape) < 2:

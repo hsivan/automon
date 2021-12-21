@@ -1,4 +1,5 @@
-from utils.nodes_automon import NodeEntropyAutoMon
+from automon.automon.node_common_automon import NodeCommonAutoMon
+from utils.functions_to_monitor import func_entropy
 from automon.automon.coordinator_automon import CoordinatorAutoMon
 from automon.gm.coordinator_gm import CoordinatorGM
 from utils.data_generator import DataGeneratorEntropy
@@ -8,6 +9,7 @@ from utils.test_utils import start_test, end_test, run_test, get_config, write_c
 from utils.stats_analysis_utils import plot_monitoring_stats
 import logging
 from utils.object_factory import get_objects
+import numpy as np
 
 if __name__ == "__main__":
     try:
@@ -22,12 +24,12 @@ if __name__ == "__main__":
 
         logging.info("\n###################### Start entropy GM test ######################")
         data_generator.reset()
-        coordinator, nodes = get_objects(NodeEntropyGM, CoordinatorGM, conf)
+        coordinator, nodes = get_objects(NodeEntropyGM, CoordinatorGM, conf, func_entropy)
         run_test(data_generator, coordinator, nodes, test_folder)
 
         logging.info("\n###################### Start entropy AutoMon test ######################")
         data_generator.reset()
-        coordinator, nodes = get_objects(NodeEntropyAutoMon, CoordinatorAutoMon, conf)
+        coordinator, nodes = get_objects(NodeCommonAutoMon, CoordinatorAutoMon, conf, func_entropy, max_f_val=func_entropy(np.ones(conf["d"], dtype=np.float) / conf["d"]), min_f_val=0.0)
         run_test(data_generator, coordinator, nodes, test_folder)
 
         plot_monitoring_stats(test_folder)

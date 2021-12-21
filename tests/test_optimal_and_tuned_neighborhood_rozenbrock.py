@@ -1,6 +1,7 @@
 import os
 os.environ['AUTO_DIFFERENTIATION_TOOL'] = 'AutoGrad'
-from utils.nodes_automon import NodeRozenbrockAutoMon
+from automon.automon.node_common_automon import NodeCommonAutoMon
+from utils.functions_to_monitor import func_rozenbrock
 from utils.tune_neighborhood_size import tune_neighborhood_size
 from utils.data_generator import DataGeneratorRozenbrock
 from automon.coordinator_common import SlackType, SyncType
@@ -28,7 +29,7 @@ def neighborhood_size_impact(experiment_folder, error_bound):
     data_generator = DataGeneratorRozenbrock(num_iterations=conf["num_iterations"], num_nodes=conf["num_nodes"],
                                              data_file_name="data_file.txt", d=conf["d"], test_folder=experiment_folder, num_iterations_for_tuning=conf["num_iterations_for_tuning"], sliding_window_size=conf["sliding_window_size"])
 
-    coordinator, nodes = get_objects(NodeRozenbrockAutoMon, CoordinatorAutoMon, conf)
+    coordinator, nodes = get_objects(NodeCommonAutoMon, CoordinatorAutoMon, conf, func_rozenbrock)
     tune_neighborhood_size(coordinator, nodes, conf, data_generator)
     with open(test_folder + "/tuned_neighborhood_size.txt", "a") as f:
         f.write("tuned_neighborhood_size: " + str(coordinator.neighborhood_size))
@@ -45,7 +46,7 @@ def neighborhood_size_impact(experiment_folder, error_bound):
 
             logging.info("\n###################### Start Rozenbrock AutoMon test ######################")
             data_generator.reset()
-            coordinator, nodes = get_objects(NodeRozenbrockAutoMon, CoordinatorAutoMon, conf)
+            coordinator, nodes = get_objects(NodeCommonAutoMon, CoordinatorAutoMon, conf, func_rozenbrock)
             coordinator.b_fix_neighborhood_dynamically = False  # Should not change neighborhood size dynamically in this experiment
             run_test(data_generator, coordinator, nodes, sub_test_folder)
 

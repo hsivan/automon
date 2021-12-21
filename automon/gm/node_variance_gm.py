@@ -2,7 +2,6 @@ import numpy as np
 from automon.gm.node_common_gm import NodeCommonGM
 import scipy as sp
 from scipy.optimize import NonlinearConstraint
-from utils.functions_to_monitor import func_variance
 
 # Implementation according to https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=6877240
 
@@ -17,9 +16,10 @@ def func_q_on_parabola(q):
 
 class NodeVarianceGM(NodeCommonGM):
     
-    def __init__(self, idx=0, x0_len=2, domain=None):
+    def __init__(self, idx=0, x0_len=2, domain=None, func_to_monitor=None):
+        # func_to_monitor must be func_variance; however we keep function implementations outside of automon core.
         assert (x0_len == 2)  # The local vector is the first and second momentum
-        NodeCommonGM.__init__(self, idx, x0_len=x0_len, domain=domain, func_to_monitor=func_variance)
+        NodeCommonGM.__init__(self, idx, x0_len=x0_len, domain=domain, func_to_monitor=func_to_monitor)
 
     def _calc_parabola(self, thresh, x):
         # Calculates y = x**2 + thresh

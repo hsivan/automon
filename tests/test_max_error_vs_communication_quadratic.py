@@ -1,11 +1,11 @@
-from utils.nodes_automon import NodeQuadraticAutoMon
 from automon.automon.coordinator_automon import CoordinatorAutoMon
+from automon.automon.node_common_automon import NodeCommonAutoMon
 from utils.data_generator import DataGeneratorQuadratic
 from utils.test_utils import start_test, end_test, run_test, write_config_to_file, read_config_file
 from utils.stats_analysis_utils import plot_monitoring_stats
 import logging
 from utils.object_factory import get_objects
-from utils.functions_to_monitor import set_H
+from utils.functions_to_monitor import set_H, func_quadratic
 import numpy as np
 from tests.visualization.plot_error_communication_tradeoff import plot_max_error_vs_communication
 
@@ -25,7 +25,7 @@ def test_error_bounds(error_bound, parent_test_folder):
 
         logging.info("\n###################### Start AutoMon test ######################")
         data_generator.reset()
-        coordinator, nodes = get_objects(NodeQuadraticAutoMon, CoordinatorAutoMon, conf)
+        coordinator, nodes = get_objects(NodeCommonAutoMon, CoordinatorAutoMon, conf, func_quadratic)
         run_test(data_generator, coordinator, nodes, test_folder)
 
         plot_monitoring_stats(test_folder)

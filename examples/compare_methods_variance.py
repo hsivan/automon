@@ -1,4 +1,5 @@
-from utils.nodes_automon import NodeVarianceAutoMon
+from automon.automon.node_common_automon import NodeCommonAutoMon
+from utils.functions_to_monitor import func_variance
 from automon.automon.coordinator_automon import CoordinatorAutoMon
 from automon.gm.coordinator_gm import CoordinatorGM
 from utils.data_generator import DataGeneratorVariance
@@ -21,12 +22,12 @@ if __name__ == "__main__":
 
         logging.info("\n###################### Start variance GM test ######################")
         data_generator.reset()
-        coordinator, nodes = get_objects(NodeVarianceGM, CoordinatorGM, conf)
+        coordinator, nodes = get_objects(NodeVarianceGM, CoordinatorGM, conf, func_variance)
         run_test(data_generator, coordinator, nodes, test_folder)
 
         logging.info("\n###################### Start variance AutoMon test ######################")
         data_generator.reset()
-        coordinator, nodes = get_objects(NodeVarianceAutoMon, CoordinatorAutoMon, conf)
+        coordinator, nodes = get_objects(NodeCommonAutoMon, CoordinatorAutoMon, conf, func_variance, min_f_val=0.0)
         run_test(data_generator, coordinator, nodes, test_folder)
 
         plot_monitoring_stats(test_folder)

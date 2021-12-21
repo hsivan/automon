@@ -77,14 +77,15 @@ You could change the listening port of the coordinator.
 ```python
 import automon as am
 from automon.automon.coordinator_automon import CoordinatorAutoMon
-from utils.nodes_automon import NodeInnerProductAutoMon
+from automon.automon.node_common_automon import NodeCommonAutoMon
+from utils.functions_to_monitor import func_inner_product
 
 coordinator_port = 64000
 data_folder = "../datasets/inner_product/"
 
 test_folder = am.test_utils.start_test("inner_product_coordinator")
 conf = am.test_utils.read_config_file(data_folder)
-coordinator = am.test_utils.get_coordinator(CoordinatorAutoMon, NodeInnerProductAutoMon, conf)
+coordinator = am.test_utils.get_coordinator(CoordinatorAutoMon, NodeCommonAutoMon, conf, func_inner_product)
 am.test_utils.run_coordinator(coordinator, coordinator_port, conf["num_nodes"], test_folder)
 am.test_utils.end_test()
 ```
@@ -93,7 +94,8 @@ Initiate and run a node. The node can run on any computer or device with interne
 Make sure the `coordinator_ip` and `coordinator_port` are set to the IP and port of the coordinator.
 ```python
 import automon as am
-from utils.nodes_automon import NodeInnerProductAutoMon
+from automon.automon.node_common_automon import NodeCommonAutoMon
+from utils.functions_to_monitor import func_inner_product
 
 coordinator_ip = '192.68.36.202'  # Replace this with the IP of the server that runs the coordinator
 coordinator_port = 64000
@@ -103,7 +105,7 @@ data_folder = "../datasets/inner_product/"
 test_folder = am.test_utils.start_test("inner_product_node")
 conf = am.test_utils.read_config_file(data_folder)
 data_generator = am.data_generator.DataGeneratorInnerProduct(num_iterations=conf["num_iterations"], num_nodes=conf["num_nodes"], data_file_name=data_folder+"data_file.txt", d=conf["d"])
-node = am.object_factory.get_node(NodeInnerProductAutoMon, conf["domain"], conf["d"], node_idx)
+node = am.object_factory.get_node(NodeCommonAutoMon, conf["domain"], conf["d"], node_idx, func_inner_product)
 am.test_utils.run_node(coordinator_ip, coordinator_port, node, node_idx, data_generator, conf["num_nodes"], conf["sliding_window_size"], test_folder)
 am.test_utils.end_test()
 ```
@@ -115,12 +117,13 @@ After all the nodes and the coordinator are initiated the experiment begins auto
 ```python
 import automon as am
 from automon.automon.coordinator_automon import CoordinatorAutoMon
-from utils.nodes_automon import NodeInnerProductAutoMon
+from automon.automon.node_common_automon import NodeCommonAutoMon
+from utils.functions_to_monitor import func_inner_product
 
 test_folder = am.test_utils.start_test("inner_product_simulation")
 conf = am.test_utils.get_config(num_nodes=10, num_iterations=1020, sliding_window_size=20, d=40, error_bound=0.3)
 data_generator = am.data_generator.DataGeneratorInnerProduct(num_iterations=conf["num_iterations"], num_nodes=conf["num_nodes"], d=conf["d"], test_folder=test_folder)
-coordinator, nodes = am.object_factory.get_objects(NodeInnerProductAutoMon, CoordinatorAutoMon, conf)
+coordinator, nodes = am.object_factory.get_objects(NodeCommonAutoMon, CoordinatorAutoMon, conf, func_inner_product)
 am.test_utils.run_test(data_generator, coordinator, nodes, test_folder, conf["sliding_window_size"])
 am.test_utils.end_test()
 ```

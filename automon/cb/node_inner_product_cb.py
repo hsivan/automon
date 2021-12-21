@@ -1,14 +1,14 @@
 import numpy as np
 from automon.cb.node_common_cb import NodeCommonCB
-from utils.functions_to_monitor import func_inner_product
 
 # Implementation according to https://dl.acm.org/doi/pdf/10.1145/3226113
 
 
 class NodeInnerProductCB(NodeCommonCB):
     
-    def __init__(self, idx=0, x0_len=2, domain=None):
-        NodeCommonCB.__init__(self, idx, x0_len=x0_len, domain=domain, func_to_monitor=func_inner_product)
+    def __init__(self, idx=0, x0_len=2, domain=None, func_to_monitor=None):
+        # func_to_monitor must be func_inner_product; however we keep function implementations outside of automon core.
+        NodeCommonCB.__init__(self, idx, x0_len=x0_len, domain=domain, func_to_monitor=func_to_monitor)
 
     def _func_h(self, X, threshold):
         if len(X.shape) < 2:

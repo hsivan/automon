@@ -1,8 +1,9 @@
 import argparse
 import os
-from utils.nodes_automon import NodeKLDAutoMon
 from automon.automon.coordinator_automon import CoordinatorAutoMon
+from automon.automon.node_common_automon import NodeCommonAutoMon
 from utils.data_generator import DataGeneratorKldAirQuality
+from utils.functions_to_monitor import func_kld
 from utils.stats_analysis_utils import log_num_packets_sent_and_received
 from utils.test_utils import start_test, end_test, write_config_to_file, read_config_file
 from utils.object_factory import get_node, get_coordinator
@@ -32,12 +33,12 @@ if __name__ == "__main__":
         write_config_to_file(test_folder, conf)
 
         if args.node_idx == -1:
-            coordinator = get_coordinator(CoordinatorAutoMon, NodeKLDAutoMon, conf)
+            coordinator = get_coordinator(CoordinatorAutoMon, NodeCommonAutoMon, conf, func_kld)
             run_coordinator(coordinator, args.port, conf["num_nodes"], test_folder)
 
         if args.node_idx >= 0:
             data_generator = DataGeneratorKldAirQuality(num_iterations=conf["num_iterations"], num_nodes=conf["num_nodes"], d=conf["d"], test_folder=test_folder, num_iterations_for_tuning=conf["num_iterations_for_tuning"], sliding_window_size=conf["sliding_window_size"])
-            node = get_node(NodeKLDAutoMon, conf["domain"], conf["d"], args.node_idx)
+            node = get_node(NodeCommonAutoMon, conf["domain"], conf["d"], args.node_idx, func_kld)
             run_node(args.host, args.port, node, args.node_idx, data_generator, test_folder)
 
         log_num_packets_sent_and_received(test_folder)  # Log at the end

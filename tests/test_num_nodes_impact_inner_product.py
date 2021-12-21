@@ -1,7 +1,8 @@
-from utils.nodes_automon import NodeInnerProductAutoMon
+from automon.automon.node_common_automon import NodeCommonAutoMon
 from utils.data_generator import DataGeneratorInnerProduct
 from automon.coordinator_common import SlackType, SyncType
 from automon.automon.coordinator_automon import CoordinatorAutoMon
+from utils.functions_to_monitor import func_inner_product
 from utils.test_utils import start_test, end_test, run_test, get_config, write_config_to_file, read_config_file
 from utils.stats_analysis_utils import plot_monitoring_stats
 import logging
@@ -23,7 +24,7 @@ def test_num_nodes(num_nodes, parent_test_folder):
 
         logging.info("\n###################### Start AutoMon test ######################")
         data_generator.reset()
-        coordinator, nodes = get_objects(NodeInnerProductAutoMon, CoordinatorAutoMon, conf)
+        coordinator, nodes = get_objects(NodeCommonAutoMon, CoordinatorAutoMon, conf, func_inner_product)
         run_test(data_generator, coordinator, nodes, test_folder)
 
         plot_monitoring_stats(test_folder)

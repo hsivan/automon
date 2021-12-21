@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
-from utils.functions_to_monitor import func_entropy
+from utils.functions_to_monitor import func_entropy, func_variance
 from automon.gm.node_entropy_gm import NodeEntropyGM
 from automon.gm.node_variance_gm import NodeVarianceGM
 from utils.node_stream import NodeStreamFrequency, NodeStreamFirstAndSecondMomentum
@@ -254,7 +254,7 @@ def visualize_entropy():
 
     # 3 dimensional case
     sliding_window_size = 5
-    node3 = NodeEntropyGM(idx=node_idx, x0_len=3)
+    node3 = NodeEntropyGM(idx=node_idx, x0_len=3, func_to_monitor=func_entropy)
     x0 = np.array([1, 1, 4]) / np.sum([1, 1, 4])
     node3.sync(x0, slack, 0.7, 1)
     entropy_gm_draw_constraints(node3)
@@ -293,7 +293,7 @@ def visualize_entropy():
 
     # 2 dimensional case
     sliding_window_size = 4
-    node2 = NodeEntropyGM(idx=1, x0_len=2)
+    node2 = NodeEntropyGM(idx=1, x0_len=2, func_to_monitor=func_entropy)
     x0 = np.array([1, 4]) / np.sum([1, 4])
     node2.sync(x0, slack, 0.5, 0.6)
     entropy_gm_draw_constraints(node2)
@@ -335,7 +335,7 @@ def visualize_variance():
     x0 = np.array([0.5, 2])
     node_idx = 1
 
-    node = NodeVarianceGM(idx=node_idx)
+    node = NodeVarianceGM(idx=node_idx, func_to_monitor=func_variance)
     node.sync(x0, slack, 0.08, 3)
     # Fill sliding window
     node_stream = NodeStreamFirstAndSecondMomentum(2, sliding_window_size, 1, x0.shape[0])

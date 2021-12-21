@@ -1,9 +1,10 @@
-from utils.nodes_automon import NodeKLDAutoMon
+from automon.automon.node_common_automon import NodeCommonAutoMon
+from automon.rlv.node_common_rlv import NodeCommonRLV
+from utils.functions_to_monitor import func_kld
 from utils.tune_neighborhood_size import tune_neighborhood_size
 from automon.automon.coordinator_automon import CoordinatorAutoMon
 from automon.rlv.coordinator_rlv import CoordinatorRLV
 from utils.data_generator import DataGeneratorKldAirQuality
-from utils.nodes_rlv import NodeKLDRLV
 from utils.test_utils import start_test, end_test, run_test, write_config_to_file, read_config_file
 from utils.stats_analysis_utils import plot_monitoring_stats
 import logging
@@ -25,12 +26,12 @@ if __name__ == "__main__":
 
         logging.info("\n###################### Start KLD RLV test ######################")
         data_generator.reset()
-        coordinator, nodes = get_objects(NodeKLDRLV, CoordinatorRLV, conf)
+        coordinator, nodes = get_objects(NodeCommonRLV, CoordinatorRLV, conf, func_kld)
         run_test(data_generator, coordinator, nodes, test_folder)
 
         logging.info("\n###################### Start KLD AutoMon test ######################")
         data_generator.reset()
-        coordinator, nodes = get_objects(NodeKLDAutoMon, CoordinatorAutoMon, conf)
+        coordinator, nodes = get_objects(NodeCommonAutoMon, CoordinatorAutoMon, conf, func_kld)
         tune_neighborhood_size(coordinator, nodes, conf, data_generator)
         run_test(data_generator, coordinator, nodes, test_folder)
 

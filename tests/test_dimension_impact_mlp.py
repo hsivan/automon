@@ -1,4 +1,4 @@
-from utils.nodes_automon import NodeMlpAutoMon
+from automon.automon.node_common_automon import NodeCommonAutoMon
 from utils.tune_neighborhood_size import tune_neighborhood_size
 from automon.automon.coordinator_automon import CoordinatorAutoMon
 from utils.data_generator import DataGeneratorMlp
@@ -8,7 +8,7 @@ from utils.stats_analysis_utils import plot_monitoring_stats
 import logging
 from utils.object_factory import get_objects
 from utils.jax_mlp import train_net
-from utils.functions_to_monitor import set_net_params
+from utils.functions_to_monitor import set_net_params, func_mlp
 
 
 def test_dimension(dimension, parent_test_folder):
@@ -29,7 +29,7 @@ def test_dimension(dimension, parent_test_folder):
 
         logging.info("\n###################### Start DNN exp AutoMon test ######################")
         data_generator.reset()
-        coordinator, nodes = get_objects(NodeMlpAutoMon, CoordinatorAutoMon, conf)
+        coordinator, nodes = get_objects(NodeCommonAutoMon, CoordinatorAutoMon, conf, func_mlp)
         tune_neighborhood_size(coordinator, nodes, conf, data_generator)
         run_test(data_generator, coordinator, nodes, test_folder)
 

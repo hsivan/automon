@@ -27,12 +27,12 @@ def compare_results(regression_test_files_folder, sync_history, msg_counters, ty
     # pickle.dump(msg_counters, open(expected_msg_counters_str, 'wb'))
 
 
-def test_func_slack_sync_variations(coordinator_class, func_name, NodeClass, data_generator, conf, test_folder, regression_test_files_folder):
+def test_func_slack_sync_variations(coordinator_class, func_name, NodeClass, data_generator, conf, test_folder, regression_test_files_folder, func_to_monitor, max_f_val=np.inf, min_f_val=-np.inf):
     print("\nRun " + func_name + " test with Drift Slack and Eager Sync")
     np.random.seed(seed=1)
     data_generator.reset()
     conf["slack_type"], conf["sync_type"] = SlackType.Drift.value, SyncType.Eager.value
-    coordinator, nodes = get_objects(NodeClass, coordinator_class, conf)
+    coordinator, nodes = get_objects(NodeClass, coordinator_class, conf, func_to_monitor, max_f_val, min_f_val)
     sync_history, msg_counters = run_test(data_generator, coordinator, nodes, test_folder)
     compare_results(regression_test_files_folder, sync_history, msg_counters, func_name, "drift", "eager")
 
@@ -40,7 +40,7 @@ def test_func_slack_sync_variations(coordinator_class, func_name, NodeClass, dat
     np.random.seed(seed=1)
     data_generator.reset()
     conf["slack_type"], conf["sync_type"] = SlackType.Drift.value, SyncType.LazyRandom.value
-    coordinator, nodes = get_objects(NodeClass, coordinator_class, conf)
+    coordinator, nodes = get_objects(NodeClass, coordinator_class, conf, func_to_monitor, max_f_val, min_f_val)
     sync_history, msg_counters = run_test(data_generator, coordinator, nodes, test_folder)
     compare_results(regression_test_files_folder, sync_history, msg_counters, func_name, "drift", "lazy_random")
 
@@ -48,7 +48,7 @@ def test_func_slack_sync_variations(coordinator_class, func_name, NodeClass, dat
     np.random.seed(seed=1)
     data_generator.reset()
     conf["slack_type"], conf["sync_type"] = SlackType.Drift.value, SyncType.LazyLRU.value
-    coordinator, nodes = get_objects(NodeClass, coordinator_class, conf)
+    coordinator, nodes = get_objects(NodeClass, coordinator_class, conf, func_to_monitor, max_f_val, min_f_val)
     sync_history, msg_counters = run_test(data_generator, coordinator, nodes, test_folder)
     compare_results(regression_test_files_folder, sync_history, msg_counters, func_name, "drift", "lazy_lru")
 
@@ -56,7 +56,7 @@ def test_func_slack_sync_variations(coordinator_class, func_name, NodeClass, dat
     try:
         b_assertion = False
         conf["slack_type"], conf["sync_type"] = SlackType.NoSlack.value, SyncType.LazyRandom.value
-        _, _ = get_objects(NodeClass, coordinator_class, conf)
+        _, _ = get_objects(NodeClass, coordinator_class, conf, func_to_monitor, max_f_val, min_f_val)
     except AssertionError:
         print("This combination should throw exception. No Slack must come with Eager Sync.")
         b_assertion = True
@@ -66,6 +66,6 @@ def test_func_slack_sync_variations(coordinator_class, func_name, NodeClass, dat
     np.random.seed(seed=1)
     data_generator.reset()
     conf["slack_type"], conf["sync_type"] = SlackType.NoSlack.value, SyncType.Eager.value
-    coordinator, nodes = get_objects(NodeClass, coordinator_class, conf)
+    coordinator, nodes = get_objects(NodeClass, coordinator_class, conf, func_to_monitor, max_f_val, min_f_val)
     sync_history, msg_counters = run_test(data_generator, coordinator, nodes, test_folder)
     compare_results(regression_test_files_folder, sync_history, msg_counters, func_name, "no", "eager")

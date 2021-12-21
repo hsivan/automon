@@ -1,10 +1,10 @@
-from utils.nodes_automon import NodeQuadraticAutoMon
+from automon.automon.node_common_automon import NodeCommonAutoMon
+from automon.rlv.node_common_rlv import NodeCommonRLV
 from automon.automon.coordinator_automon import CoordinatorAutoMon
 from automon.rlv.coordinator_rlv import CoordinatorRLV
-from utils.functions_to_monitor import set_H, get_H
+from utils.functions_to_monitor import set_H, get_H, func_quadratic
 from utils.data_generator import DataGeneratorQuadratic
 from automon.coordinator_common import SlackType, SyncType
-from utils.nodes_rlv import NodeQuadraticRLV
 from utils.test_utils import start_test, end_test, run_test, get_config, write_config_to_file
 from utils.stats_analysis_utils import plot_monitoring_stats
 import logging
@@ -28,12 +28,12 @@ if __name__ == "__main__":
 
         logging.info("\n###################### Start KLD RLV test ######################")
         data_generator.reset()
-        coordinator, nodes = get_objects(NodeQuadraticRLV, CoordinatorRLV, conf)
+        coordinator, nodes = get_objects(NodeCommonRLV, CoordinatorRLV, conf, func_quadratic)
         run_test(data_generator, coordinator, nodes, test_folder)
 
         logging.info("\n###################### Start quadratic AutoMon test ######################")
         data_generator.reset()
-        coordinator, nodes = get_objects(NodeQuadraticAutoMon, CoordinatorAutoMon, conf)
+        coordinator, nodes = get_objects(NodeCommonAutoMon, CoordinatorAutoMon, conf, func_quadratic)
         run_test(data_generator, coordinator, nodes, test_folder)
 
         plot_monitoring_stats(test_folder)

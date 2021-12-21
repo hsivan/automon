@@ -1,4 +1,5 @@
-from utils.nodes_automon import NodeKLDAutoMon
+from automon.automon.node_common_automon import NodeCommonAutoMon
+from utils.functions_to_monitor import func_kld
 from utils.tune_neighborhood_size import tune_neighborhood_size
 from automon.automon.coordinator_automon import CoordinatorAutoMon
 from utils.data_generator import DataGeneratorKldAirQuality
@@ -24,7 +25,7 @@ def test_error_bounds(error_bound, parent_test_folder):
 
         logging.info("\n###################### Start AutoMon test ######################")
         data_generator.reset()
-        coordinator, nodes = get_objects(NodeKLDAutoMon, CoordinatorAutoMon, conf)
+        coordinator, nodes = get_objects(NodeCommonAutoMon, CoordinatorAutoMon, conf, func_kld)
         tune_neighborhood_size(coordinator, nodes, conf, data_generator)
         run_test(data_generator, coordinator, nodes, test_folder)
 

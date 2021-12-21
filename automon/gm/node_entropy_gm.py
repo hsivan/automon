@@ -1,15 +1,15 @@
 import numpy as np
 from automon.gm.node_common_gm import NodeCommonGM
 import cvxpy as cp
-from utils.functions_to_monitor import func_entropy
 
 # Implementation according to https://dl.acm.org/doi/pdf/10.1145/3097983.3098092
 
 
 class NodeEntropyGM(NodeCommonGM):
     
-    def __init__(self, idx=0, x0_len=1, domain=None):
-        NodeCommonGM.__init__(self, idx, x0_len=x0_len, domain=domain, func_to_monitor=func_entropy)
+    def __init__(self, idx=0, x0_len=1, domain=None, func_to_monitor=None):
+        # func_to_monitor must be func_entropy; however we keep function implementations outside of automon core.
+        NodeCommonGM.__init__(self, idx, x0_len=x0_len, domain=domain, func_to_monitor=func_to_monitor)
         self.k = x0_len
         # point_to_check is a probability vector, however, it is possible to
         # get negative or above 1 values when using drift slack.

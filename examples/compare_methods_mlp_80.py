@@ -1,15 +1,15 @@
-from utils.nodes_automon import NodeMlpAutoMon
+from automon.automon.node_common_automon import NodeCommonAutoMon
+from automon.rlv.node_common_rlv import NodeCommonRLV
 from utils.tune_neighborhood_size import tune_neighborhood_size
 from automon.rlv.coordinator_rlv import CoordinatorRLV
 from utils.data_generator import DataGeneratorMlp
 from automon.automon.coordinator_automon import CoordinatorAutoMon
-from utils.nodes_rlv import NodeMlpRLV
 from utils.test_utils import start_test, end_test, run_test, write_config_to_file, read_config_file
 from utils.stats_analysis_utils import plot_monitoring_stats
 import logging
 from utils.jax_mlp import load_net
 from utils.object_factory import get_objects
-from utils.functions_to_monitor import set_net_params
+from utils.functions_to_monitor import set_net_params, func_mlp
 
 if __name__ == "__main__":
     try:
@@ -39,12 +39,12 @@ if __name__ == "__main__":
 
         logging.info("\n###################### Start MLP RLV test ######################")
         data_generator.reset()
-        coordinator, nodes = get_objects(NodeMlpRLV, CoordinatorRLV, conf)
+        coordinator, nodes = get_objects(NodeCommonRLV, CoordinatorRLV, func_mlp)
         run_test(data_generator, coordinator, nodes, test_folder)
 
         logging.info("\n###################### Start MLP AutoMon test ######################")
         data_generator.reset()
-        coordinator, nodes = get_objects(NodeMlpAutoMon, CoordinatorAutoMon, conf)
+        coordinator, nodes = get_objects(NodeCommonAutoMon, CoordinatorAutoMon, conf, func_mlp)
         tune_neighborhood_size(coordinator, nodes, conf, data_generator)
         run_test(data_generator, coordinator, nodes, test_folder)
 

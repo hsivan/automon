@@ -1,4 +1,5 @@
-from utils.nodes_automon import NodeInnerProductAutoMon
+from automon.automon.node_common_automon import NodeCommonAutoMon
+from utils.functions_to_monitor import func_inner_product
 from automon.cb.node_inner_product_cb import NodeInnerProductCB
 from automon.automon.coordinator_automon import CoordinatorAutoMon
 from automon.cb.coordinator_cb import CoordinatorCB
@@ -22,12 +23,12 @@ if __name__ == "__main__":
 
         logging.info("\n###################### Start inner product CB test ######################")
         data_generator.reset()
-        coordinator, nodes = get_objects(NodeInnerProductCB, CoordinatorCB, conf)
+        coordinator, nodes = get_objects(NodeInnerProductCB, CoordinatorCB, conf, func_inner_product)
         run_test(data_generator, coordinator, nodes, test_folder)
 
         logging.info("\n###################### Start inner product AutoMon test ######################")
         data_generator.reset()
-        coordinator, nodes = get_objects(NodeInnerProductAutoMon, CoordinatorAutoMon, conf)
+        coordinator, nodes = get_objects(NodeCommonAutoMon, CoordinatorAutoMon, conf, func_inner_product)
         run_test(data_generator, coordinator, nodes, test_folder)
 
         plot_monitoring_stats(test_folder)

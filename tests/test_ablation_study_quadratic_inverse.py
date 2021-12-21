@@ -1,9 +1,10 @@
-from utils.nodes_automon import NodeQuadraticInverseAutoMon
+from automon.automon.node_common_automon import NodeCommonAutoMon
+from automon.rlv.node_common_rlv import NodeCommonRLV
+from utils.functions_to_monitor import func_quadratic_inverse
 from automon.automon.coordinator_automon import CoordinatorAutoMon
 from automon.rlv.coordinator_rlv import CoordinatorRLV
 from utils.data_generator import DataGeneratorQuadraticInverse
 from automon.coordinator_common import SlackType, SyncType
-from utils.nodes_rlv import NodeQuadraticInverseRLV
 from tests.visualization.plot_monitoring_stats_ablation_study import plot_monitoring_stats_graph_and_barchart
 from utils.test_utils import start_test, end_test, run_test, get_config, write_config_to_file
 from utils.stats_analysis_utils import plot_monitoring_stats
@@ -26,13 +27,13 @@ if __name__ == "__main__":
 
         logging.info("\n###################### Start quadratic inverse RLV test (no ADCD no slack) ######################")
         data_generator.reset()
-        coordinator, nodes = get_objects(NodeQuadraticInverseRLV, CoordinatorRLV, conf)
+        coordinator, nodes = get_objects(NodeCommonRLV, CoordinatorRLV, conf, func_quadratic_inverse)
         coordinator.coordinator_name = "no ADCD no slack"
         run_test(data_generator, coordinator, nodes, test_folder)
 
         logging.info("\n###################### Start quadratic inverse RLV test (no ADCD) ######################")
         data_generator.reset()
-        coordinator, nodes = get_objects(NodeQuadraticInverseRLV, CoordinatorRLV, conf)
+        coordinator, nodes = get_objects(NodeCommonRLV, CoordinatorRLV, conf, func_quadratic_inverse)
         coordinator.coordinator_name = "no ADCD"
         coordinator.slack_type = SlackType.Drift
         coordinator.sync_type = SyncType.LazyLRU
@@ -40,7 +41,7 @@ if __name__ == "__main__":
 
         logging.info("\n###################### Start quadratic inverse AutoMon test ######################")
         data_generator.reset()
-        coordinator, nodes = get_objects(NodeQuadraticInverseAutoMon, CoordinatorAutoMon, conf)
+        coordinator, nodes = get_objects(NodeCommonAutoMon, CoordinatorAutoMon, conf, func_quadratic_inverse)
         run_test(data_generator, coordinator, nodes, test_folder)
 
         plot_monitoring_stats(test_folder)

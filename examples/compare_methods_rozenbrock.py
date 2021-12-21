@@ -1,10 +1,11 @@
-from utils.nodes_automon import NodeRozenbrockAutoMon
+from automon.automon.node_common_automon import NodeCommonAutoMon
+from automon.rlv.node_common_rlv import NodeCommonRLV
+from utils.functions_to_monitor import func_rozenbrock
 from utils.tune_neighborhood_size import tune_neighborhood_size
 from automon.rlv.coordinator_rlv import CoordinatorRLV
 from utils.data_generator import DataGeneratorRozenbrock
 from automon.coordinator_common import SlackType, SyncType
 from automon.automon.coordinator_automon import CoordinatorAutoMon
-from utils.nodes_rlv import NodeRozenbrockRLV
 from utils.test_utils import start_test, end_test, run_test, get_config, write_config_to_file
 from utils.stats_analysis_utils import plot_monitoring_stats
 import logging
@@ -24,12 +25,12 @@ if __name__ == "__main__":
 
         logging.info("\n###################### Start Rozenbrock RLV test ######################")
         data_generator.reset()
-        coordinator, nodes = get_objects(NodeRozenbrockRLV, CoordinatorRLV, conf)
+        coordinator, nodes = get_objects(NodeCommonRLV, CoordinatorRLV, conf, func_rozenbrock)
         run_test(data_generator, coordinator, nodes, test_folder)
 
         logging.info("\n###################### Start Rozenbrock AutoMon test ######################")
         data_generator.reset()
-        coordinator, nodes = get_objects(NodeRozenbrockAutoMon, CoordinatorAutoMon, conf)
+        coordinator, nodes = get_objects(NodeCommonAutoMon, CoordinatorAutoMon, conf, func_rozenbrock)
         tune_neighborhood_size(coordinator, nodes, conf, data_generator)
         run_test(data_generator, coordinator, nodes, test_folder)
 

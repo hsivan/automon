@@ -1,4 +1,4 @@
-from utils.nodes_automon import NodeMlpAutoMon
+from automon.automon.node_common_automon import NodeCommonAutoMon
 from utils.tune_neighborhood_size import tune_neighborhood_size
 from utils.data_generator import DataGeneratorMlp
 from automon.automon.coordinator_automon import CoordinatorAutoMon
@@ -7,7 +7,7 @@ from utils.stats_analysis_utils import plot_monitoring_stats
 import logging
 from utils.jax_mlp import load_net
 from utils.object_factory import get_objects
-from utils.functions_to_monitor import set_net_params
+from utils.functions_to_monitor import set_net_params, func_mlp
 from tests.visualization.plot_num_nodes_impact import plot_num_nodes_impact_on_communication
 
 
@@ -26,7 +26,7 @@ def test_num_nodes(num_nodes, parent_test_folder):
 
         logging.info("\n###################### Start DNN exp AutoMon test ######################")
         data_generator.reset()
-        coordinator, nodes = get_objects(NodeMlpAutoMon, CoordinatorAutoMon, conf)
+        coordinator, nodes = get_objects(NodeCommonAutoMon, CoordinatorAutoMon, conf, func_mlp)
         tune_neighborhood_size(coordinator, nodes, conf, data_generator)
         run_test(data_generator, coordinator, nodes, test_folder)
 
