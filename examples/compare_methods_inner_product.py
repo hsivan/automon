@@ -19,7 +19,7 @@ if __name__ == "__main__":
         write_config_to_file(test_folder, conf)
 
         data_generator = DataGeneratorInnerProduct(num_iterations=conf["num_iterations"], num_nodes=conf["num_nodes"],
-                                                   d=conf["d"], test_folder=test_folder)
+                                                   d=conf["d"], test_folder=test_folder, sliding_window_size=conf["sliding_window_size"])
 
         logging.info("\n###################### Start inner product CB test ######################")
         data_generator.reset()

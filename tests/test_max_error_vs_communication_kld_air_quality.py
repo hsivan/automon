@@ -44,7 +44,8 @@ if __name__ == "__main__":
     conf = read_config_file(data_folder)
     write_config_to_file(parent_test_folder, conf)
     data_generator = DataGeneratorKldAirQuality(num_iterations=conf["num_iterations"], num_nodes=conf["num_nodes"],
-                                                d=conf["d"], test_folder=parent_test_folder, num_iterations_for_tuning=conf["num_iterations_for_tuning"])
+                                                d=conf["d"], test_folder=parent_test_folder, num_iterations_for_tuning=conf["num_iterations_for_tuning"],
+                                                sliding_window_size=conf["sliding_window_size"])
 
     error_bounds = [0.003, 0.004, 0.005, 0.01, 0.02, 0.04, 0.06, 0.08, 0.1, 0.12, 0.14]
 

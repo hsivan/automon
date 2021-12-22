@@ -122,7 +122,7 @@ if __name__ == "__main__":
     data_folder = "../../datasets/MLP_2"
     conf = read_config_file(data_folder)
     net_params, net_apply = load_net(data_folder)
-    data_generator = DataGeneratorMlp(num_iterations=conf["num_iterations"], num_nodes=conf["num_nodes"], data_file_name="data_file.txt", test_folder=data_folder, d=conf["d"])
+    data_generator = DataGeneratorMlp(num_iterations=conf["num_iterations"], num_nodes=conf["num_nodes"], data_file_name="data_file.txt", test_folder=data_folder, d=conf["d"], sliding_window_size=conf["sliding_window_size"])
     # Figure 4 (b)
     draw_f_approx_contour_and_node_trail(net_apply, net_params, data_generator.data, low, high)
     draw_f_and_f_approx(net_apply, net_params, low, high)
