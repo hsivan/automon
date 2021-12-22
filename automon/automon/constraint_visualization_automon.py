@@ -326,10 +326,10 @@ def visualize_entropy():
     slack = np.zeros(k)  # No slack
     x0 = np.array([1, 1, 4]) / np.sum([1, 1, 4])
     domain = [(0+epsilon, 1-epsilon)] * k
-    dc_type, extreme_lambda, g_func_grad, h_func_grad = adcd_helper.adcd_x(x0, domain, 0)
+    dc_type, extreme_lambda = adcd_helper.adcd_x(x0, domain, 0)
 
     node3 = NodeEntropyAutoMon(idx=node_idx, x0_len=k, domain=(0+epsilon, 1-epsilon))
-    node3.sync(x0, slack, 0.7, 1, -1, dc_type, extreme_lambda, g_func_grad(x0), h_func_grad(x0))
+    node3.sync(x0, slack, 0.7, 1, -1, dc_type, extreme_lambda)
     entropy_automon_draw_constraints(node3)
     # Fill sliding window
     node_stream = NodeStream(2, sliding_window_size, 1, update_local_vector_frequency, x0)
@@ -359,7 +359,7 @@ def visualize_entropy():
     b_inside_safe_zone = node3.set_new_data_point(local_vector)
     entropy_automon_draw_constraints(node3)
     assert b_inside_safe_zone
-    node3.sync(x0, slack, 0.7, 1, -1, dc_type, extreme_lambda, g_func_grad(x0), h_func_grad(x0))
+    node3.sync(x0, slack, 0.7, 1, -1, dc_type, extreme_lambda)
     entropy_automon_draw_constraints(node3)
 
     # 2 dimensional case
@@ -369,10 +369,10 @@ def visualize_entropy():
     node_idx = 1
     x0 = np.array([1, 4]) / np.sum([1, 4])
     domain = [(0 + epsilon, 1 - epsilon)] * k
-    dc_type, extreme_lambda, g_func_grad, h_func_grad = adcd_helper.adcd_x(x0, domain, 0)
+    dc_type, extreme_lambda = adcd_helper.adcd_x(x0, domain, 0)
 
     node2 = NodeEntropyAutoMon(idx=node_idx, x0_len=k)
-    node2.sync(x0, slack, 0.5, 0.6, -1, dc_type, extreme_lambda, g_func_grad(x0), h_func_grad(x0))
+    node2.sync(x0, slack, 0.5, 0.6, -1, dc_type, extreme_lambda)
     entropy_automon_draw_constraints(node2)
     # Fill sliding window
     node_stream = NodeStream(2, sliding_window_size, 1, update_local_vector_frequency, x0)
@@ -402,7 +402,7 @@ def visualize_entropy():
     b_inside_safe_zone = node2.set_new_data_point(local_vector)
     entropy_automon_draw_constraints(node2)
     assert not b_inside_safe_zone
-    node2.sync(x0, slack, 0.5, 0.6, -1, dc_type, extreme_lambda, g_func_grad(x0), h_func_grad(x0))
+    node2.sync(x0, slack, 0.5, 0.6, -1, dc_type, extreme_lambda)
     entropy_automon_draw_constraints(node2)
 
 
@@ -414,9 +414,9 @@ def visualize_variance():
     sliding_window_size = 5
     node_idx = 1
 
-    dc_type, extreme_lambda, g_func_grad, h_func_grad = adcd_helper.adcd_x(x0, None, 0)
+    dc_type, extreme_lambda = adcd_helper.adcd_x(x0, None, 0)
     node = NodeVarianceAutoMon(idx=node_idx)
-    node.sync(x0, slack, 0.08, 3, -1, dc_type, extreme_lambda, g_func_grad(x0), h_func_grad(x0))
+    node.sync(x0, slack, 0.08, 3, -1, dc_type, extreme_lambda)
     # Fill sliding window
     node_stream = NodeStream(2, sliding_window_size, 1, update_local_vector_first_and_second_momentum, x0)
     for i in range(sliding_window_size):
@@ -445,9 +445,9 @@ def visualize_rozenbrock():
     sliding_window_size = 5
     node_idx = 1
 
-    dc_type, extreme_lambda, g_func_grad, h_func_grad = adcd_helper.adcd_x(x0, None, 0)
+    dc_type, extreme_lambda = adcd_helper.adcd_x(x0, None, 0)
     node = NodeRozenbrockAutoMon(idx=node_idx)
-    node.sync(x0, slack, 0.08, 3, -1, dc_type, extreme_lambda, g_func_grad(x0), h_func_grad(x0))
+    node.sync(x0, slack, 0.08, 3, -1, dc_type, extreme_lambda)
     # Fill sliding window
     node_stream = NodeStream(2, sliding_window_size, 1, update_local_vector_average, x0)
     for i in range(sliding_window_size):
@@ -466,9 +466,9 @@ def visualize_inner_product():
     sliding_window_size = 5
     node_idx = 1
 
-    dc_type, extreme_lambda, g_func_grad, h_func_grad = adcd_helper.adcd_x(x0, None, 0)
+    dc_type, extreme_lambda = adcd_helper.adcd_x(x0, None, 0)
     node = NodeInnerProductAutoMon(idx=node_idx)
-    node.sync(x0, slack, 0.08, 3, -1, dc_type, extreme_lambda, g_func_grad(x0), h_func_grad(x0))
+    node.sync(x0, slack, 0.08, 3, -1, dc_type, extreme_lambda)
     # Fill sliding window
     node_stream = NodeStream(2, sliding_window_size, 1, update_local_vector_average, x0)
     for i in range(sliding_window_size):

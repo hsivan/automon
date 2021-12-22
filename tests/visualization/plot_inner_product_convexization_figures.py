@@ -110,7 +110,7 @@ def draw_upper_threshold_constraints(node):
     # Plot the upper threshold
     ax.plot_surface(X, Y, np.ones_like(X) * node.u_thresh, color="blue", linewidth=0, antialiased=False, label='$U$', alpha=0.2)
     # Plot the lower g
-    ax.plot_surface(X, Y, g_x, color="green", linewidth=0, antialiased=False, label='$g$', alpha=0.2)
+    ax.plot_surface(X, Y, g_x, color="green", linewidth=0, antialiased=False, label=r"$\breve{g}(x)$", alpha=0.2)
 
     # Plot x0 and x
     plot_points_on_graph(node, ax)
@@ -130,18 +130,18 @@ if __name__ == "__main__":
     x0 = np.array([0.1, 0.1])
     x = np.array([0.65, 0.65])
 
-    dc_type, signed_H, g_func_grad, h_func_grad = adcd_helper.adcd_e(x0)
-    node = NodeInnerProductAutoMon(idx=1, initial_x0=np.zeros(2))
-    node.sync(x0, slack, func_inner_product(x0)-0.5, func_inner_product(x0)+0.5, -1, dc_type, signed_H, g_func_grad(x0), h_func_grad(x0))
+    dc_type, signed_H = adcd_helper.adcd_e(x0)
+    node = NodeInnerProductAutoMon(idx=1)
+    node.sync(x0, slack, func_inner_product(x0)-0.5, func_inner_product(x0)+0.5, -1, dc_type, signed_H)
     b_inside_safe_zone = node.set_new_data_point(x)
     # Inside safe zone
     draw_constraints_bounds(node)
     draw_upper_threshold_constraints(node)
     assert b_inside_safe_zone
 
-    dc_type, extreme_lambda, g_func_grad, h_func_grad = adcd_helper.adcd_x(x0, None, 0)
-    node = NodeInnerProductAutoMon(idx=1, initial_x0=np.zeros(2))
-    node.sync(x0, slack, func_inner_product(x0) - 0.5, func_inner_product(x0) + 0.5, -1, dc_type, extreme_lambda, g_func_grad(x0), h_func_grad(x0))
+    dc_type, extreme_lambda = adcd_helper.adcd_x(x0, None, 0)
+    node = NodeInnerProductAutoMon(idx=1)
+    node.sync(x0, slack, func_inner_product(x0) - 0.5, func_inner_product(x0) + 0.5, -1, dc_type, extreme_lambda)
     b_inside_safe_zone = node.set_new_data_point(x)
     # Not inside safe zone
     draw_upper_threshold_constraints(node)
