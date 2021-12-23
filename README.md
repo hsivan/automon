@@ -95,20 +95,19 @@ from automon.automon.node_common_automon import NodeCommonAutoMon
 from automon_utils.utils_zmq_sockets import init_server_socket, get_next_node_message, send_message_to_node
 from function_def.py import func_inner_product
 
-if __name__ == "__main__":
-    logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
-    # Create dummy node for the coordinator that uses it in the process of resolving violations.
-    verifier = NodeCommonAutoMon(idx=-1, x0_len=40, func_to_monitor=func_inner_product)
-    coordinator = CoordinatorAutoMon(verifier, num_nodes=4, error_bound=0.5)
-    # Open server socket. Wait for all nodes to connect and send 'start' signal to all nodes to start their data loop.
-    server_socket = init_server_socket(port=6400, num_nodes=4)
+# Create dummy node for the coordinator that uses it in the process of resolving violations.
+verifier = NodeCommonAutoMon(idx=-1, x0_len=40, func_to_monitor=func_inner_product)
+coordinator = CoordinatorAutoMon(verifier, num_nodes=4, error_bound=0.5)
+# Open server socket. Wait for all nodes to connect and send 'start' signal to all nodes to start their data loop.
+server_socket = init_server_socket(port=6400, num_nodes=4)
 
-    while True:
-        msg = get_next_node_message(server_socket)
-        replies = coordinator.parse_message(msg)
-        for node_idx, reply in replies:
-            send_message_to_node(server_socket, node_idx, reply)
+while True:
+    msg = get_next_node_message(server_socket)
+    replies = coordinator.parse_message(msg)
+    for node_idx, reply in replies:
+        send_message_to_node(server_socket, node_idx, reply)
 ```
 
 Lastly, initiate and run a node. The node can run on any computer or device with internet access.
@@ -118,7 +117,7 @@ import sys
 import logging
 import threading
 import time
-from timeit import default_timer as timer
+from timeit import default_timer
 import numpy as np
 from automon.automon.node_common_automon import NodeCommonAutoMon
 from automon.messages_common import prepare_message_data_update
@@ -131,31 +130,30 @@ def data_loop(node_idx, host, port):
 
     # Read data sample every 1 second and update the node local vector. Report violations to the coordinator.
     while True:
-        start = timer()
+        start = default_timer()
         data = np.random.normal(loc=1, scale=0.1, size=(40,))
         message_data_update = prepare_message_data_update(node_idx, data)
         message_violation = node.parse_message(message_data_update)
         if message_violation:
             send_message_to_coordinator(client_data_socket, message_violation)
-        time.sleep(1 - (timer() - start))
+        time.sleep(1 - (default_timer() - start))
 
-if __name__ == "__main__":
-    logging.basicConfig(stream=sys.stdout, level=logging.INFO)
-    args = {'node_idx': 0, 'host': '127.0.0.1', 'port': 6400}  # Change node index for different nodes
+logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+args = {'node_idx': 0, 'host': '127.0.0.1', 'port': 6400}  # Change node index for different nodes
 
-    node = NodeCommonAutoMon(idx=args['node_idx'], x0_len=40, func_to_monitor=func_inner_product)
-    # Open a client socket and connect to the server socket. Wait for 'start' message from the server.
-    client_socket = init_client_socket(args['node_idx'], host=args['host'], port=args['port'])
+node = NodeCommonAutoMon(idx=args['node_idx'], x0_len=40, func_to_monitor=func_inner_product)
+# Open a client socket and connect to the server socket. Wait for 'start' message from the server.
+client_socket = init_client_socket(args['node_idx'], host=args['host'], port=args['port'])
 
-    # Run the data loop in a different thread.
-    threading.Thread(target=data_loop, kwargs=args).start()
+# Run the data loop in a different thread.
+threading.Thread(target=data_loop, kwargs=args).start()
 
-    # Wait for message from the coordinator (local data requests or local constraint updates) and send the reply to the coordinator.
-    while True:
-        message = get_next_coordinator_message(client_socket)
-        reply = node.parse_message(message)
-        if reply:
-            send_message_to_coordinator(client_socket, reply)
+# Wait for message from the coordinator (local data requests or local constraint updates) and send the reply to the coordinator.
+while True:
+    message = get_next_coordinator_message(client_socket)
+    reply = node.parse_message(message)
+    if reply:
+        send_message_to_coordinator(client_socket, reply)
 ```
 Initiate all 3 other nodes similarly.
 Don't forget to update the node_idx for every new instance.
