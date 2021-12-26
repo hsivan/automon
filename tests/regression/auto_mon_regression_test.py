@@ -1,10 +1,10 @@
 from automon.automon.node_common_automon import NodeCommonAutoMon
 from automon.automon.coordinator_automon import CoordinatorAutoMon
 from automon.coordinator_common import SlackType, SyncType
-from automon_utils.data_generator import DataGeneratorEntropy, DataGeneratorVariance, DataGeneratorInnerProduct, \
+from test_utils.data_generator import DataGeneratorEntropy, DataGeneratorVariance, DataGeneratorInnerProduct, \
     DataGeneratorKldAirQuality, DataGeneratorQuadratic, DataGeneratorRozenbrock
-from automon_utils.test_utils import start_test, end_test, get_config
-from automon_utils.functions_to_monitor import set_H, func_variance, func_entropy, func_inner_product, func_kld, func_quadratic, func_rozenbrock
+from test_utils.test_utils import start_test, end_test, get_config
+from test_utils.functions_to_monitor import set_H, func_variance, func_entropy, func_inner_product, func_kld, func_quadratic, func_rozenbrock
 from tests.regression.regression_test_utils import test_func_slack_sync_variations
 import numpy as np
 

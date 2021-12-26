@@ -1,13 +1,13 @@
 from automon.coordinator_common import SlackType, SyncType
 from automon.rlv.coordinator_rlv import CoordinatorRLV
 from automon.rlv.node_common_rlv import NodeCommonRLV
-from automon_utils.data_generator import DataGeneratorKldAirQuality, DataGeneratorQuadratic, DataGeneratorRozenbrock
-from automon_utils.test_utils import start_test, end_test, get_config
-from automon_utils.functions_to_monitor import set_H, func_kld, func_quadratic, func_rozenbrock
+from test_utils.data_generator import DataGeneratorKldAirQuality, DataGeneratorQuadratic, DataGeneratorRozenbrock
+from test_utils.test_utils import start_test, end_test, get_config
+from test_utils.functions_to_monitor import set_H, func_kld, func_quadratic, func_rozenbrock
 from tests.regression.regression_test_utils import compare_results
 import numpy as np
-from automon_utils.object_factory import get_objects
-from automon_utils.test_utils import run_test
+from test_utils.object_factory import get_objects
+from test_utils.test_utils import run_test
 
 regression_test_files_folder = "./regression_test_files_rlv/"
 

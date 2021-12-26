@@ -1,15 +1,15 @@
 from automon.automon.node_common_automon import NodeCommonAutoMon
 from automon.rlv.node_common_rlv import NodeCommonRLV
-from automon_utils.tune_neighborhood_size import tune_neighborhood_size
+from test_utils.tune_neighborhood_size import tune_neighborhood_size
 from automon.rlv.coordinator_rlv import CoordinatorRLV
-from automon_utils.data_generator import DataGeneratorMlp
+from test_utils.data_generator import DataGeneratorMlp
 from automon.automon.coordinator_automon import CoordinatorAutoMon
-from automon_utils.test_utils import start_test, end_test, run_test, write_config_to_file, read_config_file
-from automon_utils.stats_analysis_utils import plot_monitoring_stats
+from test_utils.test_utils import start_test, end_test, run_test, write_config_to_file, read_config_file
+from test_utils.stats_analysis_utils import plot_monitoring_stats
 import logging
-from automon_utils.jax_mlp import load_net
-from automon_utils.object_factory import get_objects
-from automon_utils.functions_to_monitor import set_net_params, func_mlp
+from test_utils.jax_mlp import load_net
+from test_utils.object_factory import get_objects
+from test_utils.functions_to_monitor import set_net_params, func_mlp
 
 if __name__ == "__main__":
     try:

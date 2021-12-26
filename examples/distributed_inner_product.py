@@ -2,12 +2,12 @@ import argparse
 import os
 from automon.automon.coordinator_automon import CoordinatorAutoMon
 from automon.automon.node_common_automon import NodeCommonAutoMon
-from automon_utils.data_generator import DataGeneratorInnerProduct
-from automon_utils.functions_to_monitor import func_inner_product
-from automon_utils.stats_analysis_utils import log_num_packets_sent_and_received
-from automon_utils.test_utils import start_test, end_test, write_config_to_file, read_config_file
-from automon_utils.object_factory import get_node, get_coordinator
-from automon_utils.test_utils_zmq_sockets import run_node, run_coordinator
+from test_utils.data_generator import DataGeneratorInnerProduct
+from test_utils.functions_to_monitor import func_inner_product
+from test_utils.stats_analysis_utils import log_num_packets_sent_and_received
+from test_utils.test_utils import start_test, end_test, write_config_to_file, read_config_file
+from test_utils.object_factory import get_node, get_coordinator
+from test_utils.test_utils_zmq_sockets import run_node, run_coordinator
 
 
 if __name__ == "__main__":

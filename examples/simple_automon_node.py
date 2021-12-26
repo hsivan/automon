@@ -13,12 +13,12 @@ logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 def time_to_wait_for_next_sample_milliseconds(start_time, num_received_samples):
     return (num_received_samples - (timer() - start_time)) * 1000
 
-NODE_IDX = 0  # Change node index for different nodes
+NODE_IDX = 0  # Change the node index for different nodes
 node = NodeCommonAutoMon(idx=NODE_IDX, x0_len=40, func_to_monitor=func_inner_product)
 # Open a client socket and connect to the server socket. Wait for 'start' message from the server.
 client_socket = init_client_socket(NODE_IDX, host='127.0.0.1', port=6400)
 
-# Wait for message from the coordinator (local data requests or local constraint updates) and send the reply to the coordinator.
+# Wait for a message from the coordinator (local data requests or local constraint updates) and send the reply to the coordinator.
 # Read new data samples every 1 second and update the node local vector. Report violations to the coordinator.
 start = timer()
 num_data_samples = 0
@@ -33,7 +33,7 @@ while True:
         num_data_samples += 1
     event = client_socket.poll(timeout=time_to_wait_for_next_sample_milliseconds(start, num_data_samples))
     if event != 0:
-        # Received message from the coordinator before the timeout has reached
+        # Received a message from the coordinator before the timeout has reached
         message = client_socket.recv()
         reply = node.parse_message(message)
         if reply:

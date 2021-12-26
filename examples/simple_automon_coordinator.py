@@ -8,10 +8,10 @@ from function_def import func_inner_product
 reload(logging)
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
-# Create dummy node for the coordinator that uses it in the process of resolving violations.
+# Create a dummy node for the coordinator that uses it in the process of resolving violations.
 verifier = NodeCommonAutoMon(idx=-1, x0_len=40, func_to_monitor=func_inner_product)
 coordinator = CoordinatorAutoMon(verifier, num_nodes=4, error_bound=2.0)
-# Open server socket. Wait for all nodes to connect and send 'start' signal to all nodes to start their data loop.
+# Open a server socket. Wait for all nodes to connect and send 'start' signal to all nodes to start their data loop.
 server_socket = init_server_socket(port=6400, num_nodes=4)
 
 while True:

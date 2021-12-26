@@ -1,12 +1,12 @@
 import numpy as np
 from automon.coordinator_common import SlackType, SyncType
 from automon.gm.coordinator_gm import CoordinatorGM
-from automon_utils.data_generator import DataGeneratorEntropy, DataGeneratorVariance
+from test_utils.data_generator import DataGeneratorEntropy, DataGeneratorVariance
 from automon.gm.node_entropy_gm import NodeEntropyGM
 from automon.gm.node_variance_gm import NodeVarianceGM
-from automon_utils.functions_to_monitor import func_entropy, func_variance
-from automon_utils.test_utils import start_test, end_test, run_test, get_config
-from automon_utils.object_factory import get_objects
+from test_utils.functions_to_monitor import func_entropy, func_variance
+from test_utils.test_utils import start_test, end_test, run_test, get_config
+from test_utils.object_factory import get_objects
 from tests.regression.regression_test_utils import compare_results
 
 regression_test_files_folder = "./regression_test_files_gm/"

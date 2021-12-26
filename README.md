@@ -37,7 +37,7 @@ pip install <automon_root>
 
 ## Features
 
-### Lightweight design -- a library, not a framework
+### Lightweight design &ndash; a library, not a framework
 AutoMon is designed to be integrated easily into distributed applications. 
 It focuses on managing the distributed approximation algorithm, and does not impose (nor use) any specific underlying messaging fabric.
 
@@ -96,10 +96,10 @@ from automon.utils_zmq_sockets import init_server_socket, get_next_node_message,
 from function_def import func_inner_product
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
-# Create dummy node for the coordinator that uses it in the process of resolving violations.
+# Create a dummy node for the coordinator that uses it in the process of resolving violations.
 verifier = NodeCommonAutoMon(idx=-1, x0_len=40, func_to_monitor=func_inner_product)
 coordinator = CoordinatorAutoMon(verifier, num_nodes=4, error_bound=2.0)
-# Open server socket. Wait for all nodes to connect and send 'start' signal to all nodes to start their data loop.
+# Open a server socket. Wait for all nodes to connect and send 'start' signal to all nodes to start their data loop.
 server_socket = init_server_socket(port=6400, num_nodes=4)
 
 while True:
@@ -125,12 +125,12 @@ logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 def time_to_wait_for_next_sample_milliseconds(start_time, num_received_samples):
     return (num_received_samples - (timer() - start_time)) * 1000
 
-NODE_IDX = 3  # Change node index for different nodes
+NODE_IDX = 0  # Change the node index for different nodes
 node = NodeCommonAutoMon(idx=NODE_IDX, x0_len=40, func_to_monitor=func_inner_product)
 # Open a client socket and connect to the server socket. Wait for 'start' message from the server.
 client_socket = init_client_socket(NODE_IDX, host='127.0.0.1', port=6400)
 
-# Wait for message from the coordinator (local data requests or local constraint updates) and send the reply to the coordinator.
+# Wait for a message from the coordinator (local data requests or local constraint updates) and send the reply to the coordinator.
 # Read new data samples every 1 second and update the node local vector. Report violations to the coordinator.
 start = timer()
 num_data_samples = 0
@@ -145,7 +145,7 @@ while True:
         num_data_samples += 1
     event = client_socket.poll(timeout=time_to_wait_for_next_sample_milliseconds(start, num_data_samples))
     if event != 0:
-        # Received message from the coordinator before the timeout has reached
+        # Received a message from the coordinator before the timeout has reached
         message = client_socket.recv()
         reply = node.parse_message(message)
         if reply:
@@ -186,10 +186,10 @@ Put the 12 `PRSA_Data_XXX_20130301-20170228.csv` files in `<automon_root>/datase
 download `kddcup.data_10_percent.gz` and `corrected.gz` from [here](http://kdd.ics.uci.edu/databases/kddcup99/kddcup99.html) and decompress.
 Put the decompressed `kddcup.data_10_percent` and `corrected` files in `<automon_root>/datasets/intrusion_detection` folder.
 
-Run all the experiments from within the tests folder:
+Run all the experiments from within the `experiments` folder:
 ```bash
 export PYTHONPATH=$PYTHONPATH:<automon_root>
-cd <automon_root>/tests
+cd <automon_root>/experiments
 ```
 
 #### Error-Communication Tradeoff (Sec. 4.3)
@@ -200,7 +200,7 @@ python test_max_error_vs_communication_quadratic.py
 python test_max_error_vs_communication_kld_air_quality.py
 python test_max_error_vs_communication_dnn_intrusion detection.py
 ```
-You will find the output files and figures in `<automon_root>/tests/test_results/results_test_max_error_vs_communication_inner_product_xxx` folders.
+You will find the output files and figures in `<automon_root>/experiments/test_results/results_test_max_error_vs_communication_inner_product_xxx` folders.
 
 #### Scalability: Dimensions, Nodes, Runtime (Sec. 4.4)
 To reproduce _Scalability to Dimensionality_ results run:
@@ -209,8 +209,8 @@ python test_dimension_impact_inner_product.py
 python test_dimension_impact_kld_air_quality.py
 python test_dimension_impact_mlp.py
 ```
-These generate the output folders `<automon_root>/tests/test_results/results_test_dimension_impact_xxx`.
-Open the script `<automon_root>/tests/visualization/plot_dimensions_stats.py` and update the name of the three output folders
+These generate the output folders `<automon_root>/experiments/test_results/results_test_dimension_impact_xxx`.
+Open the script `<automon_root>/experiments/visualization/plot_dimensions_stats.py` and update the name of the three output folders
 at the bottom of the file and run the script.
 The script generates four figures:
 1. dimension_communication.pdf shows the total number of messages in each run for different functions and input dimensions.
@@ -223,8 +223,8 @@ To reproduce _Scalability to Number of Nodes_ results run:
 python test_num_nodes_impact_inner_product.py
 python test_num_nodes_impact_mlp_40.py
 ```
-These generate the output folders `<automon_root>/tests/test_results/results_test_num_nodes_impact_xxx`.
-Open the script `<automon_root>/tests/visualization/plot_num_nodes_impact.py` and update the name of the two output folders
+These generate the output folders `<automon_root>/experiments/test_results/results_test_num_nodes_impact_xxx`.
+Open the script `<automon_root>/experiments/visualization/plot_num_nodes_impact.py` and update the name of the two output folders
 at the bottom of the file and run the script.
 The script generates the figure num_nodes_vs_communication.pdf that illustrates how the number of messages grows with
 the number of AutoMon nodes.
@@ -235,16 +235,16 @@ To reproduce _Neighborhood Size Tuning_ results run:
 python test_optimal_and_tuned_neighborhood_rozenbrock.py
 python test_optimal_and_tuned_neighborhood_mlp_2.py
 ```
-These generate the output folders `<automon_root>/tests/test_results/results_optimal_and_tuned_neighborhood_xxx` where you will find the
+These generate the output folders `<automon_root>/experiments/test_results/results_optimal_and_tuned_neighborhood_xxx` where you will find the
 figure neighborhood_size_error_bound_connection_avg.pdf and other output files.
 
-Open the scripts `<automon_root>/tests/test_neighborhood_impact_on_communication_rozenbrock.py` and `<automon_root>/tests/test_neighborhood_impact_on_communication_mlp_2.py`
+Open the scripts `<automon_root>/experiments/test_neighborhood_impact_on_communication_rozenbrock.py` and `<automon_root>/experiments/test_neighborhood_impact_on_communication_mlp_2.py`
 and update at the bottom of the files the output folders `results_optimal_and_tuned_neighborhood_xxx` respectively. Run:
 ```bash
 python test_neighborhood_impact_on_communication_rozenbrock.py
 python test_neighborhood_impact_on_communication_mlp_2.py
 ```
-You will find the output files and figures in `<automon_root>/tests/test_results/results_comm_neighborhood_xxx` folders.
+You will find the output files and figures in `<automon_root>/experiments/test_results/results_comm_neighborhood_xxx` folders.
 
 #### Impact of ADCD, Slack, and Lazy Sync (Sec. 4.6)
 To reproduce the _Ablation Study_ results run:
@@ -252,7 +252,7 @@ To reproduce the _Ablation Study_ results run:
 python test_ablation_study_mlp_2.py
 python test_ablation_study_quadratic_inverse.py
 ```
-You will find the output files and figures in `<automon_root>/tests/test_results/results_ablation_study_xxx` folders.
+You will find the output files and figures in `<automon_root>/experiments/test_results/results_ablation_study_xxx` folders.
 
 
 ### Distributed experiment on a real-world WAN

@@ -2,10 +2,10 @@ import sys
 from importlib import reload
 import logging
 from automon.automon.coordinator_automon import CoordinatorAutoMon
-from automon_utils.data_generator import DataGeneratorInnerProduct
-from automon_utils.test_utils import run_test, get_config
+from test_utils.data_generator import DataGeneratorInnerProduct
+from test_utils.test_utils import run_test, get_config
 from automon.automon.node_common_automon import NodeCommonAutoMon
-from automon_utils.functions_to_monitor import func_inner_product
+from test_utils.functions_to_monitor import func_inner_product
 
 if __name__ == "__main__":
     reload(logging)
