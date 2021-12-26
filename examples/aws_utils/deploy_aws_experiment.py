@@ -1,7 +1,7 @@
 import time
 import boto3
 import json
-import importlib.resources as pkg_resources
+import os
 from examples.aws_utils.aws_ec2_coordinator import run_coordinator_on_ec2_instance
 
 
@@ -150,7 +150,7 @@ if __name__ == "__main__":
 
     # These values were taken from the test_max_error_vs_communication_xxx experiments
     if NODE_TYPE == "inner_product":
-        error_bounds = [0.02, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8]
+        error_bounds = [0.3]
         NUM_NODES = 10
     if NODE_TYPE == "quadratic":
         error_bounds = [0.015, 0.02, 0.03, 0.04, 0.05, 0.08, 0.1, 1.0]
@@ -163,7 +163,8 @@ if __name__ == "__main__":
         NUM_NODES = 9
 
     account_id = boto3.client('sts').get_caller_identity().get('Account')
-    automon_task = pkg_resources.read_text('examples.aws_utils', 'automon_aws_task.json')
+    with open(os.path.abspath(os.path.dirname(__file__)) + "/automon_aws_task.json", 'r') as f:
+        automon_task = f.read()
     automon_task = automon_task.replace("<account_id>", account_id)
     automon_task = json.loads(automon_task)
 

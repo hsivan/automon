@@ -266,7 +266,7 @@ the other one is located in US-East (Ohio) region and includes all the node task
 
 To run these distributed experiments you will need an AWS account, docker engine, docker cli, and aws cli.
 After having these tools installed and configured follow these steps:
-1. Download AutoMon's source code and the external datasets.
+1. Download AutoMon's source code and the external datasets. Set `PYTHONPATH`: `export PYTHONPATH=$PYTHONPATH:<automon_root>`
 2. Create AWS IAM user with  AdministratorAccess permissions and download the csv file `new_user_credentials.csv` that contains the key ID and the secret key.
 3. Place the `new_user_credentials.csv` file in `<automon_root>/examples/aws_utils` folder.
 4. Build AutoMon's docker image, push it to AWS ECR, and start the experiment:
@@ -275,7 +275,7 @@ sudo docker build -t automon .
 aws ecr get-login-password --region us-east-2 | sudo docker login --username AWS --password-stdin <your_AWS_account_number>.dkr.ecr.us-east-2.amazonaws.com/automon
 sudo docker tag automon <your_AWS_account_number>.dkr.ecr.us-east-2.amazonaws.com/automon
 sudo docker push <your_AWS_account_number>.dkr.ecr.us-east-2.amazonaws.com/automon
-python <automon_root>/examples/aws_utils/start_aws_task.py
+python <automon_root>/examples/aws_utils/deploy_aws_experiment.py
 ```
 You can follow the status of the tasks in ECS console and watch the logs in CloudWatch console.
 After the experiment finishes the results are written to S3 bucket named `automon-experiment-results`.

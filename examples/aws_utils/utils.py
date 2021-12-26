@@ -1,8 +1,8 @@
 import json
 import time
-from importlib import resources as pkg_resources
 import boto3
 import pandas as pd
+import os
 
 
 # Not used
@@ -32,7 +32,7 @@ def delete_access_key(user_name, access_key_id):
 
 
 def read_credentials_file():
-    credentials_file = pkg_resources.open_text('examples.aws_utils', 'new_user_credentials.csv')
+    credentials_file = os.path.abspath(os.path.dirname(__file__)) + "/new_user_credentials.csv"
     df = pd.read_csv(credentials_file)
     username = df['User name'][0]
     access_key_id = df['Access key ID'][0]

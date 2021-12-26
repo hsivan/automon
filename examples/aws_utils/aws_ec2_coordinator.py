@@ -1,17 +1,15 @@
 import time
 import boto3
 import paramiko
-import importlib.resources as pkg_resources
 from botocore.client import ClientError
 from examples.aws_utils.utils import read_credentials_file, create_iam_role
+import os
 
 
 def create_keypair(ec2_client, keypair_name):
     # Search for existing *.pem file (private key) or create one if not found.
     keypair_file_name = keypair_name + '.pem'
-    try:
-        pkg_resources.open_text('examples.aws_utils', keypair_file_name)
-    except ModuleNotFoundError:
+    if not os.path.exists(os.path.abspath(os.path.dirname(__file__)) + "/" + keypair_file_name):
         # Create new key pair
         response = ec2_client.create_key_pair(KeyName=keypair_name)
         with open(keypair_name + '.pem', 'w') as private_key_file:

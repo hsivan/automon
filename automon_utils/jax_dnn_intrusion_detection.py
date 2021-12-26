@@ -7,7 +7,7 @@ from jax import random
 import numpy.random as npr
 import itertools
 from sklearn.preprocessing import Normalizer
-from datasets.intrusion_detection.read_csv import get_training_data, get_testing_data
+from automon_utils.data_generator import DataGeneratorDnnIntrusionDetection
 from jax.config import config
 config.update("jax_platform_name", 'cpu')
 
@@ -70,8 +70,8 @@ def train_net(test_folder=None, num_epochs=3, step_size=1e-4):
         g = grad(loss_cross_entropy)(params, batch, key_)
         return opt_update(iteration, g, opt_state_)
 
-    train_data = get_training_data()
-    test_data = get_testing_data()
+    train_data = DataGeneratorDnnIntrusionDetection.get_training_data()
+    test_data = DataGeneratorDnnIntrusionDetection.get_testing_data()
     train_x = train_data.iloc[:, 1:42].values
     train_y = train_data.iloc[:, 0].values
     test_x = test_data.iloc[:, 1:42].values

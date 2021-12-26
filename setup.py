@@ -23,16 +23,10 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     install_requires=INSTALL_REQUIRES,
     url='https://github.com/hsivan/automon',
-    packages=setuptools.find_packages(exclude=['examples', 'tests', 'tests.*']),
+    packages=setuptools.find_packages(include=['automon']),
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: BSD License",
         "Operating System :: OS Independent",
     ],
-    package_data={
-        # Dataset files
-        'datasets': ['*/*.csv', '*/*.txt', '*/*corrected', '*/*.npy'],
-        # AWS util files
-        'examples.aws_utils': ['*.csv', '*.json', '*.pem']
-    },
 )
