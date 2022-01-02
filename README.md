@@ -4,11 +4,14 @@ AutoMon library for distributed functional monitoring.
 
 AutoMon is an easy-to-use algorithmic building block for automatically approximating arbitrary real
 multivariate functions over distributed data streams.
-Consider a distributed system with a single coordinator node and $n$ nodes, where each node $i$ holds a dynamic local
-data vector $x^i$ computed from its local data stream.
-Let $f$ be an arbitrary real multivariate function $f : \mathbb{R}^d →\mathbb{R}$ of
-the average vector of local data $\bar{x} = \frac{1}{n} \sum_{i=1}^{n} x_i$.
-Given $f$ expressed as code in Python and an approximation
+Consider a distributed system with a single coordinator node and <img src="https://latex.codecogs.com/gif.latex?n"/> nodes,
+where each node <img src="https://latex.codecogs.com/gif.latex?i"/> holds a dynamic local
+data vector <img src="https://latex.codecogs.com/gif.latex?x_i"/> computed from its local data stream.
+Let <img src="https://latex.codecogs.com/gif.latex?f"/> be an arbitrary real multivariate function of
+the average vector of local data, i.e.,
+<img src="https://latex.codecogs.com/gif.latex?f(\bar{x})"/>, where <img src="https://latex.codecogs.com/gif.latex?\bar{x}"/>
+is the average of <img src="https://latex.codecogs.com/gif.latex?x_i"/>.
+Given <img src="https://latex.codecogs.com/gif.latex?f"/> expressed as code in Python and an approximation
 error bound, AutoMon automatically provides communication-efficient distributed monitoring of the function approximation,
 without requiring any manual analysis by the user.
 For more information regarding AutoMon see [AutoMon: Automatic Distributed Monitoring for Arbitrary
