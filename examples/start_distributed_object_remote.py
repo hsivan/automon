@@ -12,9 +12,10 @@ node_idx = os.environ['NODE_IDX']  # -1 for the coordinator and 0 to num_nodes-1
 node_type = os.environ['NODE_TYPE']  # Could be inner_product, or kld, or quadratic
 if node_idx == -1:
     host = '0.0.0.0'
+    error_bound = os.environ['ERROR_BOUND']  # The error bound
 else:
     host = os.environ['HOST']  # Coordinator IP
-error_bound = os.environ['ERROR_BOUND']  # The error bound
+    error_bound = os.getenv('ERROR_BOUND', None)  # If error bound is given to node it is used in the name of the result folder (to distinguish between experiments with different error bounds).
 if node_type == "inner_product":
     experiment_name = "distributed_inner_product"
 elif node_type == "kld":
@@ -93,7 +94,10 @@ nethogs_proc = subprocess.Popen(["nethogs", "-t", "-v2", "-d", "5"], stdout=outf
 try:
     dir_path = os.path.abspath(os.path.dirname(__file__))
     print("This script folder path:", dir_path)
-    obj_proc = subprocess.Popen(["python", os.path.join(dir_path, experiment_name+".py"), "--node_idx", node_idx, "--host", host, "--error_bound", error_bound])  # host is the coordinator IP
+    if error_bound is not None:
+        obj_proc = subprocess.Popen(["python", os.path.join(dir_path, experiment_name+".py"), "--node_idx", node_idx, "--host", host, "--error_bound", error_bound])  # host is the coordinator IP
+    else:
+        obj_proc = subprocess.Popen(["python", os.path.join(dir_path, experiment_name + ".py"), "--node_idx", node_idx, "--host", host])  # host is the coordinator IP
     print("Object PID is:", obj_proc.pid)
     proc_pid = obj_proc.pid
     obj_proc.communicate()
