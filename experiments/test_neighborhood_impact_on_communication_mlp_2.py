@@ -1,6 +1,6 @@
 import os
 
-from automon.automon.node_common_automon import NodeCommonAutoMon
+from automon.automon.node_automon import NodeCommonAutoMon
 from test_utils.data_generator import DataGeneratorMlp
 from automon.automon.coordinator_automon import CoordinatorAutoMon
 from experiments.test_neighborhood_impact_on_communication_rozenbrock import get_optimal_neighborhood_sizes_from_full_test

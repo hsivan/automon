@@ -1,6 +1,6 @@
 import os
 os.environ['AUTO_DIFFERENTIATION_TOOL'] = 'AutoGrad'
-from automon.automon.node_common_automon import NodeCommonAutoMon
+from automon.automon.node_automon import NodeCommonAutoMon
 from test_utils.functions_to_monitor import func_rozenbrock
 from test_utils.tune_neighborhood_size import tune_neighborhood_size
 from test_utils.data_generator import DataGeneratorRozenbrock

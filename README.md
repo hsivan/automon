@@ -113,7 +113,7 @@ You could change the listening port of the coordinator.
 import sys
 import logging
 from automon.automon.coordinator_automon import CoordinatorAutoMon
-from automon.automon.node_common_automon import NodeCommonAutoMon
+from automon.automon.node_automon import NodeCommonAutoMon
 from automon.utils_zmq_sockets import init_server_socket, get_next_node_message, send_message_to_node
 from function_def import func_inner_product
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
@@ -138,7 +138,7 @@ import sys
 import logging
 from timeit import default_timer as timer
 import numpy as np
-from automon.automon.node_common_automon import NodeCommonAutoMon
+from automon.automon.node_automon import NodeCommonAutoMon
 from automon.messages_common import prepare_message_data_update
 from automon.utils_zmq_sockets import init_client_socket
 from function_def import func_inner_product

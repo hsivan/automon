@@ -1,4 +1,4 @@
-from automon.automon.node_common_automon import NodeCommonAutoMon
+from automon.automon.node_automon import NodeCommonAutoMon
 from test_utils.data_generator import DataGeneratorInnerProduct
 from automon.coordinator_common import SlackType, SyncType
 from automon.automon.coordinator_automon import CoordinatorAutoMon

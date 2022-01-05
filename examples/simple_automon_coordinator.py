@@ -2,7 +2,7 @@ import sys
 from importlib import reload
 import logging
 from automon.automon.coordinator_automon import CoordinatorAutoMon
-from automon.automon.node_common_automon import NodeCommonAutoMon
+from automon.automon.node_automon import NodeCommonAutoMon
 from automon.utils_zmq_sockets import init_server_socket, get_next_node_message, send_message_to_node
 from function_def import func_inner_product
 reload(logging)

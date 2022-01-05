@@ -3,7 +3,7 @@ from importlib import reload
 import logging
 from timeit import default_timer as timer
 import numpy as np
-from automon.automon.node_common_automon import NodeCommonAutoMon
+from automon.automon.node_automon import NodeCommonAutoMon
 from automon.messages_common import prepare_message_data_update
 from automon.utils_zmq_sockets import init_client_socket
 from function_def import func_inner_product

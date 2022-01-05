@@ -3,7 +3,7 @@ from matplotlib import rcParams, rcParamsDefault
 from matplotlib.lines import Line2D
 import numpy as np
 
-from automon.automon.node_common_automon import NodeCommonAutoMon
+from automon.automon.node_automon import NodeCommonAutoMon
 from test_utils.functions_to_monitor import func_inner_product
 from experiments.visualization.visualization_utils import get_figsize
 from automon.automon.coordinator_automon import AdcdHelper

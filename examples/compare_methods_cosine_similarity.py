@@ -1,4 +1,4 @@
-from automon.automon.node_common_automon import NodeCommonAutoMon
+from automon.automon.node_automon import NodeCommonAutoMon
 from test_utils.functions_to_monitor import func_cosine_similarity
 from automon.cb.node_cosine_similarity_cb import NodeCosineSimilarityCB
 from automon.automon.coordinator_automon import CoordinatorAutoMon

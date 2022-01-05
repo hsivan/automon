@@ -1,5 +1,5 @@
-from automon.automon.node_common_automon import NodeCommonAutoMon
-from automon.rlv.node_common_rlv import NodeCommonRLV
+from automon.automon.node_automon import NodeCommonAutoMon
+from automon.rlv.node_rlv import NodeCommonRLV
 from automon.automon.coordinator_automon import CoordinatorAutoMon
 from automon.rlv.coordinator_rlv import CoordinatorRLV
 from test_utils.functions_to_monitor import set_H, get_H, func_quadratic

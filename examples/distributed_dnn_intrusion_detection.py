@@ -1,7 +1,7 @@
 import argparse
 import os
 from automon.automon.coordinator_automon import CoordinatorAutoMon
-from automon.automon.node_common_automon import NodeCommonAutoMon
+from automon.automon.node_automon import NodeCommonAutoMon
 from test_utils.data_generator import DataGeneratorDnnIntrusionDetection
 from test_utils.functions_to_monitor import set_net_params, func_dnn_intrusion_detection
 from test_utils.jax_dnn_intrusion_detection import load_net

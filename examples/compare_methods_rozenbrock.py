@@ -1,5 +1,5 @@
-from automon.automon.node_common_automon import NodeCommonAutoMon
-from automon.rlv.node_common_rlv import NodeCommonRLV
+from automon.automon.node_automon import NodeCommonAutoMon
+from automon.rlv.node_rlv import NodeCommonRLV
 from test_utils.functions_to_monitor import func_rozenbrock
 from test_utils.tune_neighborhood_size import tune_neighborhood_size
 from automon.rlv.coordinator_rlv import CoordinatorRLV

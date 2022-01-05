@@ -1,4 +1,4 @@
-from automon.automon.node_common_automon import NodeCommonAutoMon
+from automon.automon.node_automon import NodeCommonAutoMon
 from test_utils.functions_to_monitor import func_inner_product
 from automon.cb.node_inner_product_cb import NodeInnerProductCB
 from automon.automon.coordinator_automon import CoordinatorAutoMon

@@ -1,5 +1,5 @@
-from automon.automon.node_common_automon import NodeCommonAutoMon
-from automon.rlv.node_common_rlv import NodeCommonRLV
+from automon.automon.node_automon import NodeCommonAutoMon
+from automon.rlv.node_rlv import NodeCommonRLV
 from test_utils.tune_neighborhood_size import tune_neighborhood_size
 from automon.rlv.coordinator_rlv import CoordinatorRLV
 from test_utils.data_generator import DataGeneratorMlp
