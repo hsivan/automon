@@ -1,5 +1,5 @@
 from automon.automon.coordinator_automon import CoordinatorAutoMon
-from automon.automon.node_automon import NodeCommonAutoMon
+from automon.automon.node_automon import NodeAutoMon
 from test_utils.data_generator import DataGeneratorSine
 from automon.coordinator_common import SlackType, SyncType
 from test_utils.functions_to_monitor import func_sine
@@ -24,7 +24,7 @@ if __name__ == "__main__":
 
         logging.info("\n###################### Start Sine AutoMon test ######################")
         data_generator.reset()
-        coordinator, nodes = get_objects(NodeCommonAutoMon, CoordinatorAutoMon, conf, func_sine)
+        coordinator, nodes = get_objects(NodeAutoMon, CoordinatorAutoMon, conf, func_sine)
         run_test(data_generator, coordinator, nodes, test_folder)
 
         plot_monitoring_stats(test_folder)

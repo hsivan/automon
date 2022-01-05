@@ -1,6 +1,6 @@
 from automon.coordinator_common import SlackType, SyncType
 from automon.rlv.coordinator_rlv import CoordinatorRLV
-from automon.rlv.node_rlv import NodeCommonRLV
+from automon.rlv.node_rlv import NodeRLV
 from test_utils.data_generator import DataGeneratorKldAirQuality, DataGeneratorQuadratic, DataGeneratorRozenbrock
 from test_utils.test_utils import start_test, end_test, get_config
 from test_utils.functions_to_monitor import set_H, func_kld, func_quadratic, func_rozenbrock
@@ -32,7 +32,7 @@ if __name__ == "__main__":
         # Read data from test file
         data_generator = DataGeneratorKldAirQuality(num_iterations=conf["num_iterations"], num_nodes=conf["num_nodes"],
                                                     data_file_name=regression_test_files_folder + "data_file_kld.txt", d=conf["d"], sliding_window_size=conf["sliding_window_size"])
-        test_func("kld", NodeCommonRLV, data_generator, conf, test_folder, func_kld)
+        test_func("kld", NodeRLV, data_generator, conf, test_folder, func_kld)
 
 
         conf = get_config(num_nodes=10, num_iterations=1000, sliding_window_size=5, d=10, error_bound=2,
@@ -42,7 +42,7 @@ if __name__ == "__main__":
                                                 data_file_name=regression_test_files_folder + "data_file_quadratic.txt", d=conf["d"], sliding_window_size=conf["sliding_window_size"])
         H = np.loadtxt(regression_test_files_folder + 'H_matrix.txt', dtype=np.float32)
         set_H(conf["d"], H)
-        test_func("quadratic", NodeCommonRLV, data_generator, conf, test_folder, func_quadratic)
+        test_func("quadratic", NodeRLV, data_generator, conf, test_folder, func_quadratic)
 
 
         conf = get_config(num_nodes=3, num_iterations=500, sliding_window_size=10, d=2, error_bound=10,
@@ -50,7 +50,7 @@ if __name__ == "__main__":
         # Read data from test file
         data_generator = DataGeneratorRozenbrock(num_iterations=conf["num_iterations"], num_nodes=conf["num_nodes"],
                                                  data_file_name=regression_test_files_folder + "data_file_rozenbrock.txt", d=conf["d"], sliding_window_size=conf["sliding_window_size"])
-        test_func("rozenbrock", NodeCommonRLV, data_generator, conf, test_folder, func_rozenbrock)
+        test_func("rozenbrock", NodeRLV, data_generator, conf, test_folder, func_rozenbrock)
 
     finally:
         end_test()

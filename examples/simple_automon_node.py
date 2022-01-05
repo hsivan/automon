@@ -3,7 +3,7 @@ from importlib import reload
 import logging
 from timeit import default_timer as timer
 import numpy as np
-from automon.automon.node_automon import NodeCommonAutoMon
+from automon.automon.node_automon import NodeAutoMon
 from automon.messages_common import prepare_message_data_update
 from automon.utils_zmq_sockets import init_client_socket
 from function_def import func_inner_product
@@ -14,7 +14,7 @@ def time_to_wait_for_next_sample_milliseconds(start_time, num_received_samples):
     return (num_received_samples - (timer() - start_time)) * 1000
 
 NODE_IDX = 0  # Change the node index for different nodes
-node = NodeCommonAutoMon(idx=NODE_IDX, x0_len=40, func_to_monitor=func_inner_product)
+node = NodeAutoMon(idx=NODE_IDX, x0_len=40, func_to_monitor=func_inner_product)
 # Open a client socket and connect to the server socket. Wait for 'start' message from the server.
 client_socket = init_client_socket(NODE_IDX, host='127.0.0.1', port=6400)
 

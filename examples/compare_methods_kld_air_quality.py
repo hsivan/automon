@@ -1,5 +1,5 @@
-from automon.automon.node_automon import NodeCommonAutoMon
-from automon.rlv.node_rlv import NodeCommonRLV
+from automon.automon.node_automon import NodeAutoMon
+from automon.rlv.node_rlv import NodeRLV
 from test_utils.functions_to_monitor import func_kld
 from test_utils.tune_neighborhood_size import tune_neighborhood_size
 from automon.automon.coordinator_automon import CoordinatorAutoMon
@@ -26,12 +26,12 @@ if __name__ == "__main__":
 
         logging.info("\n###################### Start KLD RLV test ######################")
         data_generator.reset()
-        coordinator, nodes = get_objects(NodeCommonRLV, CoordinatorRLV, conf, func_kld)
+        coordinator, nodes = get_objects(NodeRLV, CoordinatorRLV, conf, func_kld)
         run_test(data_generator, coordinator, nodes, test_folder)
 
         logging.info("\n###################### Start KLD AutoMon test ######################")
         data_generator.reset()
-        coordinator, nodes = get_objects(NodeCommonAutoMon, CoordinatorAutoMon, conf, func_kld)
+        coordinator, nodes = get_objects(NodeAutoMon, CoordinatorAutoMon, conf, func_kld)
         tune_neighborhood_size(coordinator, nodes, conf, data_generator)
         run_test(data_generator, coordinator, nodes, test_folder)
 

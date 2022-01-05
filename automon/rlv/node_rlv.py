@@ -4,7 +4,7 @@ import numpy as np
 from timeit import default_timer as timer
 
 
-class NodeCommonRLV(NodeCommon):
+class NodeRLV(NodeCommon):
     
     def __init__(self, idx=0, x0_len=1, max_f_val=np.inf, min_f_val=-np.inf, domain=None, func_to_monitor=None):
         NodeCommon.__init__(self, idx, func_to_monitor, x0_len, domain, max_f_val, min_f_val)

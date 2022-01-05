@@ -27,7 +27,7 @@ if (AUTO_DIFFERENTIATION_TOOL is None) or (AUTO_DIFFERENTIATION_TOOL == "Jax"):
         from autograd import grad
 
 
-class NodeCommonAutoMon(NodeCommon):
+class NodeAutoMon(NodeCommon):
     
     def __init__(self, idx=0, x0_len=1, max_f_val=numpy.inf, min_f_val=-numpy.inf, domain=None, func_to_monitor=None):
         NodeCommon.__init__(self, idx, func_to_monitor, x0_len, domain, max_f_val, min_f_val)

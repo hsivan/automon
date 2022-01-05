@@ -1,4 +1,4 @@
-from automon.automon.node_automon import NodeCommonAutoMon
+from automon.automon.node_automon import NodeAutoMon
 from test_utils.tune_neighborhood_size import tune_neighborhood_size
 from automon.automon.coordinator_automon import CoordinatorAutoMon
 from test_utils.data_generator import DataGeneratorDnnIntrusionDetection
@@ -26,7 +26,7 @@ def test_error_bounds(error_bound, parent_test_folder):
 
         logging.info("\n###################### Start AutoMon test ######################")
         data_generator.reset()
-        coordinator, nodes = get_objects(NodeCommonAutoMon, CoordinatorAutoMon, conf, func_dnn_intrusion_detection)
+        coordinator, nodes = get_objects(NodeAutoMon, CoordinatorAutoMon, conf, func_dnn_intrusion_detection)
         tune_neighborhood_size(coordinator, nodes, conf, data_generator, b_single_sample_per_round=True)
         run_test(data_generator, coordinator, nodes, test_folder, b_single_sample_per_round=True)
 

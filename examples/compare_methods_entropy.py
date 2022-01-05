@@ -1,4 +1,4 @@
-from automon.automon.node_automon import NodeCommonAutoMon
+from automon.automon.node_automon import NodeAutoMon
 from test_utils.functions_to_monitor import func_entropy
 from automon.automon.coordinator_automon import CoordinatorAutoMon
 from automon.gm.coordinator_gm import CoordinatorGM
@@ -29,7 +29,7 @@ if __name__ == "__main__":
 
         logging.info("\n###################### Start entropy AutoMon test ######################")
         data_generator.reset()
-        coordinator, nodes = get_objects(NodeCommonAutoMon, CoordinatorAutoMon, conf, func_entropy, max_f_val=func_entropy(np.ones(conf["d"], dtype=np.float) / conf["d"]), min_f_val=0.0)
+        coordinator, nodes = get_objects(NodeAutoMon, CoordinatorAutoMon, conf, func_entropy, max_f_val=func_entropy(np.ones(conf["d"], dtype=np.float) / conf["d"]), min_f_val=0.0)
         run_test(data_generator, coordinator, nodes, test_folder)
 
         plot_monitoring_stats(test_folder)

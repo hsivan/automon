@@ -1,5 +1,5 @@
 from automon.automon.coordinator_automon import CoordinatorAutoMon
-from automon.automon.node_automon import NodeCommonAutoMon
+from automon.automon.node_automon import NodeAutoMon
 from test_utils.data_generator import DataGeneratorInnerProduct
 from automon.coordinator_common import SlackType, SyncType
 from test_utils.functions_to_monitor import func_inner_product
@@ -25,7 +25,7 @@ def test_dimension(dimension, parent_test_folder):
 
         logging.info("\n###################### Start inner product AutoMon test ######################")
         data_generator.reset()
-        coordinator, nodes = get_objects(NodeCommonAutoMon, CoordinatorAutoMon, conf, func_inner_product)
+        coordinator, nodes = get_objects(NodeAutoMon, CoordinatorAutoMon, conf, func_inner_product)
         run_test(data_generator, coordinator, nodes, test_folder)
 
         plot_monitoring_stats(test_folder)

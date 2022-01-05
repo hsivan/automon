@@ -1,4 +1,4 @@
-from automon.automon.node_automon import NodeCommonAutoMon
+from automon.automon.node_automon import NodeAutoMon
 from test_utils.functions_to_monitor import func_cosine_similarity
 from automon.cb.node_cosine_similarity_cb import NodeCosineSimilarityCB
 from automon.automon.coordinator_automon import CoordinatorAutoMon
@@ -28,7 +28,7 @@ if __name__ == "__main__":
         
         logging.info("\n###################### Start cosine similarity AutoMon test ######################")
         data_generator.reset()
-        coordinator, nodes = get_objects(NodeCommonAutoMon, CoordinatorAutoMon, conf, func_cosine_similarity, max_f_val=1.0, min_f_val=-1.0)
+        coordinator, nodes = get_objects(NodeAutoMon, CoordinatorAutoMon, conf, func_cosine_similarity, max_f_val=1.0, min_f_val=-1.0)
         run_test(data_generator, coordinator, nodes, test_folder)
         
         plot_monitoring_stats(test_folder)

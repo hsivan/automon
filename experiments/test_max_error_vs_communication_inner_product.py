@@ -1,4 +1,4 @@
-from automon.automon.node_automon import NodeCommonAutoMon
+from automon.automon.node_automon import NodeAutoMon
 from test_utils.functions_to_monitor import func_inner_product
 from automon.cb.node_inner_product_cb import NodeInnerProductCB
 from automon.automon.coordinator_automon import CoordinatorAutoMon
@@ -29,7 +29,7 @@ def test_error_bounds(error_bound, parent_test_folder):
 
         logging.info("\n###################### Start AutoMon test ######################")
         data_generator.reset()
-        coordinator, nodes = get_objects(NodeCommonAutoMon, CoordinatorAutoMon, conf, func_inner_product)
+        coordinator, nodes = get_objects(NodeAutoMon, CoordinatorAutoMon, conf, func_inner_product)
         run_test(data_generator, coordinator, nodes, test_folder)
 
         plot_monitoring_stats(test_folder)

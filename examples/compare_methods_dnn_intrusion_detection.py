@@ -1,5 +1,5 @@
-from automon.automon.node_automon import NodeCommonAutoMon
-from automon.rlv.node_rlv import NodeCommonRLV
+from automon.automon.node_automon import NodeAutoMon
+from automon.rlv.node_rlv import NodeRLV
 from automon.rlv.coordinator_rlv import CoordinatorRLV
 from test_utils.functions_to_monitor import set_net_params, func_dnn_intrusion_detection
 from test_utils.data_generator import DataGeneratorDnnIntrusionDetection
@@ -35,12 +35,12 @@ if __name__ == "__main__":
 
         logging.info("\n###################### Start DNN intrusion_detection RLV test ######################")
         data_generator.reset()
-        coordinator, nodes = get_objects(NodeCommonRLV, CoordinatorRLV, conf, func_dnn_intrusion_detection)
+        coordinator, nodes = get_objects(NodeRLV, CoordinatorRLV, conf, func_dnn_intrusion_detection)
         run_test(data_generator, coordinator, nodes, test_folder, b_single_sample_per_round=True)
 
         logging.info("\n###################### Start DNN intrusion_detection AutoMon test ######################")
         data_generator.reset()
-        coordinator, nodes = get_objects(NodeCommonAutoMon, CoordinatorAutoMon, conf, func_dnn_intrusion_detection)
+        coordinator, nodes = get_objects(NodeAutoMon, CoordinatorAutoMon, conf, func_dnn_intrusion_detection)
         run_test(data_generator, coordinator, nodes, test_folder, b_single_sample_per_round=True)
 
         plot_monitoring_stats(test_folder)

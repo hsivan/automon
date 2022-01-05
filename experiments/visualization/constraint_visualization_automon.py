@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
 from automon.automon.coordinator_automon import AdcdHelper
-from automon.automon.node_automon import NodeCommonAutoMon
+from automon.automon.node_automon import NodeAutoMon
 from test_utils.functions_to_monitor import func_entropy, func_variance, func_inner_product, func_rozenbrock
 from test_utils.node_stream import NodeStreamFrequency, NodeStreamFirstAndSecondMomentum, NodeStreamAverage
 
@@ -327,7 +327,7 @@ def visualize_entropy():
     domain = [(0+epsilon, 1-epsilon)] * k
     dc_type, extreme_lambda = adcd_helper.adcd_x(x0, domain, 0)
 
-    node3 = NodeCommonAutoMon(idx=node_idx, x0_len=k, max_f_val=func_entropy(np.ones(k, dtype=np.float) / k), min_f_val=0.0, domain=(0+epsilon, 1-epsilon), func_to_monitor=func_entropy)
+    node3 = NodeAutoMon(idx=node_idx, x0_len=k, max_f_val=func_entropy(np.ones(k, dtype=np.float) / k), min_f_val=0.0, domain=(0 + epsilon, 1 - epsilon), func_to_monitor=func_entropy)
     node3.sync(x0, slack, 0.7, 1, -1, dc_type, extreme_lambda)
     entropy_automon_draw_constraints(node3)
     # Fill sliding window
@@ -370,7 +370,7 @@ def visualize_entropy():
     domain = [(0 + epsilon, 1 - epsilon)] * k
     dc_type, extreme_lambda = adcd_helper.adcd_x(x0, domain, 0)
 
-    node2 = NodeCommonAutoMon(idx=node_idx, x0_len=k, max_f_val=func_entropy(np.ones(k, dtype=np.float) / k), min_f_val=0.0, func_to_monitor=func_entropy)
+    node2 = NodeAutoMon(idx=node_idx, x0_len=k, max_f_val=func_entropy(np.ones(k, dtype=np.float) / k), min_f_val=0.0, func_to_monitor=func_entropy)
     node2.sync(x0, slack, 0.5, 0.6, -1, dc_type, extreme_lambda)
     entropy_automon_draw_constraints(node2)
     # Fill sliding window
@@ -414,7 +414,7 @@ def visualize_variance():
     node_idx = 1
 
     dc_type, extreme_lambda = adcd_helper.adcd_x(x0, None, 0)
-    node = NodeCommonAutoMon(idx=node_idx, x0_len=2, func_to_monitor=func_variance, min_f_val=0.0)
+    node = NodeAutoMon(idx=node_idx, x0_len=2, func_to_monitor=func_variance, min_f_val=0.0)
     node.sync(x0, slack, 0.08, 3, -1, dc_type, extreme_lambda)
     # Fill sliding window
     node_stream = NodeStreamFirstAndSecondMomentum(2, sliding_window_size, 1, x0.shape[0])
@@ -445,7 +445,7 @@ def visualize_rozenbrock():
     node_idx = 1
 
     dc_type, extreme_lambda = adcd_helper.adcd_x(x0, None, 0)
-    node = NodeCommonAutoMon(idx=node_idx, x0_len=x0.shape[0], func_to_monitor=func_rozenbrock)
+    node = NodeAutoMon(idx=node_idx, x0_len=x0.shape[0], func_to_monitor=func_rozenbrock)
     node.sync(x0, slack, 0.08, 3, -1, dc_type, extreme_lambda)
     # Fill sliding window
     node_stream = NodeStreamAverage(2, sliding_window_size, x0.shape[0], x0.shape[0])
@@ -466,7 +466,7 @@ def visualize_inner_product():
     node_idx = 1
 
     dc_type, extreme_lambda = adcd_helper.adcd_x(x0, None, 0)
-    node = NodeCommonAutoMon(idx=node_idx, x0_len=x0.shape[0], func_to_monitor=func_inner_product)
+    node = NodeAutoMon(idx=node_idx, x0_len=x0.shape[0], func_to_monitor=func_inner_product)
     node.sync(x0, slack, 0.08, 3, -1, dc_type, extreme_lambda)
     # Fill sliding window
     node_stream = NodeStreamAverage(2, sliding_window_size, x0.shape[0], x0.shape[0])

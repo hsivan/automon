@@ -1,6 +1,6 @@
 import os
 os.environ['AUTO_DIFFERENTIATION_TOOL'] = 'AutoGrad'
-from automon.automon.node_automon import NodeCommonAutoMon
+from automon.automon.node_automon import NodeAutoMon
 from test_utils.functions_to_monitor import func_rozenbrock
 from test_utils.data_generator import DataGeneratorRozenbrock
 from automon.automon.coordinator_automon import CoordinatorAutoMon
@@ -29,7 +29,7 @@ def neighborhood_size_impact(experiment_folder, test_folder, neighborhood_sizes,
 
             logging.info("\n###################### Start Rozenbrock AutoMon test ######################")
             data_generator.reset()
-            coordinator, nodes = get_objects(NodeCommonAutoMon, CoordinatorAutoMon, conf, func_rozenbrock)
+            coordinator, nodes = get_objects(NodeAutoMon, CoordinatorAutoMon, conf, func_rozenbrock)
             if prefixes[i] != "tuned":
                 coordinator.b_fix_neighborhood_dynamically = False  # Should not change neighborhood size dynamically for optimal and fixed neighborhood sizes
             run_test(data_generator, coordinator, nodes, sub_test_folder)

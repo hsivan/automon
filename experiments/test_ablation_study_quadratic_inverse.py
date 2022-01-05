@@ -1,5 +1,5 @@
-from automon.automon.node_automon import NodeCommonAutoMon
-from automon.rlv.node_rlv import NodeCommonRLV
+from automon.automon.node_automon import NodeAutoMon
+from automon.rlv.node_rlv import NodeRLV
 from test_utils.functions_to_monitor import func_quadratic_inverse
 from automon.automon.coordinator_automon import CoordinatorAutoMon
 from automon.rlv.coordinator_rlv import CoordinatorRLV
@@ -27,13 +27,13 @@ if __name__ == "__main__":
 
         logging.info("\n###################### Start quadratic inverse RLV test (no ADCD no slack) ######################")
         data_generator.reset()
-        coordinator, nodes = get_objects(NodeCommonRLV, CoordinatorRLV, conf, func_quadratic_inverse)
+        coordinator, nodes = get_objects(NodeRLV, CoordinatorRLV, conf, func_quadratic_inverse)
         coordinator.coordinator_name = "no ADCD no slack"
         run_test(data_generator, coordinator, nodes, test_folder)
 
         logging.info("\n###################### Start quadratic inverse RLV test (no ADCD) ######################")
         data_generator.reset()
-        coordinator, nodes = get_objects(NodeCommonRLV, CoordinatorRLV, conf, func_quadratic_inverse)
+        coordinator, nodes = get_objects(NodeRLV, CoordinatorRLV, conf, func_quadratic_inverse)
         coordinator.coordinator_name = "no ADCD"
         coordinator.slack_type = SlackType.Drift
         coordinator.sync_type = SyncType.LazyLRU
@@ -41,7 +41,7 @@ if __name__ == "__main__":
 
         logging.info("\n###################### Start quadratic inverse AutoMon test ######################")
         data_generator.reset()
-        coordinator, nodes = get_objects(NodeCommonAutoMon, CoordinatorAutoMon, conf, func_quadratic_inverse)
+        coordinator, nodes = get_objects(NodeAutoMon, CoordinatorAutoMon, conf, func_quadratic_inverse)
         run_test(data_generator, coordinator, nodes, test_folder)
 
         plot_monitoring_stats(test_folder)

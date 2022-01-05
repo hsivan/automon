@@ -113,13 +113,13 @@ You could change the listening port of the coordinator.
 import sys
 import logging
 from automon.automon.coordinator_automon import CoordinatorAutoMon
-from automon.automon.node_automon import NodeCommonAutoMon
+from automon.automon.node_automon import NodeAutoMon
 from automon.utils_zmq_sockets import init_server_socket, get_next_node_message, send_message_to_node
 from function_def import func_inner_product
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 # Create a dummy node for the coordinator that uses it in the process of resolving violations.
-verifier = NodeCommonAutoMon(idx=-1, x0_len=40, func_to_monitor=func_inner_product)
+verifier = NodeAutoMon(idx=-1, x0_len=40, func_to_monitor=func_inner_product)
 coordinator = CoordinatorAutoMon(verifier, num_nodes=4, error_bound=2.0)
 # Open a server socket. Wait for all nodes to connect and send 'start' signal to all nodes to start their data loop.
 server_socket = init_server_socket(port=6400, num_nodes=4)
@@ -138,7 +138,7 @@ import sys
 import logging
 from timeit import default_timer as timer
 import numpy as np
-from automon.automon.node_automon import NodeCommonAutoMon
+from automon.automon.node_automon import NodeAutoMon
 from automon.messages_common import prepare_message_data_update
 from automon.utils_zmq_sockets import init_client_socket
 from function_def import func_inner_product
@@ -148,7 +148,7 @@ def time_to_wait_for_next_sample_milliseconds(start_time, num_received_samples):
     return (num_received_samples - (timer() - start_time)) * 1000
 
 NODE_IDX = 0  # Change the node index for different nodes
-node = NodeCommonAutoMon(idx=NODE_IDX, x0_len=40, func_to_monitor=func_inner_product)
+node = NodeAutoMon(idx=NODE_IDX, x0_len=40, func_to_monitor=func_inner_product)
 # Open a client socket and connect to the server socket. Wait for 'start' message from the server.
 client_socket = init_client_socket(NODE_IDX, host='127.0.0.1', port=6400)
 
