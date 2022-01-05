@@ -210,10 +210,13 @@ class State(enum.Enum):
 
 class CoordinatorCommon:
     
-    def __init__(self, verifier, num_nodes, error_bound=2, slack_type=SlackType.Drift, sync_type=SyncType.Eager, lazy_sync_max_S=0.5, b_simulation=False):
-        # Override these fields by inherent class
-        self.coordinator_name = "Common"
-        self.b_violation_strict = True
+    def __init__(self, verifier, num_nodes, error_bound=2, slack_type=SlackType.Drift, sync_type=SyncType.Eager,
+                 lazy_sync_max_S=0.5, b_violation_strict=True, coordinator_name="Common"):
+        self.coordinator_name = coordinator_name
+        # Relevant only for simulation. Indicates whether this type of coordinator tolerates false negative events (missed violations).
+        self.b_violation_strict = b_violation_strict
+        # Flag that indicates if the current run is simulation or not. The test manager sets to True, after initialization, if running as simulation.
+        self.b_simulation = False
 
         self.lock = threading.Semaphore()
         
@@ -225,10 +228,9 @@ class CoordinatorCommon:
         assert(not (slack_type == SlackType.NoSlack and sync_type.is_lazy()))
         self.lazy_sync_max_S = lazy_sync_max_S
         self.num_nodes = num_nodes
-        self.b_simulation = b_simulation
 
         CoordinatorCommon._init(self)
-        logging.info("CoordinatorCommon initialization: x0_len " + str(self.x0_len) + ", error_bound " + str(error_bound) + ", num_nodes " + str(num_nodes) +
+        logging.info("Coordinator " + self.coordinator_name + " initialization: x0_len " + str(self.x0_len) + ", error_bound " + str(error_bound) + ", num_nodes " + str(num_nodes) +
                      ", slack_type " + str(slack_type) + ", sync_type " + str(sync_type) + ", lazy_sync_max_S " + str(lazy_sync_max_S))
 
     def _init(self):

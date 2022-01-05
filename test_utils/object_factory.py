@@ -24,14 +24,11 @@ def get_coordinator(CoordinatorClass, NodeClass, conf, func_to_monitor, max_f_va
 
     if CoordinatorClass is CoordinatorAutoMon:
         # AutoMon coordinator have extra parameter neighborhood_size
-        coordinator = CoordinatorClass(verifier, conf["num_nodes"],
-                                       slack_type=SlackType(conf["slack_type"]), sync_type=SyncType(conf["sync_type"]),
-                                       error_bound=conf["error_bound"], domain=conf["domain"],
-                                       neighborhood_size=conf["neighborhood_size"])
+        coordinator = CoordinatorClass(verifier, conf["num_nodes"], slack_type=SlackType(conf["slack_type"]), sync_type=SyncType(conf["sync_type"]),
+                                       error_bound=conf["error_bound"], neighborhood_size=conf["neighborhood_size"])
     else:
-        coordinator = CoordinatorClass(verifier, conf["num_nodes"],
-                                       slack_type=SlackType(conf["slack_type"]), sync_type=SyncType(conf["sync_type"]),
-                                       error_bound=conf["error_bound"], domain=conf["domain"])
+        coordinator = CoordinatorClass(verifier, conf["num_nodes"], slack_type=SlackType(conf["slack_type"]), sync_type=SyncType(conf["sync_type"]),
+                                       error_bound=conf["error_bound"])
     return coordinator
 
 

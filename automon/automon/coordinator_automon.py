@@ -178,16 +178,15 @@ class AdcdHelper:
 class CoordinatorAutoMon(CoordinatorCommon):
     
     def __init__(self, verifier, num_nodes, error_bound=2, slack_type=SlackType.Drift, sync_type=SyncType.LazyLRU,
-                 lazy_sync_max_S=0.5, domain=None, neighborhood_size=None):
-        CoordinatorCommon.__init__(self, verifier, num_nodes, error_bound, slack_type, sync_type, lazy_sync_max_S)
-        logging.info("CoordinatorAutoMon initialization: domain " + str(domain) + ", AUTO_DIFFERENTIATION_TOOL " + AUTO_DIFFERENTIATION_TOOL + ", neighborhood_size " + str(neighborhood_size))
-        self.coordinator_name = "AutoMon"
-        self.b_violation_strict = False
+                 lazy_sync_max_S=0.5, neighborhood_size=None):
+        CoordinatorCommon.__init__(self, verifier, num_nodes, error_bound, slack_type, sync_type, lazy_sync_max_S,
+                                   b_violation_strict=False, coordinator_name="AutoMon")
+        logging.info("CoordinatorAutoMon initialization: domain " + str(verifier.domain_range) + ", AUTO_DIFFERENTIATION_TOOL " + AUTO_DIFFERENTIATION_TOOL + ", neighborhood_size " + str(neighborhood_size))
         self.adcd_helper = AdcdHelper(verifier.func_to_monitor)
 
-        self.domain = domain  # If None, the domain is the entire R^d
+        self.domain = verifier.domain_range  # If None, the domain is the entire R^d
         # If neighborhood_size is not None, then neighborhood is updated according to x0. Otherwise it remains the entire domain.
-        self.neighborhood = [domain] * self.x0_len if domain is not None else None
+        self.neighborhood = [verifier.domain_range] * self.x0_len if verifier.domain_range is not None else None
         # Check if the Hessian is constant. If the Hessian const there is no need to find the min and max eigenvalues for every x0 update.
         # Also, for constant hessian the neighborhood remains the entire domain during the test.
         self.b_hessian_const = self._is_hessian_const(self.x0_len)
