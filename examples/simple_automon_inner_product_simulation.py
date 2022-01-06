@@ -6,6 +6,8 @@ from test_utils.data_generator import DataGeneratorInnerProduct
 from test_utils.test_utils import run_test, get_config
 from automon.automon.node_automon import NodeAutoMon
 from test_utils.functions_to_monitor import func_inner_product
+logging.getLogger('automon').setLevel(logging.INFO)
+
 
 if __name__ == "__main__":
     reload(logging)

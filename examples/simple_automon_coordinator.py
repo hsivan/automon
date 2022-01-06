@@ -1,12 +1,9 @@
-import sys
-from importlib import reload
 import logging
 from automon.automon.coordinator_automon import CoordinatorAutoMon
 from automon.automon.node_automon import NodeAutoMon
 from automon.utils_zmq_sockets import init_server_socket, get_next_node_message, send_message_to_node
 from function_def import func_inner_product
-reload(logging)
-logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+logging.getLogger('automon').setLevel(logging.INFO)
 
 # Create a dummy node for the coordinator that uses it in the process of resolving violations.
 verifier = NodeAutoMon(idx=-1, x0_len=40, func_to_monitor=func_inner_product)

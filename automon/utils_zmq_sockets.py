@@ -2,6 +2,8 @@ import traceback
 import zmq
 import logging
 
+logging = logging.getLogger(__name__)
+
 # Use ZMQ Client-Server pattern  (https://zguide.zeromq.org/docs/chapter3/#The-Asynchronous-Client-Server-Pattern)
 # Between the coordinator and the nodes. Coordinator uses ROUTER socket and the nodes use DEALER socket.
 
@@ -27,17 +29,6 @@ def init_client_socket(node_idx, host='127.0.0.1', port=6400):
         logging.info("Node " + str(node_idx) + " got start message from the coordinator")
     except Exception as e:
         logging.info(traceback.print_exc())
-    return client_socket
-
-
-def init_client_data_socket(node_idx, host='127.0.0.1', port=6400):
-    context = zmq.Context()
-    client_socket = context.socket(zmq.DEALER)
-    client_socket.setsockopt(zmq.LINGER, 0)
-    identity = 'data_loop-%d' % node_idx
-    client_socket.identity = identity.encode('ascii')
-    client_socket.connect('tcp://' + host + ':' + str(port))
-    logging.info('Node %s started' % identity)
     return client_socket
 
 

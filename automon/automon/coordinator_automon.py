@@ -7,6 +7,8 @@ import os
 from automon.messages_common import prepare_message_lazy_sync, ViolationOrigin
 from automon.automon.messages_automon import DcType, prepare_message_sync_automon
 
+logging = logging.getLogger(__name__)
+
 # Can set this environment variable in test to force use AutoGrad, even if Jax exists: os.environ['AUTO_DIFFERENTIATION_TOOL'] = 'AutoGrad'
 AUTO_DIFFERENTIATION_TOOL = os.getenv('AUTO_DIFFERENTIATION_TOOL')
 # Try import Jax if AUTO_DIFFERENTIATION_TOOL is None (automatic decision, try Jax first) or AUTO_DIFFERENTIATION_TOOL is Jax.

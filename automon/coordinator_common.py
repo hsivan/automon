@@ -7,6 +7,9 @@ from automon.messages_common import MessageType, ViolationOrigin, parse_message_
     prepare_message_sync, prepare_message_lazy_sync, prepare_message_get_local_vector, message_to_message_list
 
 
+logging = logging.getLogger(__name__)
+
+
 class SlackType(enum.Enum):
     # When no slack is used each node monitors its local value x.
     NoSlack = 0

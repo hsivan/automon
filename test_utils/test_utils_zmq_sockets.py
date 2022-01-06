@@ -206,17 +206,6 @@ def init_client_socket(node_idx, host='127.0.0.1', port=6400):
     return client_socket
 
 
-def init_client_data_socket(node_idx, host='127.0.0.1', port=6400):
-    context = zmq.Context()
-    client_socket = context.socket(zmq.DEALER)
-    client_socket.setsockopt(zmq.LINGER, 0)
-    identity = 'data_loop-%d' % node_idx
-    client_socket.identity = identity.encode('ascii')
-    client_socket.connect('tcp://' + host + ':' + str(port))
-    logging.info('Node %s started' % identity)
-    return client_socket
-
-
 def event_monitor_server(monitor):
     num_connections = 0
     num_disconnections = 0
@@ -305,42 +294,3 @@ def run_coordinator(coordinator, port, num_nodes, test_folder):
         end = timer()
         logging.info("The test took: " + str(end - start_time) + " seconds")
         coordinator.dump_stats(test_folder)
-
-
-def init_server_socket(port=6400, num_nodes=10):
-    # Opens server socket. Waits for all the nodes to connect and then sends 'start' signal to all the nodes to start the data loop
-    context = zmq.Context()
-    server_socket = context.socket(zmq.ROUTER)
-    server_socket.setsockopt(zmq.LINGER, 0)
-    server_socket.bind('tcp://0.0.0.0:' + str(port))
-
-    logging.info("Coordinator server socket started")
-
-    try:
-        monitor = server_socket.get_monitor_socket()
-        t = threading.Thread(target=event_monitor_server, args=(monitor,))
-        t.start()
-
-        # Wait for ready message from all the node sockets
-        b_ready_nodes = np.zeros(num_nodes, dtype=bool)
-        while not np.all(b_ready_nodes):
-            ident, message = server_socket.recv_multipart()
-            logging.info("Got message: " + message.decode() + " from node " + ident.decode())
-            if message == b'ready':
-                b_ready_nodes[int(ident)] = True
-
-        # After all node sockets are ready, send start signal to all the nodes to start the data loop
-        for node_idx in range(num_nodes):
-            server_socket.send_multipart([str(node_idx).encode('ascii'), "start".encode()])
-    except Exception as e:
-        logging.info(traceback.print_exc())
-    return server_socket
-
-
-def get_next_message(server_socket):
-    ident, message = server_socket.recv_multipart()
-    return message
-
-
-def send_message(server_socket, node_idx, reply):
-    server_socket.send_multipart([str(node_idx).encode('ascii'), reply])

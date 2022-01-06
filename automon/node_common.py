@@ -7,6 +7,8 @@ from automon.messages_common import parse_message_data_update, prepare_message_v
     parse_message_lazy_sync, prepare_message_local_vector_info, parse_message_header, messages_header_format, \
     parse_message_get_local_vector
 
+logging = logging.getLogger(__name__)
+
 
 class State(enum.Enum):
     Monitoring = 0

@@ -3,9 +3,10 @@ import os
 import datetime
 from timeit import default_timer as timer
 import logging
-from importlib import reload
 import sys
 from automon.messages_common import prepare_message_data_update
+
+logger = logging.getLogger('automon')
 
 
 def _prepare_test_folder(test_name, test_folder=""):
@@ -14,10 +15,7 @@ def _prepare_test_folder(test_name, test_folder=""):
         test_folder = os.path.join(os.getcwd(), 'test_results/results_' + test_name + "_" + test_timestamp)
     if not os.path.isdir(test_folder):
         os.makedirs(test_folder)
-    reload(logging)
 
-    logger = logging.getLogger()
-    logger.setLevel(logging.INFO)  # Can change to DEBUG to see send and received message logs from messages_common
     formatter = logging.Formatter(fmt='%(asctime)s %(levelname)-8s %(message)s')
     output_file_handler = logging.FileHandler(test_folder + "/" + test_name + '.log', mode='w')
     output_file_handler.setFormatter(formatter)
@@ -25,8 +23,11 @@ def _prepare_test_folder(test_name, test_folder=""):
     stdout_handler.setFormatter(formatter)
     logger.addHandler(output_file_handler)
     logger.addHandler(stdout_handler)
+    logger.setLevel(logging.INFO)  # Can change to DEBUG to see send and received message logs from messages_common
+    logger.propagate = False
+
     logging.getLogger('matplotlib.backends.backend_pdf').setLevel(logging.WARNING)
-    logging.info('Started test - ' + test_name)
+    logger.info('Started test - ' + test_name)
     return test_folder
 
 
@@ -36,9 +37,12 @@ def start_test(test_name, test_folder=""):
 
 
 def end_test():
-    logging.info('Finished test')
-    logging.shutdown()
-    reload(logging)
+    logger.info('Finished test')
+
+    handlers = logger.handlers
+    for handler in handlers:
+        handler.close()
+        logger.removeHandler(handler)
 
 
 def _from_violation_to_sync(coordinator, nodes, message_violations):
@@ -99,14 +103,14 @@ def _test_data_loop(coordinator, nodes, data_generator, b_single_sample_per_roun
 
 
 def run_test(data_generator, coordinator, nodes, test_folder, b_single_sample_per_round=False):
-    logging.info("num_nodes " + str(len(nodes)) + ", num_iterations " + str(data_generator.get_num_iterations()) + ", data_generator state " + str(data_generator.state))
+    logger.info("num_nodes " + str(len(nodes)) + ", num_iterations " + str(data_generator.get_num_iterations()) + ", data_generator state " + str(data_generator.state))
     coordinator.b_simulation = True  # This is a simulation of distributed system on a single machine with 'experiment manager' that simulates the system in a serialized manner.
 
     # Send data to nodes
     start = timer()
     _test_data_loop(coordinator, nodes, data_generator, b_single_sample_per_round)
     end = timer()
-    logging.info("The test took: " + str(end - start) + " seconds")
+    logger.info("The test took: " + str(end - start) + " seconds")
     full_sync_history, msg_counters = coordinator.dump_stats(test_folder)
 
     for node in nodes:

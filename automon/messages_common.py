@@ -3,6 +3,8 @@ import struct
 import numpy as np
 import logging
 
+logging = logging.getLogger(__name__)
+
 
 class ViolationOrigin(enum.Enum):
     # If the violation is caused by local vector outside the safe zone.
