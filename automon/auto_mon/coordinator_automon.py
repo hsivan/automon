@@ -5,7 +5,7 @@ from automon.coordinator_common import CoordinatorCommon, SlackType, SyncType
 import numpy
 import os
 from automon.messages_common import prepare_message_lazy_sync, ViolationOrigin
-from automon.automon.messages_automon import DcType, prepare_message_sync_automon
+from automon.auto_mon.messages_automon import DcType, prepare_message_sync_automon
 
 logging = logging.getLogger(__name__)
 

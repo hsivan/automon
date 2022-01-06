@@ -1,7 +1,7 @@
-from automon.automon.node_automon import NodeAutoMon
+from automon.auto_mon.node_automon import NodeAutoMon
 from test_utils.functions_to_monitor import func_cosine_similarity
 from automon.cb.node_cosine_similarity_cb import NodeCosineSimilarityCB
-from automon.automon.coordinator_automon import CoordinatorAutoMon
+from automon.auto_mon.coordinator_automon import CoordinatorAutoMon
 from automon.cb.coordinator_cb import CoordinatorCB
 from test_utils.data_generator import DataGeneratorCosineSimilarity
 from automon.coordinator_common import SlackType, SyncType

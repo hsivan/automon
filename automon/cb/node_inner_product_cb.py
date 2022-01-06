@@ -7,7 +7,7 @@ from automon.cb.node_common_cb import NodeCommonCB
 class NodeInnerProductCB(NodeCommonCB):
     
     def __init__(self, idx=0, x0_len=2, domain=None, func_to_monitor=None):
-        # func_to_monitor must be func_inner_product; however we keep function implementations outside of automon core.
+        # func_to_monitor must be func_inner_product; however we keep function implementations outside of auto_mon core.
         NodeCommonCB.__init__(self, idx, x0_len=x0_len, domain=domain, func_to_monitor=func_to_monitor)
 
     def _func_h(self, X, threshold):

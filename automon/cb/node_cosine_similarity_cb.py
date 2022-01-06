@@ -7,7 +7,7 @@ from automon.cb.node_common_cb import NodeCommonCB
 class NodeCosineSimilarityCB(NodeCommonCB):
     
     def __init__(self, idx=0, x0_len=2, domain=None, func_to_monitor=None):
-        # func_to_monitor must be func_cosine_similarity; however we keep function implementations outside of automon core.
+        # func_to_monitor must be func_cosine_similarity; however we keep function implementations outside of auto_mon core.
         NodeCommonCB.__init__(self, idx, x0_len=x0_len, domain=domain, func_to_monitor=func_to_monitor)
 
     def _func_convexing_part(self, X, threshold):

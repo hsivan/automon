@@ -76,7 +76,7 @@ The implementation in this project separates between the code of the basic GM pr
 a specific monitoring technique that adopts this protocol (such as AutoMon).
 The GM protocol code is implemented in `automon/coordinator_common.py` and `automon/node_common.py`.
 The code of a specific monitoring technique is in a subpackage named after the technique.
-For example, AutoMon in under `automon/automon`.
+For example, AutoMon in under `automon/auto_mon`.
 This design enables developers to easily add new monitoring techniques, add features to existing techniques, or to
 enrich the basic protocol.
 
@@ -110,12 +110,11 @@ def func_inner_product(x):
 Next, initiate and run the coordinator on a designated server.
 You could change the listening port of the coordinator.
 ```python
-import sys
-import logging
-from automon.automon.coordinator_automon import CoordinatorAutoMon
-from automon.automon.node_automon import NodeAutoMon
+from automon.auto_mon.coordinator_automon import CoordinatorAutoMon
+from automon.auto_mon.node_automon import NodeAutoMon
 from automon.utils_zmq_sockets import init_server_socket, get_next_node_message, send_message_to_node
 from function_def import func_inner_product
+import logging
 logging.getLogger('automon').setLevel(logging.INFO)
 
 # Create a dummy node for the coordinator that uses it in the process of resolving violations.
@@ -134,14 +133,13 @@ while True:
 Lastly, initiate and run a node. The node can run on any computer or device with internet access.
 Make sure the `host` and `port` are set to the IP and port of the coordinator.
 ```python
-import sys
-import logging
-from timeit import default_timer as timer
 import numpy as np
-from automon.automon.node_automon import NodeAutoMon
+from timeit import default_timer as timer
+from automon.auto_mon.node_automon import NodeAutoMon
 from automon.messages_common import prepare_message_data_update
 from automon.utils_zmq_sockets import init_client_socket
 from function_def import func_inner_product
+import logging
 logging.getLogger('automon').setLevel(logging.INFO)
 
 def time_to_wait_for_next_sample_milliseconds(start_time, num_received_samples):

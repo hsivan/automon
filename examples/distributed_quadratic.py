@@ -1,8 +1,8 @@
 import argparse
 import os
 import numpy as np
-from automon.automon.coordinator_automon import CoordinatorAutoMon
-from automon.automon.node_automon import NodeAutoMon
+from automon.auto_mon.coordinator_automon import CoordinatorAutoMon
+from automon.auto_mon.node_automon import NodeAutoMon
 from test_utils.data_generator import DataGeneratorQuadratic
 from test_utils.functions_to_monitor import set_H, func_quadratic
 from test_utils.stats_analysis_utils import log_num_packets_sent_and_received

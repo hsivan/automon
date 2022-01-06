@@ -1,8 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
-from automon.automon.coordinator_automon import AdcdHelper
-from automon.automon.node_automon import NodeAutoMon
+from automon.auto_mon.coordinator_automon import AdcdHelper
+from automon.auto_mon.node_automon import NodeAutoMon
 from test_utils.functions_to_monitor import func_entropy, func_variance, func_inner_product, func_rozenbrock
 from test_utils.node_stream import NodeStreamFrequency, NodeStreamFirstAndSecondMomentum, NodeStreamAverage
 

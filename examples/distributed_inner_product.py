@@ -1,7 +1,7 @@
 import argparse
 import os
-from automon.automon.coordinator_automon import CoordinatorAutoMon
-from automon.automon.node_automon import NodeAutoMon
+from automon.auto_mon.coordinator_automon import CoordinatorAutoMon
+from automon.auto_mon.node_automon import NodeAutoMon
 from test_utils.data_generator import DataGeneratorInnerProduct
 from test_utils.functions_to_monitor import func_inner_product
 from test_utils.stats_analysis_utils import log_num_packets_sent_and_received

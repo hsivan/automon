@@ -1,6 +1,6 @@
-from automon.automon.node_automon import NodeAutoMon
+from automon.auto_mon.node_automon import NodeAutoMon
 from test_utils.tune_neighborhood_size import tune_neighborhood_size
-from automon.automon.coordinator_automon import CoordinatorAutoMon
+from automon.auto_mon.coordinator_automon import CoordinatorAutoMon
 from test_utils.data_generator import DataGeneratorDnnIntrusionDetection
 from test_utils.jax_dnn_intrusion_detection import load_net
 from test_utils.test_utils import start_test, end_test, run_test, write_config_to_file, read_config_file

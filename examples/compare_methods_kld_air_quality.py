@@ -1,8 +1,8 @@
-from automon.automon.node_automon import NodeAutoMon
+from automon.auto_mon.node_automon import NodeAutoMon
 from automon.rlv.node_rlv import NodeRLV
 from test_utils.functions_to_monitor import func_kld
 from test_utils.tune_neighborhood_size import tune_neighborhood_size
-from automon.automon.coordinator_automon import CoordinatorAutoMon
+from automon.auto_mon.coordinator_automon import CoordinatorAutoMon
 from automon.rlv.coordinator_rlv import CoordinatorRLV
 from test_utils.data_generator import DataGeneratorKldAirQuality
 from test_utils.test_utils import start_test, end_test, run_test, write_config_to_file, read_config_file

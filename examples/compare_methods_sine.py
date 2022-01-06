@@ -1,5 +1,5 @@
-from automon.automon.coordinator_automon import CoordinatorAutoMon
-from automon.automon.node_automon import NodeAutoMon
+from automon.auto_mon.coordinator_automon import CoordinatorAutoMon
+from automon.auto_mon.node_automon import NodeAutoMon
 from test_utils.data_generator import DataGeneratorSine
 from automon.coordinator_common import SlackType, SyncType
 from test_utils.functions_to_monitor import func_sine

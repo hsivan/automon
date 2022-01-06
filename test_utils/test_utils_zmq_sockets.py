@@ -9,6 +9,7 @@ from zmq import ContextTerminated, ZMQError
 from zmq.utils.monitor import recv_monitor_message
 from automon.node_common import State
 from automon.messages_common import prepare_message_data_update
+logging = logging.getLogger('automon')
 
 # Use ZMQ Client-Server pattern  (https://zguide.zeromq.org/docs/chapter3/#The-Asynchronous-Client-Server-Pattern)
 # Between the coordinator and the nodes. Coordinator uses ROUTER socket and the nodes use DEALER socket.

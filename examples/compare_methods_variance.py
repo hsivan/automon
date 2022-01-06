@@ -1,6 +1,6 @@
-from automon.automon.node_automon import NodeAutoMon
+from automon.auto_mon.node_automon import NodeAutoMon
 from test_utils.functions_to_monitor import func_variance
-from automon.automon.coordinator_automon import CoordinatorAutoMon
+from automon.auto_mon.coordinator_automon import CoordinatorAutoMon
 from automon.gm.coordinator_gm import CoordinatorGM
 from test_utils.data_generator import DataGeneratorVariance
 from automon.coordinator_common import SlackType, SyncType

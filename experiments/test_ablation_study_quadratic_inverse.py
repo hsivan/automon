@@ -1,7 +1,7 @@
-from automon.automon.node_automon import NodeAutoMon
+from automon.auto_mon.node_automon import NodeAutoMon
 from automon.rlv.node_rlv import NodeRLV
 from test_utils.functions_to_monitor import func_quadratic_inverse
-from automon.automon.coordinator_automon import CoordinatorAutoMon
+from automon.auto_mon.coordinator_automon import CoordinatorAutoMon
 from automon.rlv.coordinator_rlv import CoordinatorRLV
 from test_utils.data_generator import DataGeneratorQuadraticInverse
 from automon.coordinator_common import SlackType, SyncType
@@ -12,6 +12,7 @@ import logging
 from test_utils.object_factory import get_objects
 import numpy as np
 from experiments.visualization.plot_quadratic_inverse_surface import draw_f_contour_and_node_trail, draw_f
+logging = logging.getLogger('automon')
 
 if __name__ == "__main__":
     try:

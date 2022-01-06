@@ -3,10 +3,10 @@ from matplotlib import rcParams, rcParamsDefault
 from matplotlib.lines import Line2D
 import numpy as np
 
-from automon.automon.node_automon import NodeAutoMon
+from automon.auto_mon.node_automon import NodeAutoMon
 from test_utils.functions_to_monitor import func_inner_product
 from experiments.visualization.visualization_utils import get_figsize
-from automon.automon.coordinator_automon import AdcdHelper
+from automon.auto_mon.coordinator_automon import AdcdHelper
 
 
 def prep_domain_grid():

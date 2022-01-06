@@ -1,16 +1,14 @@
 import sys
-from importlib import reload
 import logging
-from automon.automon.coordinator_automon import CoordinatorAutoMon
+from automon.auto_mon.coordinator_automon import CoordinatorAutoMon
 from test_utils.data_generator import DataGeneratorInnerProduct
 from test_utils.test_utils import run_test, get_config
-from automon.automon.node_automon import NodeAutoMon
+from automon.auto_mon.node_automon import NodeAutoMon
 from test_utils.functions_to_monitor import func_inner_product
 logging.getLogger('automon').setLevel(logging.INFO)
 
 
 if __name__ == "__main__":
-    reload(logging)
     logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
     conf = get_config(num_iterations=1020, sliding_window_size=20, d=40, error_bound=0.3)
@@ -22,5 +20,4 @@ if __name__ == "__main__":
 
     coordinator = CoordinatorAutoMon(verifier, conf["num_nodes"], error_bound=conf["error_bound"])
 
-    logging.info("\n###################### Start inner product AutoMon test ######################")
     run_test(data_generator, coordinator, nodes, None)

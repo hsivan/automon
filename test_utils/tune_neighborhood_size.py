@@ -2,6 +2,7 @@ from test_utils.test_utils import run_test
 import logging
 import numpy as np
 import traceback
+logging = logging.getLogger('automon')
 
 
 class ViolationsStats:
