@@ -76,7 +76,7 @@ The implementation in this project separates between the code of the basic GM pr
 a specific monitoring technique that adopts this protocol (such as AutoMon).
 The GM protocol code is implemented in `automon/coordinator_common.py` and `automon/node_common.py`.
 The code of a specific monitoring technique is in a subpackage named after the technique.
-For example, AutoMon in under `automon/auto_mon`.
+For example, AutoMon in under `automon/automon`.
 This design enables developers to easily add new monitoring techniques, add features to existing techniques, or to
 enrich the basic protocol.
 
@@ -110,8 +110,8 @@ def func_inner_product(x):
 Next, initiate and run the coordinator on a designated server.
 You could change the listening port of the coordinator.
 ```python
-from automon.auto_mon.coordinator_automon import CoordinatorAutoMon
-from automon.auto_mon.node_automon import NodeAutoMon
+from automon.automon.coordinator_automon import CoordinatorAutoMon
+from automon.automon.node_automon import NodeAutoMon
 from automon.utils_zmq_sockets import init_server_socket, get_next_node_message, send_message_to_node
 from function_def import func_inner_product
 import logging
@@ -135,7 +135,7 @@ Make sure the `host` and `port` are set to the IP and port of the coordinator.
 ```python
 import numpy as np
 from timeit import default_timer as timer
-from automon.auto_mon.node_automon import NodeAutoMon
+from automon.automon.node_automon import NodeAutoMon
 from automon.messages_common import prepare_message_data_update
 from automon.utils_zmq_sockets import init_client_socket
 from function_def import func_inner_product

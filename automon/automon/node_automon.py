@@ -3,7 +3,7 @@ import numpy
 from timeit import default_timer as timer
 import logging
 from automon.messages_common import ViolationOrigin
-from automon.auto_mon.messages_automon import DcType, parse_message_sync_automon
+from automon.automon.messages_automon import DcType, parse_message_sync_automon
 from automon.node_common import NodeCommon
 
 logging = logging.getLogger(__name__)

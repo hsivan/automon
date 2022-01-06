@@ -1,5 +1,5 @@
-from automon.auto_mon.coordinator_automon import CoordinatorAutoMon
-from automon.auto_mon.node_automon import NodeAutoMon
+from automon.automon.coordinator_automon import CoordinatorAutoMon
+from automon.automon.node_automon import NodeAutoMon
 from test_utils.data_generator import DataGeneratorQuadratic
 from test_utils.test_utils import start_test, end_test, run_test, write_config_to_file, read_config_file
 from test_utils.stats_analysis_utils import plot_monitoring_stats

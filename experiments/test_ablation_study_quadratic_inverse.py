@@ -1,7 +1,7 @@
-from automon.auto_mon.node_automon import NodeAutoMon
+from automon.automon.node_automon import NodeAutoMon
 from automon.rlv.node_rlv import NodeRLV
 from test_utils.functions_to_monitor import func_quadratic_inverse
-from automon.auto_mon.coordinator_automon import CoordinatorAutoMon
+from automon.automon.coordinator_automon import CoordinatorAutoMon
 from automon.rlv.coordinator_rlv import CoordinatorRLV
 from test_utils.data_generator import DataGeneratorQuadraticInverse
 from automon.coordinator_common import SlackType, SyncType

@@ -1,6 +1,6 @@
-from automon.auto_mon.node_automon import NodeAutoMon
+from automon.automon.node_automon import NodeAutoMon
 from test_utils.tune_neighborhood_size import tune_neighborhood_size
-from automon.auto_mon.coordinator_automon import CoordinatorAutoMon
+from automon.automon.coordinator_automon import CoordinatorAutoMon
 from test_utils.data_generator import DataGeneratorMlp
 from automon.coordinator_common import SlackType, SyncType
 from test_utils.test_utils import start_test, end_test, run_test, get_config, write_config_to_file

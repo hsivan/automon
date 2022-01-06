@@ -1,7 +1,7 @@
-from automon.auto_mon.node_automon import NodeAutoMon
+from automon.automon.node_automon import NodeAutoMon
 from test_utils.tune_neighborhood_size import tune_neighborhood_size
 from test_utils.data_generator import DataGeneratorMlp
-from automon.auto_mon.coordinator_automon import CoordinatorAutoMon
+from automon.automon.coordinator_automon import CoordinatorAutoMon
 from experiments.visualization.plot_neighborhood_impact import plot_neighborhood_size_error_bound_connection_avg
 from test_utils.test_utils import start_test, end_test, run_test, write_config_to_file, read_config_file
 from test_utils.stats_analysis_utils import plot_monitoring_stats, plot_impact_of_neighborhood_size_on_violations

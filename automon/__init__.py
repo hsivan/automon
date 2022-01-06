@@ -1,4 +1,4 @@
-from . import auto_mon
+from . import automon
 from . import cb
 from . import gm
 from . import rlv
@@ -11,4 +11,4 @@ logging.basicConfig(stream=sys.stdout)
 log = logging.getLogger(__name__)
 log.setLevel(logging.NOTSET)
 
-__all__ = ['auto_mon', 'cb', 'gm', 'rlv', 'SlackType', 'SyncType', 'utils_zmq_sockets']
+__all__ = ['automon', 'cb', 'gm', 'rlv', 'SlackType', 'SyncType', 'utils_zmq_sockets']

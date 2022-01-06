@@ -1,5 +1,5 @@
-from automon.auto_mon.node_automon import NodeAutoMon
-from automon.auto_mon.coordinator_automon import CoordinatorAutoMon
+from automon.automon.node_automon import NodeAutoMon
+from automon.automon.coordinator_automon import CoordinatorAutoMon
 from automon.coordinator_common import SlackType, SyncType
 from test_utils.data_generator import DataGeneratorEntropy, DataGeneratorVariance, DataGeneratorInnerProduct, \
     DataGeneratorKldAirQuality, DataGeneratorQuadratic, DataGeneratorRozenbrock
