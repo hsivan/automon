@@ -2,7 +2,6 @@ import matplotlib.pyplot as plt
 from matplotlib import rcParams, rcParamsDefault
 from matplotlib.lines import Line2D
 import numpy as np
-
 from automon.auto_mon.node_automon import NodeAutoMon
 from test_utils.functions_to_monitor import func_inner_product
 from experiments.visualization.visualization_utils import get_figsize

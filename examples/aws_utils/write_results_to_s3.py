@@ -5,7 +5,7 @@ from examples.aws_utils.utils import read_credentials_file
 
 
 def get_s3_bucket():
-    bucket_name = "auto_mon-experiment-results"
+    bucket_name = "automon-experiment-results"
     username, access_key_id, secret_access_key = read_credentials_file()
 
     resource_args = dict()

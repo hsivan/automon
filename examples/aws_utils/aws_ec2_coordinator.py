@@ -138,8 +138,8 @@ def run_coordinator_on_ec2_instance(region='us-west-2', node_type='inner_product
         execute_ssh_command(ssh_client, 'aws configure get region', stdout_verification=region)  # Verify configuration worked
 
         # Pull docker images from ECR
-        execute_ssh_command(ssh_client, 'aws ecr get-login-password --region us-east-2 | sudo docker login --username AWS --password-stdin ' + account_id + '.dkr.ecr.us-east-2.amazonaws.com/auto_mon', stdout_verification="Login Succeeded")
-        execute_ssh_command(ssh_client, 'sudo docker pull ' + account_id + '.dkr.ecr.us-east-2.amazonaws.com/auto_mon', stdout_verification="Downloaded newer image")
+        execute_ssh_command(ssh_client, 'aws ecr get-login-password --region us-east-2 | sudo docker login --username AWS --password-stdin ' + account_id + '.dkr.ecr.us-east-2.amazonaws.com/automon', stdout_verification="Login Succeeded")
+        execute_ssh_command(ssh_client, 'sudo docker pull ' + account_id + '.dkr.ecr.us-east-2.amazonaws.com/automon', stdout_verification="Downloaded newer image")
 
         attach_cloudwatch_policy_to_ec2_instance(region, ec2_client, instance_id)
 
@@ -157,7 +157,7 @@ def run_coordinator_on_ec2_instance(region='us-west-2', node_type='inner_product
                          ' --log-opt awslogs-region=us-east-2' + \
                          ' --log-opt awslogs-group=' + node_type.replace("_", "-") + "_" + str(error_bound).replace(".", "-") + \
                          ' --log-opt awslogs-create-group=true' + \
-                         ' -d -it --rm ' + account_id + '.dkr.ecr.us-east-2.amazonaws.com/auto_mon'
+                         ' -d -it --rm ' + account_id + '.dkr.ecr.us-east-2.amazonaws.com/automon'
         execute_ssh_command(ssh_client, docker_run_cmd, b_stderr_verification=True)
 
         ssh_client.close()

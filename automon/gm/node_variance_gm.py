@@ -17,7 +17,7 @@ def func_q_on_parabola(q):
 class NodeVarianceGM(NodeCommonGM):
     
     def __init__(self, idx=0, x0_len=2, domain=None, func_to_monitor=None):
-        # func_to_monitor must be func_variance; however we keep function implementations outside of auto_mon core.
+        # func_to_monitor must be func_variance; however we keep function implementations outside of automon core.
         assert (x0_len == 2)  # The local vector is the first and second momentum
         NodeCommonGM.__init__(self, idx, x0_len=x0_len, domain=domain, func_to_monitor=func_to_monitor)
 

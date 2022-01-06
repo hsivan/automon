@@ -6,7 +6,7 @@ with open("README.md", "r") as fh:
 with open('requirements.txt') as fid:
     INSTALL_REQUIRES = [line.strip() for line in fid.readlines() if line]
 
-# get __version__ from auto_mon/version.py
+# get __version__ from automon/version.py
 _dct = {}
 with open('automon/version.py') as f:
   exec(f.read(), _dct)
@@ -23,7 +23,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     install_requires=INSTALL_REQUIRES,
     url='https://github.com/hsivan/automon',
-    packages=setuptools.find_packages(include=['auto_mon']),
+    packages=setuptools.find_packages(include=['automon']),
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: BSD License",

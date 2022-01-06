@@ -1,5 +1,4 @@
 import os
-
 from automon.auto_mon.node_automon import NodeAutoMon
 from test_utils.data_generator import DataGeneratorMlp
 from automon.auto_mon.coordinator_automon import CoordinatorAutoMon

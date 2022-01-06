@@ -14,7 +14,7 @@ from experiments.visualization.visualization_utils import get_figsize, reformat_
 
 # Create local folder for the results in S3: mkdir test_results/max_error_vs_communication_inner_product_2021-10-05_aws
 # cd test_results/max_error_vs_communication_inner_product_2021-10-05_aws
-# Download S3 folder with AWS cli, for example: aws s3 cp s3://auto_mon-experiment-results/max_error_vs_comm_inner_product . --recursive
+# Download S3 folder with AWS cli, for example: aws s3 cp s3://automon-experiment-results/max_error_vs_comm_inner_product . --recursive
 
 
 def get_num_bytes(test_folder):

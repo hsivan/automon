@@ -64,7 +64,7 @@ def plot_monitoring_stats_graph_and_barchart(test_folder, func_name, relative_fo
     num_messages = []
     max_errors = []
 
-    ############# Figure of auto_mon stats and barchart of -x_1^2 + x_2^2 #############
+    ############# Figure of automon stats and barchart of -x_1^2 + x_2^2 #############
 
     fig, axes = plt.subplots(nrows=2, ncols=2, sharex='col',
                              gridspec_kw={'width_ratios': [2.5, 1], 'wspace': 0.35},
@@ -259,7 +259,7 @@ def plot_monitoring_stats_barchart(test_folder, func_name, relative_folder='./')
     num_messages = [num_messages[i] for i in new_order]
     max_errors = [max_errors[i] for i in new_order]
 
-    ############# Figure of auto_mon stats as barchart of MLP-2 #############
+    ############# Figure of automon stats as barchart of MLP-2 #############
 
     fig, axes = plt.subplots(nrows=2, ncols=1, sharex=True, figsize=get_figsize(wf=0.33, hf=1.7618081461187218, b_fixed_height=True))
     ax0 = axes[1]
