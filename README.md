@@ -177,20 +177,30 @@ More examples can be found in the `examples` folder.
 ## Run as a docker container
 We provide Dockerfile to support building the project as a docker image.
 To build the docker image you must first install docker engine and docker cli.
-After installing these, run the command to build the docker image:
+After installing these, run the command to build the docker image from within `<automon_root>`:
 ```
-sudo docker build -t automon <automon_root>
+sudo docker build -t automon .
 ```
-To run the docker container in a coordinator mode:
+This docker image could be used to run an AutoMon node or coordinator.
+The following example shows how to run the basic example above, of monitoring the inner product function with 4 nodes,
+using containers.
+To make it easier to test this example, we make it possible to run the 4 containers on a single machine by using a user-defined network
+for the 4 containers. We, therefore, must first create the user-defined network:
 ```
-sudo docker run -p 6400:6400 --env NODE_IDX=-1 --env NODE_TYPE=inner_product --env ERROR_BOUND=0.3 -it --rm automon
+sudo docker network create automonnet
 ```
-and in a node 0 mode:
+Run the docker container as coordinator:
 ```
-sudo docker run --env HOST=192.68.36.202 --env NODE_IDX=0 --env NODE_TYPE=inner_product -it --rm automon
+sudo docker run --net automonnet --name automonserver --rm automon python /app/examples/simple_automon_coordinator.py
 ```
-If setting the container environment variable `S3_WRITE` to `1` (`--env S3_WRITE=1`), the results are written to AWS S3 bucket named `automon-experiment-results`.
-Otherwise, it is advisable to run the container with `-v /home/ubuntu/test_results:<automon_root>/test_results`, so the results are written to the computer filesystem.
+Run the docker container as node 0:
+```
+sudo docker run --net automonnet --env HOST=automonserver --env NODE_IDX=0 --rm automon python /app/examples/simple_automon_node.py
+```
+Run the other 3 nodes similarly, while changing `NODE_IDX` value accordingly.
+
+To run the same example on different machines, simply remove `--net automonnet` from the commands and change `HOST`
+value in the node command to the IP of the coordinator machine.
 
 ## Reproduce paper's experimental results
 

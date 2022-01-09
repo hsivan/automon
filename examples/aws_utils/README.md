@@ -10,7 +10,7 @@ After having these tools installed and configured follow these steps:
 3. Place the `new_user_credentials.csv` file in `<automon_root>/examples/aws_utils` folder.
 4. Build AutoMon's docker image, push it to AWS ECR, and start the experiment:
 ```bash
-sudo docker build -t automon .
+sudo docker build -f examples/aws_utils/awstest.Dockerfile  -t automon .
 aws ecr get-login-password --region us-east-2 | sudo docker login --username AWS --password-stdin <your_AWS_account_number>.dkr.ecr.us-east-2.amazonaws.com/automon
 sudo docker tag automon <your_AWS_account_number>.dkr.ecr.us-east-2.amazonaws.com/automon
 sudo docker push <your_AWS_account_number>.dkr.ecr.us-east-2.amazonaws.com/automon
