@@ -5,7 +5,7 @@ import logging
 from timeit import default_timer as timer
 from automon.common_messages import parse_message_data_update, prepare_message_violation, MessageType, \
     parse_message_lazy_sync, prepare_message_local_vector_info, parse_message_header, messages_header_format, \
-    parse_message_get_local_vector
+    parse_message_get_local_vector, prepare_message_data_update
 
 logging = logging.getLogger(__name__)
 
@@ -186,3 +186,7 @@ class CommonNode:
                 self.bytes_sent += len(message_out)
                 self.num_messages_sent += 1
                 return message_out
+
+    def update_data(self, data_point: np.ndarray):
+        message_data_update = prepare_message_data_update(self.idx, data_point)
+        return self.parse_message(message_data_update)

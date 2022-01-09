@@ -8,7 +8,6 @@ import numpy as np
 from zmq import ContextTerminated, ZMQError
 from zmq.utils.monitor import recv_monitor_message
 from automon.common_node import State
-from automon.common_messages import prepare_message_data_update
 logging = logging.getLogger('automon')
 
 # Use ZMQ Client-Server pattern  (https://zguide.zeromq.org/docs/chapter3/#The-Asynchronous-Client-Server-Pattern)
@@ -58,8 +57,7 @@ class NodeDataLoop(threading.Thread):
 
         if idx == self.node_idx:
             local_vector = self.data_generator.get_local_vector(self.node_idx)
-            message_data_update = prepare_message_data_update(self.node_idx, local_vector)
-            message_violation = self.node.parse_message(message_data_update)
+            message_violation = self.node.update_data(local_vector)
             if message_violation is not None and len(message_violation) > 0:
                 data_client.send(message_violation)
 

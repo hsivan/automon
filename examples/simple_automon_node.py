@@ -2,7 +2,6 @@ import logging
 from timeit import default_timer as timer
 import numpy as np
 from automon.automon.automon_node import AutomonNode
-from automon.common_messages import prepare_message_data_update
 from automon.zmq_socket_utils import init_client_socket
 from function_def import func_inner_product
 logging.getLogger('automon').setLevel(logging.INFO)
@@ -25,8 +24,7 @@ while True:
     if time_to_wait_for_next_sample_milliseconds(start, num_data_samples) <= 0:
         # Time to read the next data sample
         data = np.random.normal(loc=1, scale=0.1, size=(40,))
-        message_data_update = prepare_message_data_update(NODE_IDX, data)
-        message_violation = node.parse_message(message_data_update)
+        message_violation = node.update_data(data)
         if message_violation:
             client_socket.send(message_violation)
         num_data_samples += 1

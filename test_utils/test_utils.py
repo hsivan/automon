@@ -4,7 +4,6 @@ import datetime
 from timeit import default_timer as timer
 import logging
 import sys
-from automon.common_messages import prepare_message_data_update
 
 logger = logging.getLogger('automon')
 
@@ -64,8 +63,7 @@ def _test_data_loop(coordinator, nodes, data_generator, b_single_sample_per_roun
     message_violations = b''
     for node_idx, node in enumerate(nodes):
         local_vector = data_generator.get_local_vector(node_idx)
-        message_data_update = prepare_message_data_update(node_idx, local_vector)
-        message_violation = node.parse_message(message_data_update)
+        message_violation = node.update_data(local_vector)
         if message_violation is not None and len(message_violation) > 0:
             message_violations += message_violation
     if len(message_violations) > 0:
@@ -83,8 +81,7 @@ def _test_data_loop(coordinator, nodes, data_generator, b_single_sample_per_roun
         # Update the verifier first with the global vector, so the coordinator can check, after the update
         # of the node, if the violation is "false local", "false global" or "true".
         coordinator.verifier.set_new_data_point(global_vector)  # Update the verifier
-        message_data_update = prepare_message_data_update(node_idx, local_vector)
-        message_violation = nodes[node_idx].parse_message(message_data_update)
+        message_violation = nodes[node_idx].update_data(local_vector)
         if message_violation is not None and len(message_violation) > 0:
             message_violations += message_violation
 

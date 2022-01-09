@@ -118,8 +118,8 @@ import logging
 logging.getLogger('automon').setLevel(logging.INFO)
 
 # Create a dummy node for the coordinator that uses it in the process of resolving violations.
-verifier = NodeAutoMon(idx=-1, x0_len=40, func_to_monitor=func_inner_product)
-coordinator = CoordinatorAutoMon(verifier, num_nodes=4, error_bound=2.0)
+verifier = AutomonNode(idx=-1, x0_len=40, func_to_monitor=func_inner_product)
+coordinator = AutomonCoordinator(verifier, num_nodes=4, error_bound=2.0)
 # Open a server socket. Wait for all nodes to connect and send 'start' signal to all nodes to start their data loop.
 server_socket = init_server_socket(port=6400, num_nodes=4)
 
@@ -136,7 +136,6 @@ Make sure the `host` and `port` are set to the IP and port of the coordinator.
 import numpy as np
 from timeit import default_timer as timer
 from automon.automon.automon_node import AutomonNode
-from automon.common_messages import prepare_message_data_update
 from automon.zmq_socket_utils import init_client_socket
 from function_def import func_inner_product
 import logging
@@ -146,7 +145,7 @@ def time_to_wait_for_next_sample_milliseconds(start_time, num_received_samples):
     return (num_received_samples - (timer() - start_time)) * 1000
 
 NODE_IDX = 0  # Change the node index for different nodes
-node = NodeAutoMon(idx=NODE_IDX, x0_len=40, func_to_monitor=func_inner_product)
+node = AutomonNode(idx=NODE_IDX, x0_len=40, func_to_monitor=func_inner_product)
 # Open a client socket and connect to the server socket. Wait for 'start' message from the server.
 client_socket = init_client_socket(NODE_IDX, host='127.0.0.1', port=6400)
 
@@ -158,8 +157,7 @@ while True:
     if time_to_wait_for_next_sample_milliseconds(start, num_data_samples) <= 0:
         # Time to read the next data sample
         data = np.random.normal(loc=1, scale=0.1, size=(40,))
-        message_data_update = prepare_message_data_update(NODE_IDX, data)
-        message_violation = node.parse_message(message_data_update)
+        message_violation = node.update_data(data)
         if message_violation:
             client_socket.send(message_violation)
         num_data_samples += 1
