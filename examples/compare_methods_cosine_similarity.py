@@ -1,10 +1,6 @@
-from automon.automon.automon_node import AutomonNode
+from automon import AutomonNode, AutomonCoordinator, CbCosineSimilarityNode, CbCoordinator, SlackType, SyncType
 from test_utils.functions_to_monitor import func_cosine_similarity
-from automon.cb.cb_cosine_similarity_node import CbCosineSimilarityNode
-from automon.automon.automon_coordinator import AutomonCoordinator
-from automon.cb.cb_coordinator import CbCoordinator
 from test_utils.data_generator import DataGeneratorCosineSimilarity
-from automon.common_coordinator import SlackType, SyncType
 from test_utils.object_factory import get_objects
 from test_utils.test_utils import start_test, end_test, run_test, get_config, write_config_to_file
 from test_utils.stats_analysis_utils import plot_monitoring_stats

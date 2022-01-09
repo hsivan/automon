@@ -2,8 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
 from test_utils.functions_to_monitor import func_entropy, func_variance
-from automon.gm.gm_entropy_node import GmEntropyNode
-from automon.gm.gm_variance_node import GmVarianceNode
+from automon import GmEntropyNode, GmVarianceNode
 from test_utils.node_stream import NodeStreamFrequency, NodeStreamFirstAndSecondMomentum
 
 

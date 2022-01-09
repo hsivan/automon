@@ -1,6 +1,4 @@
-from automon.common_coordinator import SlackType, SyncType
-from automon.rlv.rlv_coordinator import RlvCoordinator
-from automon.rlv.rlv_node import RlvNode
+from automon import RlvNode, RlvCoordinator, SlackType, SyncType
 from test_utils.data_generator import DataGeneratorKldAirQuality, DataGeneratorQuadratic, DataGeneratorRozenbrock
 from test_utils.test_utils import start_test, end_test, get_config
 from test_utils.functions_to_monitor import set_H, func_kld, func_quadratic, func_rozenbrock

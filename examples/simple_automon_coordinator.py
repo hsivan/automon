@@ -1,6 +1,5 @@
 import logging
-from automon.automon.automon_coordinator import AutomonCoordinator
-from automon.automon.automon_node import AutomonNode
+from automon import AutomonCoordinator, AutomonNode
 from automon.zmq_socket_utils import init_server_socket, get_next_node_message, send_message_to_node
 from function_def import func_inner_product
 logging.getLogger('automon').setLevel(logging.INFO)

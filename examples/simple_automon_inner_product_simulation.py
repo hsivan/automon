@@ -1,9 +1,8 @@
 import sys
 import logging
-from automon.automon.automon_coordinator import AutomonCoordinator
+from automon import AutomonCoordinator, AutomonNode
 from test_utils.data_generator import DataGeneratorInnerProduct
 from test_utils.test_utils import run_test, get_config
-from automon.automon.automon_node import AutomonNode
 from test_utils.functions_to_monitor import func_inner_product
 logging.getLogger('automon').setLevel(logging.INFO)
 

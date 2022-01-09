@@ -1,7 +1,7 @@
 import numpy as np
 import pickle
 from test_utils.object_factory import get_objects
-from automon.common_coordinator import SyncType, SlackType
+from automon import SyncType, SlackType
 from test_utils.test_utils import run_test
 
 

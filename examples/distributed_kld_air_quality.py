@@ -1,7 +1,6 @@
 import argparse
 import os
-from automon.automon.automon_coordinator import AutomonCoordinator
-from automon.automon.automon_node import AutomonNode
+from automon import AutomonNode, AutomonCoordinator
 from test_utils.data_generator import DataGeneratorKldAirQuality
 from test_utils.functions_to_monitor import func_kld
 from test_utils.stats_analysis_utils import log_num_packets_sent_and_received

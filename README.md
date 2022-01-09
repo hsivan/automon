@@ -101,7 +101,7 @@ this can be replaced with any other messaging library.
 The first step is to define the function.
 For example, we define the inner product function in a file called `function_def.py`:
 ```python
-import jax.numpy as np  # the user could use autograd.numpy instead of JAX
+import jax.numpy as np  # the user could use autograd.numpy instead of JAX (for Windows)
 
 def func_inner_product(x):
     return np.matmul(x[:x.shape[0] // 2], x[x.shape[0] // 2:])
@@ -110,8 +110,7 @@ def func_inner_product(x):
 Next, initiate and run the coordinator on a designated server.
 You could change the listening port of the coordinator.
 ```python
-from automon.automon.automon_coordinator import AutomonCoordinator
-from automon.automon.automon_node import AutomonNode
+from automon import AutomonCoordinator, AutomonNode
 from automon.zmq_socket_utils import init_server_socket, get_next_node_message, send_message_to_node
 from function_def import func_inner_product
 import logging
@@ -135,7 +134,7 @@ Make sure the `host` and `port` are set to the IP and port of the coordinator.
 ```python
 import numpy as np
 from timeit import default_timer as timer
-from automon.automon.automon_node import AutomonNode
+from automon import AutomonNode
 from automon.zmq_socket_utils import init_client_socket
 from function_def import func_inner_product
 import logging

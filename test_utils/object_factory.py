@@ -1,6 +1,5 @@
 import numpy as np
-from automon.common_coordinator import SlackType, SyncType
-from automon.automon.automon_coordinator import AutomonCoordinator
+from automon import SlackType, SyncType, AutomonCoordinator
 
 
 def get_node(NodeClass, domain, x0_len, node_idx, func_to_monitor, max_f_val=np.inf, min_f_val=-np.inf):

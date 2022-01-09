@@ -1,4 +1,4 @@
-from automon.common_coordinator import SlackType, SyncType
+from automon import SlackType, SyncType
 import os
 import datetime
 from timeit import default_timer as timer

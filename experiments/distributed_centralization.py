@@ -1,7 +1,6 @@
 import argparse
 import os
 import time
-
 import numpy as np
 from test_utils.data_generator import DataGeneratorQuadratic, DataGeneratorKldAirQuality, DataGeneratorDnnIntrusionDetection, DataGeneratorInnerProduct
 from test_utils.functions_to_monitor import set_H, set_net_params

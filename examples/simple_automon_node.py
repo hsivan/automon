@@ -1,7 +1,7 @@
 import logging
 from timeit import default_timer as timer
 import numpy as np
-from automon.automon.automon_node import AutomonNode
+from automon import AutomonNode
 from automon.zmq_socket_utils import init_client_socket
 from function_def import func_inner_product
 logging.getLogger('automon').setLevel(logging.INFO)

@@ -1,6 +1,4 @@
-from automon.automon.automon_node import AutomonNode
-from automon.automon.automon_coordinator import AutomonCoordinator
-from automon.common_coordinator import SlackType, SyncType
+from automon import AutomonNode, AutomonCoordinator, SlackType, SyncType
 from test_utils.data_generator import DataGeneratorEntropy, DataGeneratorVariance, DataGeneratorInnerProduct, \
     DataGeneratorKldAirQuality, DataGeneratorQuadratic, DataGeneratorRozenbrock
 from test_utils.test_utils import start_test, end_test, get_config

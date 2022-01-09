@@ -1,7 +1,4 @@
-from automon.cb.cb_cosine_similarity_node import CbCosineSimilarityNode
-from automon.cb.cb_inner_product_node import CbInnerProductNode
-from automon.cb.cb_coordinator import CbCoordinator
-from automon.common_coordinator import SlackType, SyncType
+from automon import CbCoordinator, CbCosineSimilarityNode, CbInnerProductNode, SlackType, SyncType
 from test_utils.data_generator import DataGeneratorCosineSimilarity, DataGeneratorInnerProduct
 from test_utils.functions_to_monitor import func_cosine_similarity, func_inner_product
 from test_utils.test_utils import start_test, end_test, get_config

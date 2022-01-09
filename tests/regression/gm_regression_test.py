@@ -1,9 +1,6 @@
 import numpy as np
-from automon.common_coordinator import SlackType, SyncType
-from automon.gm.gm_coordinator import GmCoordinator
+from automon import GmCoordinator, GmEntropyNode, GmVarianceNode, SlackType, SyncType
 from test_utils.data_generator import DataGeneratorEntropy, DataGeneratorVariance
-from automon.gm.gm_entropy_node import GmEntropyNode
-from automon.gm.gm_variance_node import GmVarianceNode
 from test_utils.functions_to_monitor import func_entropy, func_variance
 from test_utils.test_utils import start_test, end_test, run_test, get_config
 from test_utils.object_factory import get_objects
