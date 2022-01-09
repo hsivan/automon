@@ -1,12 +1,12 @@
-from automon.node_common import NodeCommon
-from automon.messages_common import ViolationOrigin, parse_message_sync
+from automon.common_node import CommonNode
+from automon.common_messages import ViolationOrigin, parse_message_sync
 from timeit import default_timer as timer
 
 
-class NodeCommonGM(NodeCommon):
+class GmCommonNode(CommonNode):
     
     def __init__(self, idx=0, x0_len=1, domain=None, func_to_monitor=None):
-        NodeCommon.__init__(self, idx, func_to_monitor, x0_len, domain)
+        CommonNode.__init__(self, idx, func_to_monitor, x0_len, domain)
         self.node_name = "GM"
         self._init()
 

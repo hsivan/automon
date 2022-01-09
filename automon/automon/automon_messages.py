@@ -1,7 +1,7 @@
 import enum
 import struct
 import numpy as np
-from automon.messages_common import MessageType, messages_header_format, prepare_message_header, parse_message_header
+from automon.common_messages import MessageType, messages_header_format, prepare_message_header, parse_message_header
 
 
 class DcType(enum.Enum):

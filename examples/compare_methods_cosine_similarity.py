@@ -1,10 +1,10 @@
-from automon.automon.node_automon import NodeAutoMon
+from automon.automon.automon_node import AutomonNode
 from test_utils.functions_to_monitor import func_cosine_similarity
-from automon.cb.node_cosine_similarity_cb import NodeCosineSimilarityCB
-from automon.automon.coordinator_automon import CoordinatorAutoMon
-from automon.cb.coordinator_cb import CoordinatorCB
+from automon.cb.cb_cosine_similarity_node import CbCosineSimilarityNode
+from automon.automon.automon_coordinator import AutomonCoordinator
+from automon.cb.cb_coordinator import CbCoordinator
 from test_utils.data_generator import DataGeneratorCosineSimilarity
-from automon.coordinator_common import SlackType, SyncType
+from automon.common_coordinator import SlackType, SyncType
 from test_utils.object_factory import get_objects
 from test_utils.test_utils import start_test, end_test, run_test, get_config, write_config_to_file
 from test_utils.stats_analysis_utils import plot_monitoring_stats
@@ -23,12 +23,12 @@ if __name__ == "__main__":
         
         logging.info("\n###################### Start cosine similarity CB test ######################")
         data_generator.reset()
-        coordinator, nodes = get_objects(NodeCosineSimilarityCB, CoordinatorCB, conf, func_cosine_similarity)
+        coordinator, nodes = get_objects(CbCosineSimilarityNode, CbCoordinator, conf, func_cosine_similarity)
         run_test(data_generator, coordinator, nodes, test_folder)
         
         logging.info("\n###################### Start cosine similarity AutoMon test ######################")
         data_generator.reset()
-        coordinator, nodes = get_objects(NodeAutoMon, CoordinatorAutoMon, conf, func_cosine_similarity, max_f_val=1.0, min_f_val=-1.0)
+        coordinator, nodes = get_objects(AutomonNode, AutomonCoordinator, conf, func_cosine_similarity, max_f_val=1.0, min_f_val=-1.0)
         run_test(data_generator, coordinator, nodes, test_folder)
         
         plot_monitoring_stats(test_folder)

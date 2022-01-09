@@ -7,8 +7,8 @@ from timeit import default_timer as timer
 import numpy as np
 from zmq import ContextTerminated, ZMQError
 from zmq.utils.monitor import recv_monitor_message
-from automon.node_common import State
-from automon.messages_common import prepare_message_data_update
+from automon.common_node import State
+from automon.common_messages import prepare_message_data_update
 logging = logging.getLogger('automon')
 
 # Use ZMQ Client-Server pattern  (https://zguide.zeromq.org/docs/chapter3/#The-Asynchronous-Client-Server-Pattern)

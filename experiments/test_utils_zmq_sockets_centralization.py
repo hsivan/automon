@@ -6,7 +6,7 @@ import threading
 import logging
 from timeit import default_timer as timer
 import numpy as np
-from automon.messages_common import MessageType, prepare_message_header
+from automon.common_messages import MessageType, prepare_message_header
 from test_utils.test_utils_zmq_sockets import event_monitor_client, event_monitor_server
 logging = logging.getLogger('automon')
 

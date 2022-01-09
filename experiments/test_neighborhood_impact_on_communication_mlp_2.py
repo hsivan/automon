@@ -1,7 +1,7 @@
 import os
-from automon.automon.node_automon import NodeAutoMon
+from automon.automon.automon_node import AutomonNode
 from test_utils.data_generator import DataGeneratorMlp
-from automon.automon.coordinator_automon import CoordinatorAutoMon
+from automon.automon.automon_coordinator import AutomonCoordinator
 from experiments.test_neighborhood_impact_on_communication_rozenbrock import get_optimal_neighborhood_sizes_from_full_test
 from test_utils.test_utils import start_test, end_test, run_test, write_config_to_file, read_config_file
 from test_utils.stats_analysis_utils import plot_monitoring_stats
@@ -32,7 +32,7 @@ def neighborhood_size_impact(experiment_folder, test_folder, neighborhood_sizes,
 
             logging.info("\n###################### Start DNN Exp AutoMon test ######################")
             data_generator.reset()
-            coordinator, nodes = get_objects(NodeAutoMon, CoordinatorAutoMon, conf, func_mlp)
+            coordinator, nodes = get_objects(AutomonNode, AutomonCoordinator, conf, func_mlp)
             if prefixes[i] != "tuned":
                 coordinator.b_fix_neighborhood_dynamically = False  # Should not change neighborhood size dynamically for optimal and fixed neighborhood sizes
             run_test(data_generator, coordinator, nodes, sub_test_folder)

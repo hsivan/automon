@@ -1,10 +1,10 @@
-from automon.automon.node_automon import NodeAutoMon
+from automon.automon.automon_node import AutomonNode
 from test_utils.functions_to_monitor import func_inner_product
-from automon.cb.node_inner_product_cb import NodeInnerProductCB
-from automon.automon.coordinator_automon import CoordinatorAutoMon
-from automon.cb.coordinator_cb import CoordinatorCB
+from automon.cb.cb_inner_product_node import CbInnerProductNode
+from automon.automon.automon_coordinator import AutomonCoordinator
+from automon.cb.cb_coordinator import CbCoordinator
 from test_utils.data_generator import DataGeneratorInnerProduct
-from automon.coordinator_common import SlackType, SyncType
+from automon.common_coordinator import SlackType, SyncType
 from test_utils.test_utils import start_test, end_test, run_test, get_config, write_config_to_file
 from test_utils.stats_analysis_utils import plot_monitoring_stats
 import logging
@@ -23,12 +23,12 @@ if __name__ == "__main__":
 
         logging.info("\n###################### Start inner product CB test ######################")
         data_generator.reset()
-        coordinator, nodes = get_objects(NodeInnerProductCB, CoordinatorCB, conf, func_inner_product)
+        coordinator, nodes = get_objects(CbInnerProductNode, CbCoordinator, conf, func_inner_product)
         run_test(data_generator, coordinator, nodes, test_folder)
 
         logging.info("\n###################### Start inner product AutoMon test ######################")
         data_generator.reset()
-        coordinator, nodes = get_objects(NodeAutoMon, CoordinatorAutoMon, conf, func_inner_product)
+        coordinator, nodes = get_objects(AutomonNode, AutomonCoordinator, conf, func_inner_product)
         run_test(data_generator, coordinator, nodes, test_folder)
 
         plot_monitoring_stats(test_folder)

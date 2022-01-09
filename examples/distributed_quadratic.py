@@ -1,8 +1,8 @@
 import argparse
 import os
 import numpy as np
-from automon.automon.coordinator_automon import CoordinatorAutoMon
-from automon.automon.node_automon import NodeAutoMon
+from automon.automon.automon_coordinator import AutomonCoordinator
+from automon.automon.automon_node import AutomonNode
 from test_utils.data_generator import DataGeneratorQuadratic
 from test_utils.functions_to_monitor import set_H, func_quadratic
 from test_utils.stats_analysis_utils import log_num_packets_sent_and_received
@@ -30,12 +30,12 @@ if __name__ == "__main__":
         set_H(conf["d"], H)
 
         if args.node_idx == -1:
-            coordinator = get_coordinator(CoordinatorAutoMon, NodeAutoMon, conf, func_quadratic)
+            coordinator = get_coordinator(AutomonCoordinator, AutomonNode, conf, func_quadratic)
             run_coordinator(coordinator, args.port, conf["num_nodes"], test_folder)
 
         if args.node_idx >= 0:
             data_generator = DataGeneratorQuadratic(num_iterations=conf["num_iterations"], num_nodes=conf["num_nodes"], d=conf["d"], data_file_name="data_file.txt", test_folder=data_folder, sliding_window_size=conf["sliding_window_size"])
-            node = get_node(NodeAutoMon, conf["domain"], conf["d"], args.node_idx, func_quadratic)
+            node = get_node(AutomonNode, conf["domain"], conf["d"], args.node_idx, func_quadratic)
             run_node(args.host, args.port, node, args.node_idx, data_generator, test_folder)
 
         log_num_packets_sent_and_received(test_folder)  # Log at the end

@@ -2,9 +2,9 @@ import os
 import numpy
 from timeit import default_timer as timer
 import logging
-from automon.messages_common import ViolationOrigin
-from automon.automon.messages_automon import DcType, parse_message_sync_automon
-from automon.node_common import NodeCommon
+from automon.common_messages import ViolationOrigin
+from automon.automon.automon_messages import DcType, parse_message_sync_automon
+from automon.common_node import CommonNode
 
 logging = logging.getLogger(__name__)
 
@@ -29,10 +29,10 @@ if (AUTO_DIFFERENTIATION_TOOL is None) or (AUTO_DIFFERENTIATION_TOOL == "Jax"):
         from autograd import grad
 
 
-class NodeAutoMon(NodeCommon):
+class AutomonNode(CommonNode):
     
     def __init__(self, idx=0, x0_len=1, max_f_val=numpy.inf, min_f_val=-numpy.inf, domain=None, func_to_monitor=None):
-        NodeCommon.__init__(self, idx, func_to_monitor, x0_len, domain, max_f_val, min_f_val)
+        CommonNode.__init__(self, idx, func_to_monitor, x0_len, domain, max_f_val, min_f_val)
         logging.info("AutoMon Node " + str(idx) + " initialization: AUTO_DIFFERENTIATION_TOOL " + AUTO_DIFFERENTIATION_TOOL)
         self.node_name = "AutoMon"
         self.domain_range = domain

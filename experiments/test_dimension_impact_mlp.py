@@ -1,8 +1,8 @@
-from automon.automon.node_automon import NodeAutoMon
+from automon.automon.automon_node import AutomonNode
 from test_utils.tune_neighborhood_size import tune_neighborhood_size
-from automon.automon.coordinator_automon import CoordinatorAutoMon
+from automon.automon.automon_coordinator import AutomonCoordinator
 from test_utils.data_generator import DataGeneratorMlp
-from automon.coordinator_common import SlackType, SyncType
+from automon.common_coordinator import SlackType, SyncType
 from test_utils.test_utils import start_test, end_test, run_test, get_config, write_config_to_file
 from test_utils.stats_analysis_utils import plot_monitoring_stats
 import logging
@@ -29,7 +29,7 @@ def test_dimension(dimension, parent_test_folder):
 
         logging.info("\n###################### Start DNN exp AutoMon test ######################")
         data_generator.reset()
-        coordinator, nodes = get_objects(NodeAutoMon, CoordinatorAutoMon, conf, func_mlp)
+        coordinator, nodes = get_objects(AutomonNode, AutomonCoordinator, conf, func_mlp)
         tune_neighborhood_size(coordinator, nodes, conf, data_generator)
         run_test(data_generator, coordinator, nodes, test_folder)
 

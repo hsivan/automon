@@ -1,10 +1,10 @@
-from automon.automon.node_automon import NodeAutoMon
+from automon.automon.automon_node import AutomonNode
 from test_utils.functions_to_monitor import func_entropy
-from automon.automon.coordinator_automon import CoordinatorAutoMon
-from automon.gm.coordinator_gm import CoordinatorGM
+from automon.automon.automon_coordinator import AutomonCoordinator
+from automon.gm.gm_coordinator import GmCoordinator
 from test_utils.data_generator import DataGeneratorEntropy
-from automon.coordinator_common import SlackType, SyncType
-from automon.gm.node_entropy_gm import NodeEntropyGM
+from automon.common_coordinator import SlackType, SyncType
+from automon.gm.gm_entropy_node import GmEntropyNode
 from test_utils.test_utils import start_test, end_test, run_test, get_config, write_config_to_file
 from test_utils.stats_analysis_utils import plot_monitoring_stats
 import logging
@@ -24,12 +24,12 @@ if __name__ == "__main__":
 
         logging.info("\n###################### Start entropy GM test ######################")
         data_generator.reset()
-        coordinator, nodes = get_objects(NodeEntropyGM, CoordinatorGM, conf, func_entropy)
+        coordinator, nodes = get_objects(GmEntropyNode, GmCoordinator, conf, func_entropy)
         run_test(data_generator, coordinator, nodes, test_folder)
 
         logging.info("\n###################### Start entropy AutoMon test ######################")
         data_generator.reset()
-        coordinator, nodes = get_objects(NodeAutoMon, CoordinatorAutoMon, conf, func_entropy, max_f_val=func_entropy(np.ones(conf["d"], dtype=np.float) / conf["d"]), min_f_val=0.0)
+        coordinator, nodes = get_objects(AutomonNode, AutomonCoordinator, conf, func_entropy, max_f_val=func_entropy(np.ones(conf["d"], dtype=np.float) / conf["d"]), min_f_val=0.0)
         run_test(data_generator, coordinator, nodes, test_folder)
 
         plot_monitoring_stats(test_folder)

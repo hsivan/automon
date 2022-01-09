@@ -1,6 +1,6 @@
 import numpy as np
-from automon.coordinator_common import SlackType, SyncType
-from automon.automon.coordinator_automon import CoordinatorAutoMon
+from automon.common_coordinator import SlackType, SyncType
+from automon.automon.automon_coordinator import AutomonCoordinator
 
 
 def get_node(NodeClass, domain, x0_len, node_idx, func_to_monitor, max_f_val=np.inf, min_f_val=-np.inf):
@@ -22,7 +22,7 @@ def get_coordinator(CoordinatorClass, NodeClass, conf, func_to_monitor, max_f_va
     # x0 is initialized from the nodes after all the sliding windows are full, in the first eager sync.
     verifier = get_node(NodeClass, conf["domain"], conf["d"], -1, func_to_monitor, max_f_val, min_f_val)
 
-    if CoordinatorClass is CoordinatorAutoMon:
+    if CoordinatorClass is AutomonCoordinator:
         # AutoMon coordinator have extra parameter neighborhood_size
         coordinator = CoordinatorClass(verifier, conf["num_nodes"], slack_type=SlackType(conf["slack_type"]), sync_type=SyncType(conf["sync_type"]),
                                        error_bound=conf["error_bound"], neighborhood_size=conf["neighborhood_size"])

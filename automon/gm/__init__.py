@@ -1,5 +1,5 @@
-from . import coordinator_gm
-from . import node_entropy_gm
-from . import node_variance_gm
+from . import gm_coordinator
+from . import gm_entropy_node
+from . import gm_variance_node
 
-__all__ = ['coordinator_gm', 'node_entropy_gm', 'node_variance_gm']
+__all__ = ['gm_coordinator', 'gm_entropy_node', 'gm_variance_node']

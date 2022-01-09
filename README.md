@@ -110,9 +110,9 @@ def func_inner_product(x):
 Next, initiate and run the coordinator on a designated server.
 You could change the listening port of the coordinator.
 ```python
-from automon.automon.coordinator_automon import CoordinatorAutoMon
-from automon.automon.node_automon import NodeAutoMon
-from automon.utils_zmq_sockets import init_server_socket, get_next_node_message, send_message_to_node
+from automon.automon.automon_coordinator import AutomonCoordinator
+from automon.automon.automon_node import AutomonNode
+from automon.zmq_socket_utils import init_server_socket, get_next_node_message, send_message_to_node
 from function_def import func_inner_product
 import logging
 logging.getLogger('automon').setLevel(logging.INFO)
@@ -135,9 +135,9 @@ Make sure the `host` and `port` are set to the IP and port of the coordinator.
 ```python
 import numpy as np
 from timeit import default_timer as timer
-from automon.automon.node_automon import NodeAutoMon
-from automon.messages_common import prepare_message_data_update
-from automon.utils_zmq_sockets import init_client_socket
+from automon.automon.automon_node import AutomonNode
+from automon.common_messages import prepare_message_data_update
+from automon.zmq_socket_utils import init_client_socket
 from function_def import func_inner_product
 import logging
 logging.getLogger('automon').setLevel(logging.INFO)

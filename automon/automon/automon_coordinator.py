@@ -1,11 +1,11 @@
 from scipy.optimize import minimize
 from timeit import default_timer as timer
 import logging
-from automon.coordinator_common import CoordinatorCommon, SlackType, SyncType
+from automon.common_coordinator import CommonCoordinator, SlackType, SyncType
 import numpy
 import os
-from automon.messages_common import prepare_message_lazy_sync, ViolationOrigin
-from automon.automon.messages_automon import DcType, prepare_message_sync_automon
+from automon.common_messages import prepare_message_lazy_sync, ViolationOrigin
+from automon.automon.automon_messages import DcType, prepare_message_sync_automon
 
 logging = logging.getLogger(__name__)
 
@@ -177,11 +177,11 @@ class AdcdHelper:
         return dc_type, extreme_lambda
 
 
-class CoordinatorAutoMon(CoordinatorCommon):
+class AutomonCoordinator(CommonCoordinator):
     
     def __init__(self, verifier, num_nodes, error_bound=2, slack_type=SlackType.Drift, sync_type=SyncType.LazyLRU,
                  lazy_sync_max_S=0.5, neighborhood_size=None):
-        CoordinatorCommon.__init__(self, verifier, num_nodes, error_bound, slack_type, sync_type, lazy_sync_max_S,
+        CommonCoordinator.__init__(self, verifier, num_nodes, error_bound, slack_type, sync_type, lazy_sync_max_S,
                                    b_violation_strict=False, coordinator_name="AutoMon")
         logging.info("CoordinatorAutoMon initialization: domain " + str(verifier.domain_range) + ", AUTO_DIFFERENTIATION_TOOL " + AUTO_DIFFERENTIATION_TOOL + ", neighborhood_size " + str(neighborhood_size))
         self.adcd_helper = AdcdHelper(verifier.func_to_monitor)

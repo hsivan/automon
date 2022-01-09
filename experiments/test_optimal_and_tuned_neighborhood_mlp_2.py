@@ -1,7 +1,7 @@
-from automon.automon.node_automon import NodeAutoMon
+from automon.automon.automon_node import AutomonNode
 from test_utils.tune_neighborhood_size import tune_neighborhood_size
 from test_utils.data_generator import DataGeneratorMlp
-from automon.automon.coordinator_automon import CoordinatorAutoMon
+from automon.automon.automon_coordinator import AutomonCoordinator
 from experiments.visualization.plot_neighborhood_impact import plot_neighborhood_size_error_bound_connection_avg
 from test_utils.test_utils import start_test, end_test, run_test, write_config_to_file, read_config_file
 from test_utils.stats_analysis_utils import plot_monitoring_stats, plot_impact_of_neighborhood_size_on_violations
@@ -30,7 +30,7 @@ def neighborhood_size_impact(experiment_folder, error_bound):
     data_generator = DataGeneratorMlp(num_iterations=conf["num_iterations"], num_nodes=conf["num_nodes"],
                                       data_file_name="data_file.txt", test_folder=experiment_folder, d=conf["d"], num_iterations_for_tuning=conf["num_iterations_for_tuning"], sliding_window_size=conf["sliding_window_size"])
 
-    coordinator, nodes = get_objects(NodeAutoMon, CoordinatorAutoMon, conf, func_mlp)
+    coordinator, nodes = get_objects(AutomonNode, AutomonCoordinator, conf, func_mlp)
     tune_neighborhood_size(coordinator, nodes, conf, data_generator)
     with open(test_folder + "/tuned_neighborhood_size.txt", "a") as f:
         f.write("tuned_neighborhood_size: " + str(coordinator.neighborhood_size))
@@ -47,7 +47,7 @@ def neighborhood_size_impact(experiment_folder, error_bound):
 
             logging.info("\n###################### Start MLP AutoMon test ######################")
             data_generator.reset()
-            coordinator, nodes = get_objects(NodeAutoMon, CoordinatorAutoMon, conf, func_mlp)
+            coordinator, nodes = get_objects(AutomonNode, AutomonCoordinator, conf, func_mlp)
             coordinator.b_fix_neighborhood_dynamically = False  # Should not change neighborhood size dynamically in this experiment
             run_test(data_generator, coordinator, nodes, sub_test_folder)
 

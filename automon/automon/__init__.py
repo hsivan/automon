@@ -1,4 +1,4 @@
-from . import coordinator_automon
-from . import node_automon
+from . import automon_coordinator
+from . import automon_node
 
-__all__ = ['coordinator_automon', 'node_automon']
+__all__ = ['automon_coordinator', 'automon_node']

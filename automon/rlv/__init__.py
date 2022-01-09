@@ -1,4 +1,4 @@
-from . import coordinator_rlv
-from . import node_rlv
+from . import rlv_coordinator
+from . import rlv_node
 
-__all__ = ['coordinator_rlv', 'node_rlv']
+__all__ = ['rlv_coordinator', 'rlv_node']

@@ -3,7 +3,7 @@ import threading
 import numpy as np
 import logging
 from timeit import default_timer as timer
-from automon.messages_common import parse_message_data_update, prepare_message_violation, MessageType, \
+from automon.common_messages import parse_message_data_update, prepare_message_violation, MessageType, \
     parse_message_lazy_sync, prepare_message_local_vector_info, parse_message_header, messages_header_format, \
     parse_message_get_local_vector
 
@@ -16,7 +16,7 @@ class State(enum.Enum):
     SuspectWaitForSync = 2
 
 
-class NodeCommon:
+class CommonNode:
 
     def __init__(self, idx=0, func_to_monitor=None, x0_len=1, domain=None, max_f_val=np.inf, min_f_val=-np.inf):
         logging.info("Node " + str(idx) + " initialization: x0_len " + str(x0_len) + ", domain " + str(domain) + ", max_f_val " + str(max_f_val) + ", min_f_val " + str(min_f_val))
@@ -27,7 +27,7 @@ class NodeCommon:
         self.max_f_val = max_f_val  # The maximum value of the monitored function (if known, otherwise inf)
         self.min_f_val = min_f_val  # The minimum value of the monitored function (if known, otherwise -inf)
         self.lock = threading.Semaphore()
-        NodeCommon._init(self)
+        CommonNode._init(self)
 
     def _init(self):
         self.l_thresh = 0

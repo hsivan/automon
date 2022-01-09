@@ -1,10 +1,10 @@
-from automon.coordinator_common import SlackType, SyncType
+from automon.common_coordinator import SlackType, SyncType
 import os
 import datetime
 from timeit import default_timer as timer
 import logging
 import sys
-from automon.messages_common import prepare_message_data_update
+from automon.common_messages import prepare_message_data_update
 
 logger = logging.getLogger('automon')
 

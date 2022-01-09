@@ -2,7 +2,7 @@ import os
 import struct
 import numpy as np
 import pickle
-from automon.messages_common import messages_header_format
+from automon.common_messages import messages_header_format
 from test_utils.stats_analysis_utils import get_period_approximation_error
 from test_utils.test_utils import read_config_file
 from experiments.visualization.plot_dimensions_stats import get_num_messages

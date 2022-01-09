@@ -3,7 +3,7 @@ import numpy as np
 import logging
 from timeit import default_timer as timer
 import threading
-from automon.messages_common import MessageType, ViolationOrigin, parse_message_violation, parse_message_local_vector_info, \
+from automon.common_messages import MessageType, ViolationOrigin, parse_message_violation, parse_message_local_vector_info, \
     prepare_message_sync, prepare_message_lazy_sync, prepare_message_get_local_vector, message_to_message_list
 
 
@@ -211,7 +211,7 @@ class State(enum.Enum):
     FullSync = 2
 
 
-class CoordinatorCommon:
+class CommonCoordinator:
     
     def __init__(self, verifier, num_nodes, error_bound=2, slack_type=SlackType.Drift, sync_type=SyncType.Eager,
                  lazy_sync_max_S=0.5, b_violation_strict=True, coordinator_name="Common"):
@@ -232,7 +232,7 @@ class CoordinatorCommon:
         self.lazy_sync_max_S = lazy_sync_max_S
         self.num_nodes = num_nodes
 
-        CoordinatorCommon._init(self)
+        CommonCoordinator._init(self)
         logging.info("Coordinator " + self.coordinator_name + " initialization: x0_len " + str(self.x0_len) + ", error_bound " + str(error_bound) + ", num_nodes " + str(num_nodes) +
                      ", slack_type " + str(slack_type) + ", sync_type " + str(sync_type) + ", lazy_sync_max_S " + str(lazy_sync_max_S))
 

@@ -1,13 +1,13 @@
-from automon.node_common import NodeCommon
-from automon.messages_common import ViolationOrigin, parse_message_sync
+from automon.common_node import CommonNode
+from automon.common_messages import ViolationOrigin, parse_message_sync
 import numpy as np
 from timeit import default_timer as timer
 
 
-class NodeRLV(NodeCommon):
+class RlvNode(CommonNode):
     
     def __init__(self, idx=0, x0_len=1, max_f_val=np.inf, min_f_val=-np.inf, domain=None, func_to_monitor=None):
-        NodeCommon.__init__(self, idx, func_to_monitor, x0_len, domain, max_f_val, min_f_val)
+        CommonNode.__init__(self, idx, func_to_monitor, x0_len, domain, max_f_val, min_f_val)
         self.node_name = "RLV"
         self._init()
 

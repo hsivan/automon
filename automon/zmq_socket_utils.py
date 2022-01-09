@@ -65,12 +65,3 @@ def get_next_node_message(server_socket):
 
 def send_message_to_node(server_socket, node_idx, message):
     server_socket.send_multipart([str(node_idx).encode('ascii'), message])
-
-
-def get_next_coordinator_message(client_socket):
-    message = client_socket.recv()
-    return message
-
-
-def send_message_to_coordinator(client_socket, message):
-    client_socket.send(message)
