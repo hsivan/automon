@@ -233,7 +233,7 @@ class CommonCoordinator:
         self.num_nodes = num_nodes
 
         CommonCoordinator._init(self)
-        logging.info("Coordinator " + self.coordinator_name + " initialization: x0_len " + str(self.x0_len) + ", error_bound " + str(error_bound) + ", num_nodes " + str(num_nodes) +
+        logging.info(self.coordinator_name + " coordinator initialization: x0_len " + str(self.x0_len) + ", error_bound " + str(error_bound) + ", num_nodes " + str(num_nodes) +
                      ", slack_type " + str(slack_type) + ", sync_type " + str(sync_type) + ", lazy_sync_max_S " + str(lazy_sync_max_S))
 
     def _init(self):
@@ -296,7 +296,7 @@ class CommonCoordinator:
         if self.b_violation_strict:
             assert(b_true_violation + b_false_global_violation + b_false_local_violation == 1)
         else:
-            # Do not assert, just log the error. This is needed in CoordinatorAutoMon, when this error can happen.
+            # Do not assert, just log the error. This is needed in AutomonCoordinator and RlvCoordinator, when this error can happen.
             if b_true_violation + b_false_global_violation + b_false_local_violation != 1:
                 logging.warning("Iteration " + str(self.iteration) + ": b_true_violation " + str(b_true_violation) + ", b_false_global_violation " + str(b_false_global_violation) + ", b_false_local_violation " + str(b_false_local_violation))
 
@@ -469,8 +469,8 @@ class CommonCoordinator:
         return messages_out
 
     def _check_missed_violations(self):
-        # Check for miss violations (false negative). It is only possible to have miss violations in CoordinatorAutoMon
-        # in case the coordinator didn't find the real min/max eigenvalue, and in CoordinatorRLV.
+        # Check for missed violations (false negative). It is only possible to have missed violations in AutomonCoordinator
+        # in case the coordinator didn't find the real min/max eigenvalue, and in RlvCoordinator.
         # In that case there is violation of the admissible region, but no violation from any of the nodes.
         # We check it here, since this function is called after each round of set_new_data_point() for all the nodes.
         if (not np.any(self.b_nodes_have_violation)) and (not self._global_vector_inside_admissible_region()):

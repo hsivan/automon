@@ -33,7 +33,7 @@ class AutomonNode(CommonNode):
     
     def __init__(self, idx=0, x0_len=1, max_f_val=numpy.inf, min_f_val=-numpy.inf, domain=None, func_to_monitor=None):
         CommonNode.__init__(self, idx, func_to_monitor, x0_len, domain, max_f_val, min_f_val)
-        logging.info("AutoMon Node " + str(idx) + " initialization: AUTO_DIFFERENTIATION_TOOL " + AUTO_DIFFERENTIATION_TOOL)
+        logging.info("AutoMon node " + str(idx) + " initialization: AUTO_DIFFERENTIATION_TOOL " + AUTO_DIFFERENTIATION_TOOL)
         self.node_name = "AutoMon"
         self.domain_range = domain
         self.func_to_monitor_grad = grad(func_to_monitor)

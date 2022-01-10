@@ -183,7 +183,7 @@ class AutomonCoordinator(CommonCoordinator):
                  lazy_sync_max_S=0.5, neighborhood_size=None):
         CommonCoordinator.__init__(self, verifier, num_nodes, error_bound, slack_type, sync_type, lazy_sync_max_S,
                                    b_violation_strict=False, coordinator_name="AutoMon")
-        logging.info("CoordinatorAutoMon initialization: domain " + str(verifier.domain_range) + ", AUTO_DIFFERENTIATION_TOOL " + AUTO_DIFFERENTIATION_TOOL + ", neighborhood_size " + str(neighborhood_size))
+        logging.info("AutoMon coordinator initialization: domain " + str(verifier.domain_range) + ", AUTO_DIFFERENTIATION_TOOL " + AUTO_DIFFERENTIATION_TOOL + ", neighborhood_size " + str(neighborhood_size))
         self.adcd_helper = AdcdHelper(verifier.func_to_monitor)
 
         self.domain = verifier.domain_range  # If None, the domain is the entire R^d
