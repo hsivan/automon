@@ -199,7 +199,7 @@ sudo docker run --net automonnet --env HOST=automonserver --env NODE_IDX=0 --rm 
 ```
 Run the other 3 nodes similarly, while changing `NODE_IDX` value accordingly.
 
-To run the same example on different machines, simply remove `--net automonnet` from the commands and change `HOST`
+To run the same example on different machines, simply remove `--net automonnet` and `--name automonserver` from the commands and change `HOST`
 value in the node command to the IP of the coordinator machine.
 
 ## Reproduce paper's experimental results
