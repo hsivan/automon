@@ -1,20 +1,16 @@
 # AutoMon
 
-AutoMon library for distributed functional monitoring.
+AutoMon is a library for evaluating a mathematical function over the average of multiple vectors that are distributed over multiple nodes of a system (sometimes known formally as distributed functional monioring over continous distributed streams).
 
-AutoMon is an easy-to-use algorithmic building block for automatically approximating arbitrary real
-multivariate functions over distributed data streams.
-Consider a distributed system with a single coordinator node and <img src="https://latex.codecogs.com/gif.latex?n"/> nodes,
-where each node <img src="https://latex.codecogs.com/gif.latex?i"/> holds a dynamic local
-data vector <img src="https://latex.codecogs.com/gif.latex?x_i"/> computed from its local data stream.
-Let <img src="https://latex.codecogs.com/gif.latex?f"/> be an arbitrary real multivariate function of
-the average vector of local data, i.e.,
-<img src="https://latex.codecogs.com/gif.latex?f(\bar{x})"/>, where <img src="https://latex.codecogs.com/gif.latex?\bar{x}"/>
-is the average of <img src="https://latex.codecogs.com/gif.latex?x_i"/>.
-Given <img src="https://latex.codecogs.com/gif.latex?f"/> expressed as code in Python and an approximation
-error bound, AutoMon automatically provides communication-efficient distributed monitoring of the function approximation,
-without requiring any manual analysis by the user.
-For more information regarding AutoMon see [AutoMon: Automatic Distributed Monitoring for Arbitrary
+Consider a distributed system with a single coordinator node (e.g., a server) and n nodes (e.g., remote workers, sensors),
+and where every node i holds a dynamic local data vector x_i that is constantly being updated from its local data stream.
+Suppose we want to evaluate some arbitrary real multivariate function f of the average vector of all these local vectors.
+In other words, we want to maintain an estimate of f(x), where x is the average of all the x_i vectrors.
+
+AutoMon is an easy-to-use algorithmic building block for automatically approximating f(x) over time, without having to send all the local updates to x_i to a centralized location.
+Given Python code to compute f(x) from x as well as the desired approximation error, AutoMon will automatically provides communication-efficient distributed monitoring of the function approximation, without requiring any manual mathematical analysis by the developer.
+
+For more information, see our SIGMOD 2022 paper, [AutoMon: Automatic Distributed Monitoring for Arbitrary
 Multivariate Functions](https://assaf.net.technion.ac.il/files/2021/12/SIGMOD2022_AutoMon_revision.pdf).
 
 ## Installation
@@ -42,9 +38,17 @@ pip install <automon_root>
 
 ## Features
 
-### Lightweight design &ndash; a library, not a framework
+### Lightweight design: a library, not a framework
 AutoMon is designed to be integrated easily into distributed applications. 
 It focuses on managing the distributed approximation algorithm, and does not impose (nor use) any specific underlying messaging fabric.
+Instead, the library has a simple and easy to use API, relying on the application to pass messages between the nodes and the coordinator.
+AutoMon focuses on the mathematical and algorithmic aspects, leaving developers to focus on application and systems aspects.
+
+### Communication-efficient and adaptive
+AutoMon often uses far fewer messages than merely uplading all data updates to a centralize location.
+Moreover, unlike frequently used periodic approaches (e.g., only send one update every T times), AutoMon adapts to the data, function, and desired approximation error. 
+This means that AutoMon can incurr no communication in periods of quiesence (where the data does not change by much), yet quickly detect and update the approximation in the face of sudden changes.
+On the other hand, periodic approaches can be wasteful during quiesence and result in large approximation errors when data changes quickly.
 
 ### <a name="choice"></a>Choice of automatic differentiation tool
 AutoMon uses automatic differentiation tool to derive local constraints to the nodes.
@@ -60,19 +64,11 @@ It is possible to force using Autograd by adding at the beginning of an experime
 import os
 os.environ['AUTO_GRAD_TOOL'] = 'AutoGrad'
 ```
-
-### The basic geometric monitoring protocol
-AutoMon adopts the geometric monitoring (GM) protocol for continuous threshold monitoring in a distributed system,
+### Testbed for approaches based on the Geometric Monitoring Protocol
+AutoMon adopts the geometric monitoring (GM) protocol for continuous threshold monitoring,
 which has been widely adopted by distributed monitoring methods.
-The GM protocol comprises two basic parts: the coordinator algorithm and the node algorithm.
-Each node receives local data and updates its dynamic local vector.
-A node is responsible for monitoring the local constraints, reporting violation of these constraints
-to the coordinator, and receiving updated constraints from the coordinator.
-The coordinator is responsible for resolving violations of the local constraints by distributing updated local
-constraints to nodes.
-The GM protocol does not define the derivation of the local constraints, and this is done differently by any monitoring technique.
 
-The implementation in this project separates between the code of the basic GM protocol and the code of 
+The implementation separates between the code of the basic GM protocol and the code of 
 a specific monitoring technique that adopts this protocol (such as AutoMon).
 The GM protocol code is implemented in `automon/coordinator_common.py` and `automon/node_common.py`.
 The code of a specific monitoring technique is in a subpackage named after the technique.
@@ -80,14 +76,14 @@ For example, AutoMon in under `automon/automon`.
 This design enables developers to easily add new monitoring techniques, add features to existing techniques, or to
 enrich the basic protocol.
 
-We also provide some implementations of other monitoring techniques that were used as baselines in our paper.
+AutoMon also provide implementations of other monitoring techniques that were used as baselines in our paper.
 For the CB technique we provide the implementation of cosine similarity and inner product monitoring, based on
 [Lazerson et al., 2016](https://dl.acm.org/doi/pdf/10.1145/3226113).
 For the GM technique we provide the implementation of entropy monitoring, based on
 [Gabel et al., 2017](https://dl.acm.org/doi/pdf/10.1145/3097983.3098092), and of variance monitoring,
 based on [Gabel et al., 2014](https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=6877240).
-Note that while AutoMon can monitor any arbitrary function given as a code, the other techniques have a tailored
-implementation per function.
+(Note that while AutoMon can monitor any arbitrary function given as a code, the other techniques have a tailored
+implementation per function.)
 
 
 ## Usage example
