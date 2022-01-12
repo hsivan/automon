@@ -216,10 +216,10 @@ publication, please use the following Bibtex entry:
 ```bibtex
 @unpublished{automon,
   author    = {Sivan, Hadar and Gabel, Moshe and Schuster, Assaf},
-  title     = {AutoMon: Automatic Distributed Monitoring for Arbitrary Multivariate Functions},
+  title     = {{AutoMon}: Automatic Distributed Monitoring for Arbitrary Multivariate Functions},
   year      = {2022},
   series    = {SIGMOD '22},
-  booktitle = {Proceedings of the 2022 ACM SIGMOD International Conference on Management of Data},
-  note      = {to appear in SIGMOD '22}
+  booktitle = {Proceedings of the 2022 {ACM} {SIGMOD} International Conference on Management of Data},
+  note      = {to appear}
 }
 ```
