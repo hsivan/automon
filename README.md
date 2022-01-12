@@ -214,7 +214,7 @@ The [instructions](examples/aws_utils/README.md) for running these experiments, 
 If AutoMon has been useful for your research and you would like to cite it in an academic
 publication, please use the following Bibtex entry:
 ```bibtex
-@unpublished{automon,
+@inproceedings{sivan_automon_2022,
   author    = {Sivan, Hadar and Gabel, Moshe and Schuster, Assaf},
   title     = {{AutoMon}: Automatic Distributed Monitoring for Arbitrary Multivariate Functions},
   year      = {2022},
