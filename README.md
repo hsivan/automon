@@ -45,7 +45,7 @@ Instead, the library has a simple and easy to use API, relying on the applicatio
 AutoMon focuses on the mathematical and algorithmic aspects, leaving developers to focus on application and systems aspects.
 
 ### Communication-efficient and adaptive
-AutoMon often uses far fewer messages than merely uplading all data updates to a centralize location.
+AutoMon often uses far fewer messages than simply uploading all data updates to a centralize location.
 Moreover, unlike frequently used periodic approaches (e.g., only send one update every T times), AutoMon adapts to the data, function, and desired approximation error. 
 This means that AutoMon can incurr no communication in periods of quiesence (where the data does not change by much), yet quickly detect and update the approximation in the face of sudden changes.
 On the other hand, periodic approaches can be wasteful during quiesence and result in large approximation errors when data changes quickly.
