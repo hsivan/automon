@@ -41,9 +41,9 @@ class NodeStream:
 
 class NodeStreamAverage(NodeStream):
 
-    def __init__(self, num_nodes, sliding_window_size, data_point_len, x0_len):
-        assert x0_len == data_point_len
-        self.initial_x0 = np.zeros(x0_len)
+    def __init__(self, num_nodes, sliding_window_size, data_point_len, d):
+        assert d == data_point_len
+        self.initial_x0 = np.zeros(d)
         super().__init__(num_nodes, sliding_window_size, data_point_len)
 
     def update_local_vector(self, data_point, sliding_window, x):
@@ -64,9 +64,9 @@ class NodeStreamAverage(NodeStream):
 
 class NodeStreamFrequency(NodeStream):
 
-    def __init__(self, num_nodes, sliding_window_size, data_point_len, x0_len):
+    def __init__(self, num_nodes, sliding_window_size, data_point_len, d):
         assert data_point_len == 1
-        self.initial_x0 = np.ones(x0_len, dtype=np.float) / x0_len
+        self.initial_x0 = np.ones(d, dtype=np.float) / d
         super().__init__(num_nodes, sliding_window_size, data_point_len)
 
     def update_local_vector(self, data_point, sliding_window, x):
@@ -91,10 +91,10 @@ class NodeStreamFrequency(NodeStream):
 
 class NodeStreamFirstAndSecondMomentum(NodeStream):
 
-    def __init__(self, num_nodes, sliding_window_size, data_point_len, x0_len):
+    def __init__(self, num_nodes, sliding_window_size, data_point_len, d):
         assert data_point_len == 1
-        assert x0_len == 2
-        self.initial_x0 = np.zeros(x0_len)
+        assert d == 2
+        self.initial_x0 = np.zeros(d)
         super().__init__(num_nodes, sliding_window_size, data_point_len)
 
     def update_local_vector(self, data_point, sliding_window, x):
@@ -118,10 +118,10 @@ class NodeStreamFirstAndSecondMomentum(NodeStream):
 
 class NodeStreamConcatenatedFrequencyVectors(NodeStream):
 
-    def __init__(self, num_nodes, sliding_window_size, data_point_len, x0_len):
+    def __init__(self, num_nodes, sliding_window_size, data_point_len, d):
         assert data_point_len == 2
-        k = x0_len // 2  # Two concatenated frequency vectors
-        self.initial_x0 = np.ones(x0_len, dtype=np.float) / k
+        k = d // 2  # Two concatenated frequency vectors
+        self.initial_x0 = np.ones(d, dtype=np.float) / k
         super().__init__(num_nodes, sliding_window_size, data_point_len)
 
     def update_local_vector(self, data_point, sliding_window, x):

@@ -2,6 +2,7 @@ from scipy.optimize import minimize
 from timeit import default_timer as timer
 import logging
 from automon.common_coordinator import CommonCoordinator, SlackType, SyncType
+from automon.automon.automon_node import AutomonNode
 import numpy
 import os
 from automon.common_messages import prepare_message_lazy_sync, ViolationOrigin
@@ -179,8 +180,11 @@ class AdcdHelper:
 
 class AutomonCoordinator(CommonCoordinator):
     
-    def __init__(self, verifier, num_nodes, error_bound=2, slack_type=SlackType.Drift, sync_type=SyncType.LazyLRU,
-                 lazy_sync_max_S=0.5, neighborhood_size=None):
+    def __init__(self, num_nodes, func_to_monitor, error_bound=2, slack_type=SlackType.Drift, sync_type=SyncType.LazyLRU,
+                 lazy_sync_max_S=0.5, neighborhood_size=None, d=1, max_f_val=numpy.inf, min_f_val=-numpy.inf, domain=None):
+        # Create a dummy node for the coordinator that uses it in the process of resolving violations.
+        # In simulations the verifier's local vector is the global vector (updated by the test manager), and it is used for collecting statistics.
+        verifier = AutomonNode(-1, func_to_monitor, d, max_f_val, min_f_val, domain)
         CommonCoordinator.__init__(self, verifier, num_nodes, error_bound, slack_type, sync_type, lazy_sync_max_S,
                                    b_violation_strict=False, coordinator_name="AutoMon")
         logging.info("AutoMon coordinator initialization: domain " + str(verifier.domain_range) + ", AUTO_DIFFERENTIATION_TOOL " + AUTO_DIFFERENTIATION_TOOL + ", neighborhood_size " + str(neighborhood_size))
@@ -188,10 +192,10 @@ class AutomonCoordinator(CommonCoordinator):
 
         self.domain = verifier.domain_range  # If None, the domain is the entire R^d
         # If neighborhood_size is not None, then neighborhood is updated according to x0. Otherwise it remains the entire domain.
-        self.neighborhood = [verifier.domain_range] * self.x0_len if verifier.domain_range is not None else None
+        self.neighborhood = [verifier.domain_range] * self.d if verifier.domain_range is not None else None
         # Check if the Hessian is constant. If the Hessian const there is no need to find the min and max eigenvalues for every x0 update.
         # Also, for constant hessian the neighborhood remains the entire domain during the test.
-        self.b_hessian_const = self._is_hessian_const(self.x0_len)
+        self.b_hessian_const = self._is_hessian_const(self.d)
         if self.b_hessian_const or neighborhood_size is None:
             self.initial_neighborhood_size = -1
         else:
@@ -208,7 +212,7 @@ class AutomonCoordinator(CommonCoordinator):
         super()._init()
         self.consecutive_neighborhood_violations_counter = 0
         # If initial_neighborhood_size is not -1 (neighborhood_size is given), then neighborhood is updated according to x0. Otherwise it remains the entire domain.
-        self.neighborhood = [self.domain] * self.x0_len if self.domain is not None else None
+        self.neighborhood = [self.domain] * self.d if self.domain is not None else None
         # Relevant only if neighborhood_size is given and Hessian is not constant
         self.neighborhood_size = self.initial_neighborhood_size
         # This flag is set to True only during neighborhood size tuning procedure
@@ -236,9 +240,9 @@ class AutomonCoordinator(CommonCoordinator):
             logging.info("Iteration " + str(self.iteration) + ": Update neighborhood size to " + str(self.neighborhood_size))
 
         if self.domain is None:
-            self.neighborhood = [(self.x0[i] - self.neighborhood_size, self.x0[i] + self.neighborhood_size) for i in range(self.x0_len)]
+            self.neighborhood = [(self.x0[i] - self.neighborhood_size, self.x0[i] + self.neighborhood_size) for i in range(self.d)]
         else:
-            self.neighborhood = [(max(self.x0[i] - self.neighborhood_size, self.domain[0]), min(self.x0[i] + self.neighborhood_size, self.domain[1])) for i in range(self.x0_len)]
+            self.neighborhood = [(max(self.x0[i] - self.neighborhood_size, self.domain[0]), min(self.x0[i] + self.neighborhood_size, self.domain[1])) for i in range(self.d)]
 
         logging.info("Iteration " + str(self.iteration) + ": Update neighborhood to " + str(self.neighborhood))
 

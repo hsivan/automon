@@ -16,10 +16,10 @@ def func_q_on_parabola(q):
 
 class GmVarianceNode(GmCommonNode):
     
-    def __init__(self, idx=0, x0_len=2, domain=None, func_to_monitor=None):
+    def __init__(self, idx, func_to_monitor=None, d=2, domain=None):
         # func_to_monitor must be func_variance; however we keep function implementations outside of automon core.
-        assert (x0_len == 2)  # The local vector is the first and second momentum
-        GmCommonNode.__init__(self, idx, x0_len=x0_len, domain=domain, func_to_monitor=func_to_monitor)
+        assert (d == 2)  # The local vector is the first and second momentum
+        GmCommonNode.__init__(self, idx, d=d, domain=domain, func_to_monitor=func_to_monitor)
 
     def _calc_parabola(self, thresh, x):
         # Calculates y = x**2 + thresh

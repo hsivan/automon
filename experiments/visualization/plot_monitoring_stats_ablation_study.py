@@ -87,7 +87,7 @@ def plot_monitoring_stats_graph_and_barchart(test_folder, func_name, relative_fo
 
         if coordinator_name == "no ADCD no slack":
             ax0.plot(np.arange(start_iteration, end_iteration), function_approximation_error[offset:],
-                        label=coordinator_name, color=colors[idx], linestyle=linestyles[idx], linewidth=1.1)
+                     label=coordinator_name, color=colors[idx], linestyle=linestyles[idx], linewidth=1.1)
         else:
             ax0.plot(np.arange(start_iteration, end_iteration), function_approximation_error[offset:],
                      label=coordinator_name, color=colors[idx], linestyle=linestyles[idx], linewidth=0.8)
@@ -114,7 +114,7 @@ def plot_monitoring_stats_graph_and_barchart(test_folder, func_name, relative_fo
         if "RLV no slack" in coordinator_name:
             coordinator_name = "no ADCD no slack"
         ax1.plot(np.arange(start_iteration, end_iteration), cumulative_msgs_broadcast_disabled[offset:],
-                    label=coordinator_name, color=colors[idx], linestyle=linestyles[idx], linewidth=0.8)
+                 label=coordinator_name, color=colors[idx], linestyle=linestyles[idx], linewidth=0.8)
         assert (coordinator_name == coordinators[idx])
         num_messages.append(cumulative_msgs_broadcast_disabled[-1])
 

@@ -5,9 +5,8 @@ from timeit import default_timer as timer
 
 class GmCommonNode(CommonNode):
     
-    def __init__(self, idx=0, x0_len=1, domain=None, func_to_monitor=None):
-        CommonNode.__init__(self, idx, func_to_monitor, x0_len, domain)
-        self.node_name = "GM"
+    def __init__(self, idx=0, d=1, domain=None, func_to_monitor=None):
+        CommonNode.__init__(self, idx, func_to_monitor, d, domain, node_name="GM")
         self._init()
 
     def _init(self):

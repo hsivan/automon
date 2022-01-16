@@ -495,12 +495,12 @@ class DataGeneratorDnnIntrusionDetection(DataGenerator):
         apps, counts = np.unique(df[3], return_counts=True)
         # Divide 164352 rows with application index 51 to 5 nodes (32870 rows per node).
         # Divide 78510 rows with application index 21 to 2 nodes (39255 rows per node).
-        # Put 41237 rows with application index 0 on single node.
-        # Put the rest 26930 rows on single node.
+        # Put 41237 rows with application index 0 on a single node.
+        # Put the rest 26930 rows on a single node.
         # Overall 9 nodes with at least 30000 samples each.
-        counts[51]  # 164352 (Private)
-        counts[21]  # 78510 (ECR_i)
-        counts[0]  # 41237 (http)
+        #print(counts[51])  # 164352 (Private)
+        #print(counts[21])  # 78510 (ECR_i)
+        #print(counts[0])  # 41237 (http)
 
         node_indices = np.zeros(df.shape[0])
 

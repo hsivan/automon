@@ -1,12 +1,11 @@
 import argparse
 import os
-from automon import AutomonNode, AutomonCoordinator
+from automon import AutomonNode, AutomonCoordinator, SlackType, SyncType
 from test_utils.data_generator import DataGeneratorDnnIntrusionDetection
 from test_utils.functions_to_monitor import set_net_params, func_dnn_intrusion_detection
 from test_utils.jax_dnn_intrusion_detection import load_net
 from test_utils.stats_analysis_utils import log_num_packets_sent_and_received
 from test_utils.test_utils import start_test, end_test, write_config_to_file, read_config_file
-from test_utils.object_factory import get_node, get_coordinator
 from test_utils.test_utils_zmq_sockets import run_coordinator, run_node
 
 if __name__ == "__main__":
@@ -35,12 +34,13 @@ if __name__ == "__main__":
         set_net_params(net_params, net_apply)
 
         if args.node_idx == -1:
-            coordinator = get_coordinator(AutomonCoordinator, AutomonNode, conf, func_dnn_intrusion_detection)
+            coordinator = AutomonCoordinator(conf["num_nodes"], func_dnn_intrusion_detection, slack_type=SlackType(conf["slack_type"]), sync_type=SyncType(conf["sync_type"]),
+                                             error_bound=conf["error_bound"], neighborhood_size=conf["neighborhood_size"], domain=conf["domain"], d=conf["d"])
             run_coordinator(coordinator, args.port, conf["num_nodes"], test_folder)
 
         if args.node_idx >= 0:
             data_generator = DataGeneratorDnnIntrusionDetection(num_iterations=conf["num_iterations"], num_nodes=conf["num_nodes"], d=conf["d"], test_folder=test_folder, num_iterations_for_tuning=conf["num_iterations_for_tuning"], sliding_window_size=conf["sliding_window_size"])
-            node = get_node(AutomonNode, conf["domain"], conf["d"], args.node_idx, func_dnn_intrusion_detection)
+            node = AutomonNode(args.node_idx, func_dnn_intrusion_detection, domain=conf["domain"], d=conf["d"])
             run_node(args.host, args.port, node, args.node_idx, data_generator, test_folder, b_single_sample_per_round=True)
 
         log_num_packets_sent_and_received(test_folder)  # Log at the end

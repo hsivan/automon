@@ -6,9 +6,9 @@ from automon.cb.cb_common_node import CbCommonNode
 
 class CbInnerProductNode(CbCommonNode):
     
-    def __init__(self, idx=0, x0_len=2, domain=None, func_to_monitor=None):
+    def __init__(self, idx, func_to_monitor=None, d=2, domain=None):
         # func_to_monitor must be func_inner_product; however we keep function implementations outside of automon core.
-        CbCommonNode.__init__(self, idx, x0_len=x0_len, domain=domain, func_to_monitor=func_to_monitor)
+        CbCommonNode.__init__(self, idx, d=d, domain=domain, func_to_monitor=func_to_monitor)
 
     def _func_h(self, X, threshold):
         if len(X.shape) < 2:

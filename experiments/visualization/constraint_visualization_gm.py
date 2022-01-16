@@ -59,7 +59,7 @@ def entropy_gm_draw_constraints(node):
 
     def entropy_gm_draw_constraints_3d():
         # Possible only if d=3
-        assert (node.x0_len == 3)
+        assert (node.d == 3)
 
         epsilon = 0.00000000000001
         lower_x_lim = 0 + epsilon
@@ -91,7 +91,7 @@ def entropy_gm_draw_constraints(node):
 
         f_l = f.copy()
         f_l[f < node.l_thresh] = np.nan
-        f_max = func_entropy(np.ones(node.x0_len, dtype=float) / node.x0_len)
+        f_max = func_entropy(np.ones(node.d, dtype=float) / node.d)
         levels = np.linspace(node.l_thresh, f_max, num_contour_levels)
         ax.contour(p1, p2, f_l, alpha=0.05, colors='blue', levels=levels)
         projection = np.zeros_like(f_l)
@@ -181,7 +181,7 @@ def entropy_gm_draw_constraints(node):
 
     def entropy_gm_draw_constraints_2d():
         # Possible only if d=2
-        assert (node.x0_len == 2)
+        assert (node.d == 2)
 
         lower_x_lim = 0
         upper_x_lim = 1
@@ -239,9 +239,9 @@ def entropy_gm_draw_constraints(node):
         fig.legend()
         fig.show()
 
-    if node.x0_len == 2:
+    if node.d == 2:
         entropy_gm_draw_constraints_2d()
-    elif node.x0_len == 3:
+    elif node.d == 3:
         entropy_gm_draw_constraints_3d()
     else:
         pass
@@ -253,7 +253,7 @@ def visualize_entropy():
 
     # 3 dimensional case
     sliding_window_size = 5
-    node3 = GmEntropyNode(idx=node_idx, x0_len=3, func_to_monitor=func_entropy)
+    node3 = GmEntropyNode(idx=node_idx, d=3, func_to_monitor=func_entropy)
     x0 = np.array([1, 1, 4]) / np.sum([1, 1, 4])
     node3.sync(x0, slack, 0.7, 1)
     entropy_gm_draw_constraints(node3)
@@ -292,7 +292,7 @@ def visualize_entropy():
 
     # 2 dimensional case
     sliding_window_size = 4
-    node2 = GmEntropyNode(idx=1, x0_len=2, func_to_monitor=func_entropy)
+    node2 = GmEntropyNode(idx=1, d=2, func_to_monitor=func_entropy)
     x0 = np.array([1, 4]) / np.sum([1, 4])
     node2.sync(x0, slack, 0.5, 0.6)
     entropy_gm_draw_constraints(node2)

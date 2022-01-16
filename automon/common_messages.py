@@ -51,7 +51,7 @@ def message_to_message_list(messages: bytes):
     return unique_message_type, message_list
 
 
-def prepare_message_header(message_type: MessageType, node_idx: int, payload_len:int) -> bytes:
+def prepare_message_header(message_type: MessageType, node_idx: int, payload_len: int) -> bytes:
     # Do not print log message for DataUpdate messages as it floods the log
     if message_type != MessageType.DataUpdate:
         logging.debug("Sending message type: " + str(message_type) + " node index: " + str(node_idx) + " payload_len: " + str(payload_len))
@@ -111,8 +111,8 @@ def prepare_message_data_update(node_idx: int, data_point: np.ndarray) -> bytes:
     return message
 
 
-def parse_message_violation(payload: bytes, x0_len: int):
-    messages_payload_format = struct.Struct('! L L %dd' % x0_len)
+def parse_message_violation(payload: bytes, d: int):
+    messages_payload_format = struct.Struct('! L L %dd' % d)
     unpacked_payload = messages_payload_format.unpack(payload)
     constraint_version = unpacked_payload[0]
     violation_origin = ViolationOrigin(unpacked_payload[1])
@@ -127,26 +127,26 @@ def parse_message_get_local_vector(payload: bytes):
     return constraint_version
 
 
-def parse_message_local_vector_info(payload: bytes, x0_len: int):
-    messages_payload_format = struct.Struct('! L %dd' % x0_len)
+def parse_message_local_vector_info(payload: bytes, d: int):
+    messages_payload_format = struct.Struct('! L %dd' % d)
     unpacked_payload = messages_payload_format.unpack(payload)
     constraint_version = unpacked_payload[0]
     local_vector = np.array(unpacked_payload[1:])
     return constraint_version, local_vector
 
 
-def parse_message_sync(payload: bytes, x0_len: int):
-    messages_payload_format = struct.Struct('! L %dd %dd d d' % (x0_len, x0_len))
+def parse_message_sync(payload: bytes, d: int):
+    messages_payload_format = struct.Struct('! L %dd %dd d d' % (d, d))
     unpacked_payload = messages_payload_format.unpack(payload)
     constraint_version = unpacked_payload[0]
-    global_vector = np.array(unpacked_payload[1:x0_len + 1])
-    node_slack = np.array(unpacked_payload[x0_len + 1:2 * x0_len + 1])
+    global_vector = np.array(unpacked_payload[1:d + 1])
+    node_slack = np.array(unpacked_payload[d + 1:2 * d + 1])
     l_thresh, u_thresh = unpacked_payload[-2], unpacked_payload[-1]
     return constraint_version, global_vector, node_slack, l_thresh, u_thresh
 
 
-def parse_message_lazy_sync(payload: bytes, x0_len: int):
-    messages_payload_format = struct.Struct('! L %dd' % x0_len)
+def parse_message_lazy_sync(payload: bytes, d: int):
+    messages_payload_format = struct.Struct('! L %dd' % d)
     unpacked_payload = messages_payload_format.unpack(payload)
     constraint_version = unpacked_payload[0]
     node_slack = np.array(unpacked_payload[1:])
@@ -166,7 +166,7 @@ if __name__ == "__main__":
 
     # MessageType.Violation
     message = prepare_message_violation(7, 35, ViolationOrigin.Domain, input_vector)
-    message_type, node_idx, payload_len = parse_message_header(message)
+    message_type, node_idx, _ = parse_message_header(message)
     payload = message[messages_header_format.size:]
     assert node_idx == 7 and message_type == MessageType.Violation
     constraint_version, violation_origin, local_vector = parse_message_violation(payload, input_vector.shape[0])
@@ -177,7 +177,7 @@ if __name__ == "__main__":
     # MessageType.GetLocalVector
     constraint_version_org = 10
     message = prepare_message_get_local_vector(5, constraint_version_org)
-    message_type, node_idx, payload_len = parse_message_header(message)
+    message_type, node_idx, _ = parse_message_header(message)
     payload = message[messages_header_format.size:]
     assert node_idx == 5 and message_type == MessageType.GetLocalVector
     constraint_version = parse_message_get_local_vector(payload)
@@ -186,7 +186,7 @@ if __name__ == "__main__":
     # MessageType.LocalVectorInfo
     constraint_version_org = 20
     message = prepare_message_local_vector_info(1, constraint_version_org, input_vector)
-    message_type, node_idx, payload_len = parse_message_header(message)
+    message_type, node_idx, _ = parse_message_header(message)
     payload = message[messages_header_format.size:]
     assert node_idx == 1 and message_type == MessageType.LocalVectorInfo
     constraint_version, local_vector = parse_message_local_vector_info(payload, input_vector.shape[0])
@@ -196,7 +196,7 @@ if __name__ == "__main__":
     # MessageType.Sync
     l_thresh_org, u_thresh_org = 6.47, 18.46782
     message = prepare_message_sync(9, 106, input_vector, node_slack_org, l_thresh_org, u_thresh_org)
-    message_type, node_idx, payload_len = parse_message_header(message)
+    message_type, node_idx, _ = parse_message_header(message)
     payload = message[messages_header_format.size:]
     assert node_idx == 9 and message_type == MessageType.Sync
     constraint_version, global_vector, node_slack, l_thresh, u_thresh = parse_message_sync(payload, input_vector.shape[0])
@@ -208,7 +208,7 @@ if __name__ == "__main__":
 
     # MessageType.LazySync
     message = prepare_message_lazy_sync(3, 208, node_slack_org)
-    message_type, node_idx, payload_len = parse_message_header(message)
+    message_type, node_idx, _ = parse_message_header(message)
     payload = message[messages_header_format.size:]
     assert node_idx == 3 and message_type == MessageType.LazySync
     constraint_version, node_slack = parse_message_lazy_sync(payload, input_vector.shape[0])
@@ -218,7 +218,7 @@ if __name__ == "__main__":
     # MessageType.DataUpdate
     data_point_org = np.random.randn(5)
     message = prepare_message_data_update(2, data_point_org)
-    message_type, node_idx, payload_len = parse_message_header(message)
+    message_type, node_idx, _ = parse_message_header(message)
     payload = message[messages_header_format.size:]
     assert node_idx == 2 and message_type == MessageType.DataUpdate
     data_point = parse_message_data_update(payload, data_point_org.shape[0])

@@ -6,9 +6,8 @@ from timeit import default_timer as timer
 
 class CbCommonNode(CommonNode):
     
-    def __init__(self, idx=0, x0_len=1, max_f_val=np.inf, min_f_val=-np.inf, domain=None, func_to_monitor=None):
-        CommonNode.__init__(self, idx, func_to_monitor, x0_len, domain, max_f_val, min_f_val)
-        self.node_name = "CB"
+    def __init__(self, idx=0, d=1, max_f_val=np.inf, min_f_val=-np.inf, domain=None, func_to_monitor=None):
+        CommonNode.__init__(self, idx, func_to_monitor, d, domain, max_f_val, min_f_val, node_name="CB")
         self._init()
 
     def _init(self):

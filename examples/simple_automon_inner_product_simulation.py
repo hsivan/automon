@@ -13,10 +13,8 @@ if __name__ == "__main__":
     conf = get_config(num_iterations=1020, sliding_window_size=20, d=40, error_bound=0.3)
     data_generator = DataGeneratorInnerProduct(num_iterations=conf["num_iterations"], num_nodes=conf["num_nodes"], d=conf["d"], sliding_window_size=conf["sliding_window_size"])
 
-    nodes = [AutomonNode(idx, x0_len=conf["d"], func_to_monitor=func_inner_product) for idx in range(conf["num_nodes"])]
+    nodes = [AutomonNode(idx, func_to_monitor=func_inner_product, d=conf["d"]) for idx in range(conf["num_nodes"])]
 
-    verifier = AutomonNode(idx=-1, x0_len=conf["d"], func_to_monitor=func_inner_product)
-
-    coordinator = AutomonCoordinator(verifier, conf["num_nodes"], error_bound=conf["error_bound"])
+    coordinator = AutomonCoordinator(conf["num_nodes"], func_to_monitor=func_inner_product, d=conf["d"], error_bound=conf["error_bound"])
 
     run_test(data_generator, coordinator, nodes, None)

@@ -23,7 +23,7 @@ def get_num_bytes(test_folder):
     results = results.split("\n")
     bytes_sent = int([result for result in results if "Bytes sent" in result][-1].split("sent ")[1])
     bytes_received = int([result for result in results if "Bytes received" in result][-1].split("received ")[1])
-    num_bytes= bytes_sent + bytes_received
+    num_bytes = bytes_sent + bytes_received
     return num_bytes
 
 
@@ -480,7 +480,7 @@ def reformat_remove_leading_zeros(x, pos):
     0 and 1 without the leading "0." (e.g., 0.7 is formatted as .7 and -0.4 is
     formatted as -.4)."""
     val_str = '{:g}'.format(x)
-    if np.abs(x) > 0 and np.abs(x) < 1:
+    if 0 < np.abs(x) < 1:
         return val_str.replace("0", "", 1)
     else:
         return val_str

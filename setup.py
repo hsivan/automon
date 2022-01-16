@@ -9,7 +9,7 @@ with open('requirements.txt') as fid:
 # get __version__ from automon/version.py
 _dct = {}
 with open('automon/version.py') as f:
-  exec(f.read(), _dct)
+    exec(f.read(), _dct)
 VERSION = _dct['__version__']
 
 setuptools.setup(

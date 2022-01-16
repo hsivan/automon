@@ -7,10 +7,10 @@ import cvxpy as cp
 
 class GmEntropyNode(GmCommonNode):
     
-    def __init__(self, idx=0, x0_len=1, domain=None, func_to_monitor=None):
+    def __init__(self, idx, func_to_monitor=None, d=1, domain=None):
         # func_to_monitor must be func_entropy; however we keep function implementations outside of automon core.
-        GmCommonNode.__init__(self, idx, x0_len=x0_len, domain=domain, func_to_monitor=func_to_monitor)
-        self.k = x0_len
+        GmCommonNode.__init__(self, idx, d=d, domain=domain, func_to_monitor=func_to_monitor)
+        self.k = d
         # point_to_check is a probability vector, however, it is possible to
         # get negative or above 1 values when using drift slack.
         # In this case we should report violation or use tilda_f as in CIDER paper.

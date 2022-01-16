@@ -1,3 +1,4 @@
+import warnings
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
@@ -54,19 +55,22 @@ def entropy_automon_draw_constraints(node):
         # Prepare domain grid for graph
         X, Y, domain_grid_as_vector, mask_keep = prep_domain_grid()
 
-        # Plot the surface of the monitored function in the domain
-        Z = func_entropy(domain_grid_as_vector)
-        Z = Z.reshape(X.shape)
-        Z[np.logical_not(mask_keep)] = np.nan
-        ax.plot_surface(X, Y, Z, color="red", linewidth=0, antialiased=False, label='f(p)=$g(p)-h(p)$', alpha=0.2)
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
 
-        # Plot the upper threshold
-        ax.plot_surface(X, Y, np.ones_like(X) * node.u_thresh, color="blue", linewidth=0, antialiased=False, label='$U_{thresh}$', alpha=0.2)
-        # Plot the lower threshold
-        ax.plot_surface(X, Y, np.ones_like(X) * node.l_thresh, color="yellow", linewidth=0, antialiased=False, label='$L_{thresh}$', alpha=0.2)
+            # Plot the surface of the monitored function in the domain
+            Z = func_entropy(domain_grid_as_vector)
+            Z = Z.reshape(X.shape)
+            Z[np.logical_not(mask_keep)] = np.nan
+            ax.plot_surface(X, Y, Z, color="red", linewidth=0, antialiased=False, label='f(p)=$g(p)-h(p)$', alpha=0.2)
 
-        # Plot x0, x0_local and p
-        plot_points_on_graph(ax)
+            # Plot the upper threshold
+            ax.plot_surface(X, Y, np.ones_like(X) * node.u_thresh, color="blue", linewidth=0, antialiased=False, label='$U_{thresh}$', alpha=0.2)
+            # Plot the lower threshold
+            ax.plot_surface(X, Y, np.ones_like(X) * node.l_thresh, color="yellow", linewidth=0, antialiased=False, label='$L_{thresh}$', alpha=0.2)
+
+            # Plot x0, x0_local and p
+            plot_points_on_graph(ax)
 
         add_legend(ax)
         plt.show()
@@ -96,19 +100,22 @@ def entropy_automon_draw_constraints(node):
         g_p = node.g_func(domain_grid_as_vector).reshape(X.shape)
         g_p[np.logical_not(mask_keep)] = np.nan
 
-        # Plot the tangent hyperplane
-        ax.plot_surface(X, Y, z_p, color="red", linewidth=0, antialiased=False, label='Tangent $h(p)+U_{thresh}$', alpha=0.2)
-        # Plot the lower g
-        ax.plot_surface(X, Y, g_p, color="blue", linewidth=0, antialiased=False, label='$g(p)$', alpha=0.2)
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
 
-        # Plot the h plus upper threshold
-        h_p_plus_upper_thresh = node.h_func(domain_grid_as_vector).reshape(X.shape) + node.u_thresh
-        h_p_plus_upper_thresh[np.logical_not(mask_keep)] = np.nan
-        ax.plot_surface(X, Y, h_p_plus_upper_thresh, color="yellow", linewidth=0, antialiased=False, label='$h(p)+U_{thresh}$', alpha=0.2)
+            # Plot the tangent hyperplane
+            ax.plot_surface(X, Y, z_p, color="red", linewidth=0, antialiased=False, label='Tangent $h(p)+U_{thresh}$', alpha=0.2)
+            # Plot the lower g
+            ax.plot_surface(X, Y, g_p, color="blue", linewidth=0, antialiased=False, label='$g(p)$', alpha=0.2)
 
-        # Plot x0, x0_local and x. Then plot projection of x0 on the tangent plane
-        plot_points_on_graph(ax)
-        ax.plot([node.x0[0]], [node.x0[1]], [node.h_func(node.x0) + node.u_thresh], marker='o', markersize=5, label='$h(p_0)+U_{thresh}$', color="blue")
+            # Plot the h plus upper threshold
+            h_p_plus_upper_thresh = node.h_func(domain_grid_as_vector).reshape(X.shape) + node.u_thresh
+            h_p_plus_upper_thresh[np.logical_not(mask_keep)] = np.nan
+            ax.plot_surface(X, Y, h_p_plus_upper_thresh, color="yellow", linewidth=0, antialiased=False, label='$h(p)+U_{thresh}$', alpha=0.2)
+
+            # Plot x0, x0_local and x. Then plot projection of x0 on the tangent plane
+            plot_points_on_graph(ax)
+            ax.plot([node.x0[0]], [node.x0[1]], [node.h_func(node.x0) + node.u_thresh], marker='o', markersize=5, label='$h(p_0)+U_{thresh}$', color="blue")
 
         add_legend(ax)
         plt.show()
@@ -138,19 +145,22 @@ def entropy_automon_draw_constraints(node):
         h_p = node.h_func(domain_grid_as_vector).reshape(X.shape)
         h_p[np.logical_not(mask_keep)] = np.nan
 
-        # Plot the tangent hyperplane
-        ax.plot_surface(X, Y, z_p, color="red", linewidth=0, antialiased=False, label='Tangent $g(p)-L_{thresh}$', alpha=0.2)
-        # Plot the lower h
-        ax.plot_surface(X, Y, h_p, color="blue", linewidth=0, antialiased=False, label='$h(p)$', alpha=0.2)
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
 
-        # Plot the g minus lower threshold
-        g_p_minus_lower_thresh = node.g_func(domain_grid_as_vector).reshape(X.shape) - node.l_thresh
-        g_p_minus_lower_thresh[np.logical_not(mask_keep)] = np.nan
-        ax.plot_surface(X, Y, g_p_minus_lower_thresh, color="yellow", linewidth=0, antialiased=False, label='$g(p)-L_{thresh}$', alpha=0.2)
+            # Plot the tangent hyperplane
+            ax.plot_surface(X, Y, z_p, color="red", linewidth=0, antialiased=False, label='Tangent $g(p)-L_{thresh}$', alpha=0.2)
+            # Plot the lower h
+            ax.plot_surface(X, Y, h_p, color="blue", linewidth=0, antialiased=False, label='$h(p)$', alpha=0.2)
 
-        # Plot x0, x0_local and x. Then plot projection of x0 on the tangent plane
-        plot_points_on_graph(ax)
-        ax.plot([node.x0[0]], [node.x0[1]], [node.g_func(node.x0) - node.l_thresh], marker='o', markersize=5, label="$g(p_0)-L_{thresh}$", color="blue")
+            # Plot the g minus lower threshold
+            g_p_minus_lower_thresh = node.g_func(domain_grid_as_vector).reshape(X.shape) - node.l_thresh
+            g_p_minus_lower_thresh[np.logical_not(mask_keep)] = np.nan
+            ax.plot_surface(X, Y, g_p_minus_lower_thresh, color="yellow", linewidth=0, antialiased=False, label='$g(p)-L_{thresh}$', alpha=0.2)
+
+            # Plot x0, x0_local and x. Then plot projection of x0 on the tangent plane
+            plot_points_on_graph(ax)
+            ax.plot([node.x0[0]], [node.x0[1]], [node.g_func(node.x0) - node.l_thresh], marker='o', markersize=5, label="$g(p_0)-L_{thresh}$", color="blue")
 
         add_legend(ax)
         plt.show()
@@ -327,7 +337,7 @@ def visualize_entropy():
     domain = [(0+epsilon, 1-epsilon)] * k
     dc_type, extreme_lambda = adcd_helper.adcd_x(x0, domain, 0)
 
-    node3 = AutomonNode(idx=node_idx, x0_len=k, max_f_val=func_entropy(np.ones(k, dtype=np.float) / k), min_f_val=0.0, domain=(0 + epsilon, 1 - epsilon), func_to_monitor=func_entropy)
+    node3 = AutomonNode(idx=node_idx, d=k, max_f_val=func_entropy(np.ones(k, dtype=np.float) / k), min_f_val=0.0, domain=(0 + epsilon, 1 - epsilon), func_to_monitor=func_entropy)
     node3.sync(x0, slack, 0.7, 1, -1, dc_type, extreme_lambda)
     entropy_automon_draw_constraints(node3)
     # Fill sliding window
@@ -370,7 +380,7 @@ def visualize_entropy():
     domain = [(0 + epsilon, 1 - epsilon)] * k
     dc_type, extreme_lambda = adcd_helper.adcd_x(x0, domain, 0)
 
-    node2 = AutomonNode(idx=node_idx, x0_len=k, max_f_val=func_entropy(np.ones(k, dtype=np.float) / k), min_f_val=0.0, func_to_monitor=func_entropy)
+    node2 = AutomonNode(idx=node_idx, d=k, max_f_val=func_entropy(np.ones(k, dtype=np.float) / k), min_f_val=0.0, func_to_monitor=func_entropy)
     node2.sync(x0, slack, 0.5, 0.6, -1, dc_type, extreme_lambda)
     entropy_automon_draw_constraints(node2)
     # Fill sliding window
@@ -414,7 +424,7 @@ def visualize_variance():
     node_idx = 1
 
     dc_type, extreme_lambda = adcd_helper.adcd_x(x0, None, 0)
-    node = AutomonNode(idx=node_idx, x0_len=2, func_to_monitor=func_variance, min_f_val=0.0)
+    node = AutomonNode(idx=node_idx, d=2, func_to_monitor=func_variance, min_f_val=0.0)
     node.sync(x0, slack, 0.08, 3, -1, dc_type, extreme_lambda)
     # Fill sliding window
     node_stream = NodeStreamFirstAndSecondMomentum(2, sliding_window_size, 1, x0.shape[0])
@@ -445,7 +455,7 @@ def visualize_rozenbrock():
     node_idx = 1
 
     dc_type, extreme_lambda = adcd_helper.adcd_x(x0, None, 0)
-    node = AutomonNode(idx=node_idx, x0_len=x0.shape[0], func_to_monitor=func_rozenbrock)
+    node = AutomonNode(idx=node_idx, d=x0.shape[0], func_to_monitor=func_rozenbrock)
     node.sync(x0, slack, 0.08, 3, -1, dc_type, extreme_lambda)
     # Fill sliding window
     node_stream = NodeStreamAverage(2, sliding_window_size, x0.shape[0], x0.shape[0])
@@ -466,7 +476,7 @@ def visualize_inner_product():
     node_idx = 1
 
     dc_type, extreme_lambda = adcd_helper.adcd_x(x0, None, 0)
-    node = AutomonNode(idx=node_idx, x0_len=x0.shape[0], func_to_monitor=func_inner_product)
+    node = AutomonNode(idx=node_idx, d=x0.shape[0], func_to_monitor=func_inner_product)
     node.sync(x0, slack, 0.08, 3, -1, dc_type, extreme_lambda)
     # Fill sliding window
     node_stream = NodeStreamAverage(2, sliding_window_size, x0.shape[0], x0.shape[0])

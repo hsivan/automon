@@ -233,7 +233,7 @@ class CommonCoordinator:
         self.num_nodes = num_nodes
 
         CommonCoordinator._init(self)
-        logging.info(self.coordinator_name + " coordinator initialization: x0_len " + str(self.x0_len) + ", error_bound " + str(error_bound) + ", num_nodes " + str(num_nodes) +
+        logging.info(self.coordinator_name + " coordinator initialization: d " + str(self.d) + ", error_bound " + str(error_bound) + ", num_nodes " + str(num_nodes) +
                      ", slack_type " + str(slack_type) + ", sync_type " + str(sync_type) + ", lazy_sync_max_S " + str(lazy_sync_max_S))
 
     def _init(self):
@@ -242,7 +242,7 @@ class CommonCoordinator:
         self.indices_of_nodes_asked_for_local_vector = []
         self.verifier._init()
         self.x0 = self.verifier.get_local_vector()
-        self.x0_len = self.x0.shape[0]
+        self.d = self.x0.shape[0]
         self.u_thresh = 0
         self.l_thresh = 0
         self.b_faulty_safe_zone = False
@@ -250,12 +250,12 @@ class CommonCoordinator:
         self.b_eager_sync = False
 
         # Nodes
-        self.nodes_x0_local = np.zeros((self.num_nodes, self.x0_len))
+        self.nodes_x0_local = np.zeros((self.num_nodes, self.d))
         # Indicates if node sent its local vector in the current iteration.
         # It could be due to violation msg from this node, or during lazy sync process.
         # It tells the coordinator, during eager sync for example, that it does not need to collect the local vector from this node.
         self.b_nodes_have_updated_local_vector = np.zeros(self.num_nodes, dtype=bool)
-        self.nodes_slack = np.zeros((self.num_nodes, self.x0_len))
+        self.nodes_slack = np.zeros((self.num_nodes, self.d))
         self.b_nodes_have_violation = np.zeros(self.num_nodes, dtype=bool)
         self.b_nodes_have_violation_prev_iteration = self.b_nodes_have_violation.copy()
         self.nodes_lazy_lru_sync_counter = np.zeros(self.num_nodes)
@@ -503,8 +503,8 @@ class CommonCoordinator:
         return messages_out, b_eager_sync
 
     def _evaluate_x0_and_slack(self, nodes_indices):
-        x0 = np.zeros(self.x0_len)
-        slack = np.zeros(self.x0_len)
+        x0 = np.zeros(self.d)
+        slack = np.zeros(self.d)
 
         for node_idx in nodes_indices:
             x0 += self.nodes_x0_local[node_idx]
@@ -575,7 +575,7 @@ class CommonCoordinator:
         num_updates = 0
 
         for node_idx, payload in message_list:
-            constraint_version, violation_origin, local_vector = parse_message_violation(payload, self.x0_len)
+            constraint_version, violation_origin, local_vector = parse_message_violation(payload, self.d)
             self.statistics.update_violation_messages_statistics(violation_origin)
             if constraint_version != self.nodes_constraint_version[node_idx]:
                 logging.warning("Iteration " + str(self.iteration) + ": Node " + str(node_idx) + " reported violation " + str(violation_origin) + " with an old constraint version " + str(constraint_version) + " (current is " + str(self.nodes_constraint_version[node_idx]) + "). Ignoring.")
@@ -607,7 +607,7 @@ class CommonCoordinator:
 
         for node_idx, payload in message_list:
             self.statistics.update_node_local_vector_info_messages_statistics(1)
-            constraint_version, local_vector = parse_message_local_vector_info(payload, self.x0_len)
+            constraint_version, local_vector = parse_message_local_vector_info(payload, self.d)
             # First, check if the iteration number in the message equals self.iteration. If not, the message is from
             # old iteration and should be ignored.
             if constraint_version != self.nodes_constraint_version[node_idx]:

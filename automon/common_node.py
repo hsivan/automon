@@ -18,12 +18,13 @@ class State(enum.Enum):
 
 class CommonNode:
 
-    def __init__(self, idx=0, func_to_monitor=None, x0_len=1, domain=None, max_f_val=np.inf, min_f_val=-np.inf):
-        logging.info("Node " + str(idx) + " initialization: x0_len " + str(x0_len) + ", domain " + str(domain) + ", max_f_val " + str(max_f_val) + ", min_f_val " + str(min_f_val))
+    def __init__(self, idx=0, func_to_monitor=None, d=1, domain=None, max_f_val=np.inf, min_f_val=-np.inf, node_name="Common"):
+        self.node_name = node_name
+        logging.info(self.node_name + " node " + str(idx) + " initialization: d " + str(d) + ", domain " + str(domain) + ", max_f_val " + str(max_f_val) + ", min_f_val " + str(min_f_val))
         self.idx = idx
         self.func_to_monitor = func_to_monitor
-        self.x0_len = x0_len
-        self.domain = [domain] * x0_len if domain is not None else None
+        self.d = d
+        self.domain = [domain] * d if domain is not None else None
         self.max_f_val = max_f_val  # The maximum value of the monitored function (if known, otherwise inf)
         self.min_f_val = min_f_val  # The minimum value of the monitored function (if known, otherwise -inf)
         self.lock = threading.Semaphore()
@@ -34,7 +35,7 @@ class CommonNode:
         self.u_thresh = 0
         self.slack = 0
         self.b_before_first_sync = True
-        self.x0 = np.zeros(self.x0_len, dtype=np.float32)  # Global vector
+        self.x0 = np.zeros(self.d, dtype=np.float32)  # Global vector
         self.x = self.x0.copy()  # Current local vector
         self.x0_local = self.x0.copy()  # Local vector at the time of the last sync
         self.violation_origin = None

@@ -31,19 +31,16 @@ if (AUTO_DIFFERENTIATION_TOOL is None) or (AUTO_DIFFERENTIATION_TOOL == "Jax"):
 
 class AutomonNode(CommonNode):
     
-    def __init__(self, idx=0, x0_len=1, max_f_val=numpy.inf, min_f_val=-numpy.inf, domain=None, func_to_monitor=None):
-        CommonNode.__init__(self, idx, func_to_monitor, x0_len, domain, max_f_val, min_f_val)
+    def __init__(self, idx, func_to_monitor, d=1, max_f_val=numpy.inf, min_f_val=-numpy.inf, domain=None):
+        CommonNode.__init__(self, idx, func_to_monitor, d, domain, max_f_val, min_f_val, node_name="AutoMon")
         logging.info("AutoMon node " + str(idx) + " initialization: AUTO_DIFFERENTIATION_TOOL " + AUTO_DIFFERENTIATION_TOOL)
-        self.node_name = "AutoMon"
         self.domain_range = domain
         self.func_to_monitor_grad = grad(func_to_monitor)
-        #self.g_func_grad_at_x0 = lambda x0: self.func_to_monitor_grad(x0)
-        #self.h_func_grad_at_x0 = lambda x: numpy.zeros(self.x0_len)
         self._init()
 
     def _init(self):
         super()._init()
-        self.domain = [self.domain_range] * self.x0_len if self.domain_range is not None else None
+        self.domain = [self.domain_range] * self.d if self.domain_range is not None else None
         self.g_func = None
         self.h_func = None
 
@@ -174,13 +171,13 @@ class AutomonNode(CommonNode):
             self.g_func = g_func
             self.h_func = h_func
             self.g_func_grad_at_x0 = self.func_to_monitor_grad(x0).copy()  # The tangent line of g at the point x0
-            self.h_func_grad_at_x0 = numpy.zeros(self.x0_len)  # The tangent line of h at the point x0
+            self.h_func_grad_at_x0 = numpy.zeros(self.d)  # The tangent line of h at the point x0
         else:
             # The dc type is DcType.Concave.
             # To get unified code for convex diff and concave diff constraints, we convert concave diff to be convex diff.
             self.g_func = lambda x: -h_func(x)
             self.h_func = lambda x: -g_func(x)
-            self.g_func_grad_at_x0 = numpy.zeros(self.x0_len)  # The tangent line of g at the point x0
+            self.g_func_grad_at_x0 = numpy.zeros(self.d)  # The tangent line of g at the point x0
             self.h_func_grad_at_x0 = -self.func_to_monitor_grad(x0).copy()  # The tangent line of h at the point x0
         self.g_func_at_x0 = self.g_func(self.x0).copy()
         self.h_func_at_x0 = self.h_func(self.x0).copy()

@@ -6,9 +6,8 @@ from timeit import default_timer as timer
 
 class RlvNode(CommonNode):
     
-    def __init__(self, idx=0, x0_len=1, max_f_val=np.inf, min_f_val=-np.inf, domain=None, func_to_monitor=None):
-        CommonNode.__init__(self, idx, func_to_monitor, x0_len, domain, max_f_val, min_f_val)
-        self.node_name = "RLV"
+    def __init__(self, idx, func_to_monitor, d=1, max_f_val=np.inf, min_f_val=-np.inf, domain=None):
+        CommonNode.__init__(self, idx, func_to_monitor, d, domain, max_f_val, min_f_val, node_name="RLV")
         self._init()
 
     def _init(self):

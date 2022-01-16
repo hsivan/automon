@@ -29,7 +29,7 @@ Let `automon_root` be the root folder of the project on your local computer, for
 
 To install AutoMon run:
 ```bash
-pip install git+https://github.com/hsivan/automon
+pip install git+https://github.com/hsivan/automon.git
 ```
 Or, download the code and then run:
 ```bash
@@ -106,15 +106,13 @@ def func_inner_product(x):
 Next, initiate and run the coordinator on a designated server.
 You could change the listening port of the coordinator.
 ```python
-from automon import AutomonCoordinator, AutomonNode
+from automon import AutomonCoordinator
 from automon.zmq_socket_utils import init_server_socket, get_next_node_message, send_message_to_node
 from function_def import func_inner_product
 import logging
 logging.getLogger('automon').setLevel(logging.INFO)
 
-# Create a dummy node for the coordinator that uses it in the process of resolving violations.
-verifier = AutomonNode(idx=-1, x0_len=40, func_to_monitor=func_inner_product)
-coordinator = AutomonCoordinator(verifier, num_nodes=4, error_bound=2.0)
+coordinator = AutomonCoordinator(num_nodes=4, func_to_monitor=func_inner_product, error_bound=2.0, d=40)
 # Open a server socket. Wait for all nodes to connect and send 'start' signal to all nodes to start their data loop.
 server_socket = init_server_socket(port=6400, num_nodes=4)
 
@@ -140,7 +138,7 @@ def time_to_wait_for_next_sample_milliseconds(start_time, num_received_samples):
     return (num_received_samples - (timer() - start_time)) * 1000
 
 NODE_IDX = 0  # Change the node index for different nodes
-node = AutomonNode(idx=NODE_IDX, x0_len=40, func_to_monitor=func_inner_product)
+node = AutomonNode(idx=NODE_IDX, func_to_monitor=func_inner_product, d=40)
 # Open a client socket and connect to the server socket. Wait for 'start' message from the server.
 client_socket = init_client_socket(NODE_IDX, host='127.0.0.1', port=6400)
 
