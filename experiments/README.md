@@ -12,7 +12,8 @@ download `PRSA2017_Data_20130301-20170228.zip` from [here](https://archive.ics.u
 Put the 12 `PRSA_Data_XXX_20130301-20170228.csv` files in `<automon_root>/datasets/air_quality` folder.
 2. [Intrusion Detection](http://kdd.ics.uci.edu/databases/kddcup99/kddcup99.html):
 download `kddcup.data_10_percent.gz` and `corrected.gz` from [here](http://kdd.ics.uci.edu/databases/kddcup99/kddcup99.html) and decompress.
-Put the decompressed `kddcup.data_10_percent` and `corrected` files in `<automon_root>/datasets/intrusion_detection` folder.
+Put the decompressed `kddcup.data_10_percent` and `corrected` files in `<automon_root>/datasets/
+_detection` folder.
 
 Run all the experiments from within the `experiments` folder:
 ```bash
@@ -26,7 +27,7 @@ To reproduce _Error-Communication Tradeoff_ results run:
 python test_max_error_vs_communication_inner_product.py
 python test_max_error_vs_communication_quadratic.py
 python test_max_error_vs_communication_kld_air_quality.py
-python test_max_error_vs_communication_dnn_intrusion detection.py
+python test_max_error_vs_communication_dnn_intrusion_detection.py
 ```
 You will find the output files and figures in `<automon_root>/experiments/test_results/results_test_max_error_vs_communication_inner_product_xxx` folders.
 
