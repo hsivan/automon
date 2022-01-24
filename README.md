@@ -19,7 +19,8 @@ AutoMon is written in pure Python.
 Use the following instructions to install a
 binary package with `pip`, or to download AutoMon's source code.
 We support installing `automon` package on Linux (Ubuntu 18.04 or later) and
-Windows (10 or later) platforms, while Windows support is only partial (see Features section below). 
+Windows (10 or later) platforms, while Windows support is only partial (see Features section below).
+**The installation requires Python >=3.7, <3.11**.
 
 To download AutoMon's source code run:
 ```bash
@@ -95,16 +96,17 @@ For the communication between the coordinator and nodes we use [PyZMQ](https://g
 this can be replaced with any other messaging library.
 
 The first step is to define the function.
-For example, we define the inner product function in a file called `function_def.py`:
+For example, to monitor the inner product function, define the function in a file, and call it e.g. `function_def.py`:
 ```python
-import jax.numpy as np  # the user could use autograd.numpy instead of JAX (for Windows)
+import jax.numpy as np  # For Windows, import autograd.numpy instead of jax.numpy
 
 def func_inner_product(x):
     return np.matmul(x[:x.shape[0] // 2], x[x.shape[0] // 2:])
 ```
 
-Next, initiate and run the coordinator on a designated server.
-You could change the listening port of the coordinator.
+Next, copy the following code into a second file, called for example `coordinator.py`, and run it.
+This code will initialize and run a coordinator instance that waits for 4 nodes.
+The number of nodes and the listening port of the coordinator can be modified in this script.
 ```python
 from automon import AutomonCoordinator
 from automon.zmq_socket_utils import init_server_socket, get_next_node_message, send_message_to_node
@@ -123,8 +125,10 @@ while True:
         send_message_to_node(server_socket, node_idx, reply)
 ```
 
-Lastly, initiate and run a node. The node can run on any computer or device with internet access.
-Make sure the `host` and `port` are set to the IP and port of the coordinator.
+Lastly, use the following code to initiate and run **the 4 nodes, one at a time**.
+A node can be run on any computer or device with internet access.
+Make sure the `host` is set to the IP of the coordinator machine and the `port` is set to the one defined in the coordinator script.
+Don't forget to update `NODE_IDX` for every new instance.
 ```python
 import numpy as np
 from timeit import default_timer as timer
@@ -162,8 +166,6 @@ while True:
         if reply:
             client_socket.send(reply)
 ```
-Initiate all 3 other nodes similarly.
-Don't forget to update the node_idx for every new instance.
 After all the nodes and the coordinator are initiated, the experiment begins automatically.
 
 More examples can be found in the `examples` folder.

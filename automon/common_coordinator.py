@@ -311,7 +311,7 @@ class CommonCoordinator:
             violation_type_str = "False Global Violation" if violation_type_str == "" else violation_type_str + " and False Global Violation"
         if b_false_local_violation:
             violation_type_str = "False Local Violation" if violation_type_str == "" else violation_type_str + " and False Global Violation"
-        logging.info("Iteration " + str(self.iteration) + ": Node " + str(node_idx) + " notify " + violation_type_str)
+        logging.debug("Iteration " + str(self.iteration) + ": Node " + str(node_idx) + " notify " + violation_type_str)
 
     def _notify_violation(self, node_idx, violation_origin):
         self.b_nodes_have_violation[node_idx] = True
@@ -338,7 +338,7 @@ class CommonCoordinator:
             self.statistics.update_get_node_local_vector_messages_statistics(len(indices_of_nodes_asked_for_local_vector))
         
         for node_idx in indices_of_nodes_asked_for_local_vector:
-            logging.info("Iteration " + str(self.iteration) + ": Coordinator asks node " + str(node_idx) + " for statistics")
+            logging.debug("Iteration " + str(self.iteration) + ": Coordinator asks node " + str(node_idx) + " for statistics")
             message_out = prepare_message_get_local_vector(node_idx, self.nodes_constraint_version[node_idx])
             messages_out.append((node_idx, message_out))
 
@@ -372,7 +372,7 @@ class CommonCoordinator:
         else:
             # This action is not required as the global vector x of the verifier is not used in a real distributed experiment.
             self.verifier.x = new_x0.copy()
-        logging.info("Iteration " + str(self.iteration) + ": About to sync the value " + str(new_x0))
+        logging.debug("Iteration " + str(self.iteration) + ": About to sync the value " + str(new_x0))
 
         self.x0 = new_x0
         # Updating the thresholds to make sure that that the new x0 is inside the safe zone.
@@ -435,7 +435,7 @@ class CommonCoordinator:
         # Could not resolve violations with the nodes that provide their local vectors.
 
         if len(S) >= S_max_size:
-            logging.info("Iteration " + str(self.iteration) + ": Fallback to eager sync from lazy sync !!!!!!!!!!!!!!!!!!")
+            logging.info("Iteration " + str(self.iteration) + ": Fallback to eager sync from lazy sync")
             messages_out = self._eager_sync()
             b_eager_sync_fallback = True
             # Reset the LRU counters of all nodes
@@ -530,7 +530,7 @@ class CommonCoordinator:
         self.statistics.update_sync_messages_statistics(len(nodes_indices))
                 
         for node_idx in nodes_indices:
-            logging.info("Iteration " + str(self.iteration) + ": Coordinator syncs node " + str(node_idx))
+            logging.debug("Iteration " + str(self.iteration) + ": Coordinator syncs node " + str(node_idx))
             message_out = self._sync_node(node_idx, sync_type)
             messages_out.append((node_idx, message_out))
             self.b_nodes_have_violation[node_idx] = False
@@ -548,7 +548,7 @@ class CommonCoordinator:
 
     # Override by inherent class if sync requires additional parameters
     def _sync_node(self, node_idx, sync_type="full"):
-        self.nodes_constraint_version[node_idx] = self.iteration
+        self.nodes_constraint_version[node_idx] = self.iteration + 1
         if sync_type == "full":
             message_out = prepare_message_sync(node_idx, self.nodes_constraint_version[node_idx], self.x0, self.nodes_slack[node_idx], self.l_thresh, self.u_thresh)
         else:
@@ -559,7 +559,7 @@ class CommonCoordinator:
         f = self.func_to_monitor(self.x0)
         self.l_thresh = f - self.error_bound
         self.u_thresh = f + self.error_bound
-        logging.info("Iteration " + str(self.iteration) + ": About to sync the thresholds " + str(self.l_thresh) + "," + str(self.u_thresh))
+        logging.debug("Iteration " + str(self.iteration) + ": About to sync the thresholds " + str(self.l_thresh) + "," + str(self.u_thresh))
 
     # This function should be called after every data round by the test util loop (in a simulation, not in a real distributed experiment). This is for statistics only.
     def update_statistics(self):

@@ -93,8 +93,8 @@ class ExtremeEigenvalueHelper:
         if numpy.isnan(max_eigenvalue):
             max_eigenvalue = numpy.inf
 
-        logging.info("Iteration " + str(iteration) + ": Minimal eigenvalue of hessian in the domain: " + str(min_eigenvalue))
-        logging.info("Iteration " + str(iteration) + ": Maximal eigenvalue of hessian in the domain: " + str(max_eigenvalue))
+        logging.debug("Iteration " + str(iteration) + ": Minimal eigenvalue of hessian in the domain: " + str(min_eigenvalue))
+        logging.debug("Iteration " + str(iteration) + ": Maximal eigenvalue of hessian in the domain: " + str(max_eigenvalue))
         end = timer()
         optimization_time = end - start
         logging.info("Optimization time: " + str(optimization_time))
@@ -140,11 +140,11 @@ class AdcdHelper:
             assert(lambda_min <= lambda_max)
 
             if numpy.abs(lambda_min) <= lambda_max:
-                logging.info("Use g,h convex diff, ADCD-E with H_minus.")
+                logging.info("Use ADCD-E with convex diff (H_minus)")
                 dc_type = DcType.Convex
                 signed_H = self._get_signed_H(eigenvalues, eigenvectors, True)
             else:
-                logging.info("Use g,h concave diff, ADCD-E with H_plus.")
+                logging.info("Use ADCD-E with concave diff (H_plus)")
                 dc_type = DcType.Concave
                 signed_H = self._get_signed_H(eigenvalues, eigenvectors, False)
 
@@ -167,11 +167,11 @@ class AdcdHelper:
         lambda_max_h_hat, lambda_max_g_hat = -1.0 * lambda_max_plus, max_eigenvalue_at_x0 - 1.0 * lambda_max_plus  # Both values should be <= 0
 
         if numpy.abs(lambda_min_g + lambda_min_h) <= numpy.abs(lambda_max_h_hat + lambda_max_g_hat):
-            logging.info("Use g,h convex diff, ADCD-X with lambda_min_minus " + str(lambda_min_minus))
+            logging.info("Use ADCD-X with convex diff (lambda_min_minus=" + str(lambda_min_minus) + ")")
             dc_type = DcType.Convex
             extreme_lambda = lambda_min_minus
         else:
-            logging.info("Use g,h concave diff, ADCD-X with lambda_max_plus " + str(lambda_max_plus))
+            logging.info("Use ADCD-X with concave diff (lambda_max_plus=" + str(lambda_max_plus) + ")")
             dc_type = DcType.Concave
             extreme_lambda = lambda_max_plus
 
@@ -279,7 +279,7 @@ class AutomonCoordinator(CommonCoordinator):
     
     # Override - difference in sync
     def _sync_node(self, node_idx, sync_type="full"):
-        self.nodes_constraint_version[node_idx] = self.iteration
+        self.nodes_constraint_version[node_idx] = self.iteration + 1
         if sync_type == "full":
             # Only at full sync we update the local constraints
             if self.b_hessian_const and self.iteration > 0:

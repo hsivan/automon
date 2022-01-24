@@ -1,4 +1,4 @@
-import jax.numpy as np  # the user could use autograd.numpy instead of JAX (for Windows)
+import jax.numpy as np  # For Windows, import autograd.numpy instead of jax.numpy
 
 
 def func_inner_product(x):
