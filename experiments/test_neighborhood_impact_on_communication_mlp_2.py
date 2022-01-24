@@ -1,4 +1,5 @@
 import os
+import sys
 from automon import AutomonNode, AutomonCoordinator
 from test_utils.data_generator import DataGeneratorMlp
 from experiments.test_neighborhood_impact_on_communication_rozenbrock import get_optimal_neighborhood_sizes_from_full_test
@@ -46,9 +47,11 @@ def neighborhood_size_impact(experiment_folder, test_folder, neighborhood_sizes,
 
 
 if __name__ == "__main__":
-
     # Use the output folder of test_optimal_and_tuned_neighborhood_mlp_2.py to get the optimal and tuned neighborhood size per error bound
-    full_tuning_test_folder = "./test_results/results_optimal_and_tuned_neighborhood_mlp_2_2021-04-05_15-45-13/"
+    if len(sys.argv) > 1:
+        full_tuning_test_folder = sys.argv[1]
+    else:
+        full_tuning_test_folder = "./test_results/results_optimal_and_tuned_neighborhood_mlp_2_2021-04-05_15-45-13/"
     full_tuning_test_experiment_folders = [full_tuning_test_folder + sub_folder for sub_folder in os.listdir(full_tuning_test_folder) if os.path.isdir(full_tuning_test_folder + sub_folder)]
     num_experiments = len(full_tuning_test_experiment_folders)
     error_bounds, optimal_neighborhood_size_arr, tuned_neighborhood_size_arr = get_optimal_neighborhood_sizes_from_full_test(full_tuning_test_experiment_folders)

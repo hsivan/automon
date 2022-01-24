@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 from matplotlib import rcParams, rcParamsDefault
 from test_utils.test_utils import read_config_file
 import os
+import sys
 import numpy as np
 from experiments.visualization.visualization_utils import get_figsize, reformat_large_tick_values, get_function_value_offset
 import matplotlib.ticker as tick
@@ -74,7 +75,7 @@ def plot_num_nodes_impact_on_communication(parent_test_folder):
     rcParams.update(rcParamsDefault)
 
 
-def plot_num_nodes_impact_on_communication_combined(parent_test_folder_inner_product, parent_test_folder_mlp_40):
+def plot_num_nodes_impact_on_communication_combined(parent_test_folder_inner_product, parent_test_folder_mlp_40, result_dir="./"):
     rcParams['pdf.fonttype'] = 42
     rcParams['ps.fonttype'] = 42
     rcParams.update({'legend.fontsize': 5.4})
@@ -110,7 +111,7 @@ def plot_num_nodes_impact_on_communication_combined(parent_test_folder_inner_pro
                 horizontalalignment='right',
                 verticalalignment='bottom')
     plt.subplots_adjust(top=0.85, bottom=0.27, left=0.26, right=0.96)
-    fig.savefig("num_nodes_vs_communication.pdf")
+    fig.savefig(result_dir + "/num_nodes_vs_communication.pdf")
 
     plt.close(fig)
     rcParams.update(rcParamsDefault)
@@ -118,6 +119,14 @@ def plot_num_nodes_impact_on_communication_combined(parent_test_folder_inner_pro
 
 if __name__ == "__main__":
     # Figure 7 (b): impact of the number of nodes on communication
-    parent_test_folder_inner_product = "../test_results/results_test_num_nodes_impact_inner_product_2021-04-04_11-20-41/"
-    parent_test_folder_mlp_40 = "../test_results/results_test_num_nodes_impact_mlp_40_2021-04-04_11-30-56/"
-    plot_num_nodes_impact_on_communication_combined(parent_test_folder_inner_product, parent_test_folder_mlp_40)
+
+    if len(sys.argv) > 1:
+        result_dir = sys.argv[1]
+        parent_test_folder_inner_product = result_dir + "/" + sys.argv[2]
+        parent_test_folder_mlp_40 = result_dir + "/" + sys.argv[3]
+    else:
+        result_dir = "./"
+        parent_test_folder_inner_product = "../test_results/results_test_num_nodes_impact_inner_product_2021-04-04_11-20-41/"
+        parent_test_folder_mlp_40 = "../test_results/results_test_num_nodes_impact_mlp_40_2021-04-04_11-30-56/"
+
+    plot_num_nodes_impact_on_communication_combined(parent_test_folder_inner_product, parent_test_folder_mlp_40, result_dir)

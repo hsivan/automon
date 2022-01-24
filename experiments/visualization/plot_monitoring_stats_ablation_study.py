@@ -4,6 +4,7 @@ import numpy as np
 from experiments.visualization.visualization_utils import get_figsize, reformat_large_tick_values, get_function_value_offset
 from test_utils.test_utils import read_config_file
 import os
+import sys
 import matplotlib.ticker as tick
 
 
@@ -55,7 +56,7 @@ def plot_monitoring_stats_graph_and_barchart(test_folder, func_name, relative_fo
     ax.tick_params(width=0.5)
 
     plt.subplots_adjust(top=0.97, bottom=0.29, left=0.27, right=0.96)
-    fig.savefig(relative_folder + "func_val_and_approx_error_" + func_name + ".pdf")
+    fig.savefig(relative_folder + "/func_val_and_approx_error_" + func_name + ".pdf")
 
     new_order = [0, 2, 1]
     function_approximation_error_files = [function_approximation_error_files[i] for i in new_order]
@@ -206,7 +207,7 @@ def plot_monitoring_stats_graph_and_barchart(test_folder, func_name, relative_fo
     plt.legend(handles, labels, loc="upper center", ncol=3, bbox_to_anchor=(-1.5, 2.55), columnspacing=1.5, handletextpad=0.6, frameon=False, framealpha=0, handlelength=1.5)
 
     plt.subplots_adjust(top=0.9, bottom=0.17, left=0.18, right=0.99)
-    fig.savefig(relative_folder + "monitoring_stats_" + func_name + ".pdf")
+    fig.savefig(relative_folder + "/monitoring_stats_" + func_name + ".pdf")
 
     rcParams.update(rcParamsDefault)
 
@@ -318,14 +319,21 @@ def plot_monitoring_stats_barchart(test_folder, func_name, relative_folder='./')
                  horizontalalignment='right', verticalalignment='bottom')
 
     plt.subplots_adjust(top=0.9, bottom=0.17, left=0.5, right=0.99)
-    fig.savefig(relative_folder + "monitoring_stats_barchart_" + func_name + ".pdf")
+    fig.savefig(relative_folder + "/monitoring_stats_barchart_" + func_name + ".pdf")
 
 
 if __name__ == "__main__":
+    if len(sys.argv) > 1:
+        result_dir = sys.argv[1]
+        test_folder_quadratic_inverse = result_dir + "/" + sys.argv[2]
+        test_folder_mlp_2 = result_dir + "/" + sys.argv[3]
+    else:
+        result_dir = "./"
+        test_folder_quadratic_inverse = "../test_results/results_ablation_study_quadratic_inverse_2021-07-08_15-40-37"
+        test_folder_mlp_2 = "../test_results/results_ablation_study_mlp_2_2021-07-08_15-46-33"
+
     # Figure 10 (a)
-    test_folder = "../test_results/results_ablation_study_quadratic_inverse_2021-07-08_15-40-37"
-    plot_monitoring_stats_graph_and_barchart(test_folder, "quadratic_inverse")
+    plot_monitoring_stats_graph_and_barchart(test_folder_quadratic_inverse, "quadratic_inverse", result_dir)
 
     # Figure 10 (b)
-    test_folder = "../test_results/results_ablation_study_mlp_2_2021-07-08_15-46-33"
-    plot_monitoring_stats_barchart(test_folder, "mlp_2")
+    plot_monitoring_stats_barchart(test_folder_mlp_2, "mlp_2", result_dir)

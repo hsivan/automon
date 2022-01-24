@@ -1,5 +1,6 @@
 import os
 os.environ['AUTO_DIFFERENTIATION_TOOL'] = 'AutoGrad'
+import sys
 from automon import AutomonNode, AutomonCoordinator
 from test_utils.functions_to_monitor import func_rozenbrock
 from test_utils.data_generator import DataGeneratorRozenbrock
@@ -54,14 +55,16 @@ def get_optimal_neighborhood_sizes_from_full_test(experiment_folders):
 
 
 if __name__ == "__main__":
-
     # Use the output folder of test_optimal_and_tuned_neighborhood_rozenbrock.py to get the optimal and tuned neighborhood size per error bound
-    full_tuning_test_folder = "./test_results/results_optimal_and_tuned_neighborhood_rozenbrock_2021-04-05_08-48-07/"
+    if len(sys.argv) > 1:
+        full_tuning_test_folder = sys.argv[1]
+    else:
+        full_tuning_test_folder = "./test_results/results_optimal_and_tuned_neighborhood_rozenbrock_2021-04-05_08-48-07/"
     full_tuning_test_experiment_folders = [full_tuning_test_folder + sub_folder for sub_folder in os.listdir(full_tuning_test_folder) if os.path.isdir(full_tuning_test_folder + sub_folder)]
     num_experiments = len(full_tuning_test_experiment_folders)
     error_bounds, optimal_neighborhood_size_arr, tuned_neighborhood_size_arr = get_optimal_neighborhood_sizes_from_full_test(full_tuning_test_experiment_folders)
 
-    parent_test_folder = start_test("comm_neighborhood_rozen")
+    parent_test_folder = start_test("comm_neighborhood_rozenbrock")
     end_test()  # To close the logging
 
     for experiment_idx in range(num_experiments):

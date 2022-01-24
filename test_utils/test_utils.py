@@ -15,14 +15,17 @@ def _prepare_test_folder(test_name, test_folder=""):
     if not os.path.isdir(test_folder):
         os.makedirs(test_folder)
 
+    logger.setLevel(logging.DEBUG)
+
     formatter = logging.Formatter(fmt='%(asctime)s %(levelname)-8s %(message)s')
     output_file_handler = logging.FileHandler(test_folder + "/" + test_name + '.log', mode='w')
+    output_file_handler.setLevel(logging.INFO)  # Can change to DEBUG to see send and received message logs from messages_common
     output_file_handler.setFormatter(formatter)
     stdout_handler = logging.StreamHandler(sys.stdout)
+    stdout_handler.setLevel(logging.WARNING)  # Can change to DEBUG/INFO to see all log messages
     stdout_handler.setFormatter(formatter)
     logger.addHandler(output_file_handler)
     logger.addHandler(stdout_handler)
-    logger.setLevel(logging.INFO)  # Can change to DEBUG to see send and received message logs from messages_common
     logger.propagate = False
 
     logging.getLogger('matplotlib.backends.backend_pdf').setLevel(logging.WARNING)
@@ -73,8 +76,15 @@ def _test_data_loop(coordinator, nodes, data_generator, b_single_sample_per_roun
     # For the rest of the data rounds: read data from stream, update verifier global vector and nodes local
     # vectors, and call the coordinator to resolve violations.
     message_violations = b''
-    i = 0
-    while data_generator.has_next():
+    num_samples = data_generator.get_num_samples_left()
+    prev = timer()
+    for i in range(num_samples):
+        now = timer()
+        # Print progress message every 5 minutes
+        if now - prev > 5 * 60:
+            print("Completed " + str(i/num_samples) + "%")
+            sys.stdout.flush()
+            prev = now
         local_vector, node_idx = data_generator.get_next_data_point()
         global_vector = data_generator.get_global_vector()
 

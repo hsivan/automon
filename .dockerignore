@@ -2,6 +2,7 @@
 temp
 *.patch
 tests
+test_results
 experiments
 examples/test_results
 nethogs_out.txt

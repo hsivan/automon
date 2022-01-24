@@ -5,12 +5,13 @@ from test_utils.test_utils import read_config_file
 from test_utils.stats_analysis_utils import get_violations_per_neighborhood_size, get_neighborhood_size_error_bound_connection, \
     get_optimal_neighborhood_size
 import os
+import sys
 import numpy as np
 import matplotlib.ticker as tick
 import pickle as pkl
 
 
-def plot_impact_of_neighborhood_size_on_violations_four_error_bounds(error_bounds, data_folders):
+def plot_impact_of_neighborhood_size_on_violations_four_error_bounds(error_bounds, data_folders, result_dir="./"):
     rcParams['pdf.fonttype'] = 42
     rcParams['ps.fonttype'] = 42
     rcParams.update({'legend.fontsize': 5.4})
@@ -49,7 +50,7 @@ def plot_impact_of_neighborhood_size_on_violations_four_error_bounds(error_bound
     fig.legend(handles, labels, loc="upper center", ncol=3, columnspacing=1.05, bbox_to_anchor=(0.49, 1.04), frameon=False, handletextpad=0.25, handlelength=1.7)
 
     plt.subplots_adjust(top=0.88, bottom=0.21, left=0.13, right=0.97, hspace=0.22, wspace=0.1)
-    fig.savefig("impact_of_neighborhood_on_violations_four_error_bounds.pdf")
+    fig.savefig(result_dir + "/impact_of_neighborhood_on_violations_four_error_bounds.pdf")
     plt.close(fig)
 
     rcParams.update(rcParamsDefault)
@@ -158,7 +159,7 @@ def plot_communication_error_bound_connection(parent_test_folder, func_name, ax)
           "error large fixed r:", mean_communication_error_percent_optimal_fixed_large_r)
 
 
-def plot_communication_or_violation_error_bound_connection_rozenbrock_mlp_2(parent_test_folder_rozenbrock, parent_test_folder_mlp_2):
+def plot_communication_or_violation_error_bound_connection_rozenbrock_mlp_2(parent_test_folder_rozenbrock, parent_test_folder_mlp_2, result_dir="./"):
     rcParams['pdf.fonttype'] = 42
     rcParams['ps.fonttype'] = 42
     rcParams.update({'legend.fontsize': 5.4})
@@ -182,7 +183,7 @@ def plot_communication_or_violation_error_bound_connection_rozenbrock_mlp_2(pare
     handles, labels = axs[0].get_legend_handles_labels()
     fig.legend(handles, labels, loc="lower center", ncol=6, columnspacing=0.8, frameon=False, bbox_to_anchor=(0.5, -0.04))
     plt.subplots_adjust(top=0.96, bottom=0.39, left=0.12, right=0.99, wspace=0.17)
-    fig.savefig("neighborhood_impact_on_communication_error_bound_connection.pdf")
+    fig.savefig(result_dir + "/neighborhood_impact_on_communication_error_bound_connection.pdf")
     plt.close(fig)
     rcParams.update(rcParamsDefault)
 
@@ -251,7 +252,7 @@ def plot_neighborhood_size_error_bound_connection(parent_test_folder, func_name,
     print("Function", func_name, "mean_wrt_optimal_std:", mean_wrt_optimal_std, ", max_wrt_optimal_std:", max_wrt_optimal_std)
 
 
-def plot_neighborhood_size_error_bound_connection_avg_rozenbrock_mlp_2(parent_test_folder_rozenbrock, parent_test_folder_mlp_2):
+def plot_neighborhood_size_error_bound_connection_avg_rozenbrock_mlp_2(parent_test_folder_rozenbrock, parent_test_folder_mlp_2, result_dir="./"):
     rcParams['pdf.fonttype'] = 42
     rcParams['ps.fonttype'] = 42
     rcParams.update({'legend.fontsize': 5.4})
@@ -266,7 +267,7 @@ def plot_neighborhood_size_error_bound_connection_avg_rozenbrock_mlp_2(parent_te
     axs[1].set_yticks([0, 0.5, 1])
 
     plt.subplots_adjust(top=0.94, bottom=0.26, left=0.11, right=0.99, wspace=0.22)
-    fig.savefig("optimal_and_tuned_neighborhood.pdf")
+    fig.savefig(result_dir + "/optimal_and_tuned_neighborhood.pdf")
     plt.close(fig)
     rcParams.update(rcParamsDefault)
 
@@ -334,10 +335,20 @@ def plot_communication_or_violation_error_bound_connection(parent_test_folder, f
 
 
 if __name__ == "__main__":
-    neighborhood_size_error_bound_connection_rozenbrock_data_folder = "../test_results/results_optimal_and_tuned_neighborhood_rozenbrock_2021-04-05_08-48-07"
-    neighborhood_size_error_bound_connection_mlp_data_folder = "../test_results/results_optimal_and_tuned_neighborhood_mlp_2_2021-04-05_15-45-13"
+    if len(sys.argv) > 1:
+        result_dir = sys.argv[1]
+        neighborhood_size_error_bound_connection_rozenbrock_data_folder = result_dir + "/" + sys.argv[2]
+        neighborhood_size_error_bound_connection_mlp_data_folder = result_dir + "/" + sys.argv[3]
+        data_folder_rozenbrock = result_dir + "/" + sys.argv[4]
+        data_folder_tiny_mlp = result_dir + "/" + sys.argv[5]
+    else:
+        result_dir = "./"
+        neighborhood_size_error_bound_connection_rozenbrock_data_folder = "../test_results/results_optimal_and_tuned_neighborhood_rozenbrock_2021-04-05_08-48-07"
+        neighborhood_size_error_bound_connection_mlp_data_folder = "../test_results/results_optimal_and_tuned_neighborhood_mlp_2_2021-04-05_15-45-13"
+        data_folder_rozenbrock = "../test_results/results_comm_neighborhood_rozen_2021-04-10_10-13-41/"
+        data_folder_tiny_mlp = "../test_results/results_comm_neighborhood_mlp_2_2021-04-10_12-27-37/"
 
-    # Figure 2: figure with 4 specific error bounds for Rozenbrock
+    # Figure 3: figure with 4 specific error bounds for Rozenbrock
     error_bounds = [0.05, 0.15, 0.25, 0.95]
     test_folder = neighborhood_size_error_bound_connection_rozenbrock_data_folder + "/0/"
     data_folder_error_bound_0_075 = test_folder + "thresh_0_05/"
@@ -345,12 +356,10 @@ if __name__ == "__main__":
     data_folder_error_bound_0_15 = test_folder + "thresh_0_25000000000000006/"
     data_folder_error_bound_0_8 = test_folder + "thresh_0_9500000000000002/"
     data_folders = [data_folder_error_bound_0_075, data_folder_error_bound_0_1, data_folder_error_bound_0_15, data_folder_error_bound_0_8]
-    plot_impact_of_neighborhood_size_on_violations_four_error_bounds(error_bounds, data_folders)
+    plot_impact_of_neighborhood_size_on_violations_four_error_bounds(error_bounds, data_folders, result_dir)
 
     # Figure 8: optimal neighborhood and tuned neighborhood
-    plot_neighborhood_size_error_bound_connection_avg_rozenbrock_mlp_2(neighborhood_size_error_bound_connection_rozenbrock_data_folder, neighborhood_size_error_bound_connection_mlp_data_folder)
+    plot_neighborhood_size_error_bound_connection_avg_rozenbrock_mlp_2(neighborhood_size_error_bound_connection_rozenbrock_data_folder, neighborhood_size_error_bound_connection_mlp_data_folder, result_dir)
 
     # Figure 9: 5 lines - optimal neighborhood, tuned neighborhood, and 3 constant neighborhood sizes
-    data_folder_rozenbrock = "../test_results/results_comm_neighborhood_rozen_2021-04-10_10-13-41/"
-    data_folder_tiny_mlp = "../test_results/results_comm_neighborhood_mlp_2_2021-04-10_12-27-37/"
-    plot_communication_or_violation_error_bound_connection_rozenbrock_mlp_2(data_folder_rozenbrock, data_folder_tiny_mlp)
+    plot_communication_or_violation_error_bound_connection_rozenbrock_mlp_2(data_folder_rozenbrock, data_folder_tiny_mlp, result_dir)

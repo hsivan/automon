@@ -16,7 +16,7 @@ def get_figsize(columnwidth=241.14749, wf=1.0, hf=(5. ** 0.5 - 1.0) / 2.0, b_fix
     fig_height = fig_width*hf      # height in inches
     if b_fixed_height:
         fig_height = hf
-    print("fig_width", fig_width, "fig_height", fig_height)
+    #print("fig_width", fig_width, "fig_height", fig_height)
     return [fig_width, fig_height]
 
 

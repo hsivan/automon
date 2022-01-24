@@ -1,12 +1,25 @@
 # Reproduce experimental results
 
+## Reproduce experiments using a single script
+We provide a single script that runs all the experiments and generates the papers figures.
+The script can be run as a standalone, and in that case it also downloads the project source code,
+or it can be run as part of a cloned project.
+
+To run the script as a standalone download only the file `experiments/reproduce.py` and run it.
+To run the script from within a cloned project, first clone the project,
+`git clone https://github.com/hsivan/automon`,
+and then run the script: `python <automon_root>/experiments/reproduce.py`.
+
+## Reproduce experiments manually
+
 Before running the experiments, download AutoMon's source code:
 ```bash
 git clone https://github.com/hsivan/automon
 ```
 Let `automon_root` be the root folder of the project on your local computer.
 
-Download the external datasets:
+Download the external datasets by running: `python <automon_root>/experiments/reproduce.py --dd`.
+The script downloads the two external datasets and does the following:
 1. [Air Quality](https://archive.ics.uci.edu/ml/datasets/Beijing+Multi-Site+Air-Quality+Data):
 download `PRSA2017_Data_20130301-20170228.zip` from [here](https://archive.ics.uci.edu/ml/machine-learning-databases/00501/) and unzip it.
 Put the 12 `PRSA_Data_XXX_20130301-20170228.csv` files in `<automon_root>/datasets/air_quality` folder.
@@ -30,6 +43,14 @@ python test_max_error_vs_communication_kld_air_quality.py
 python test_max_error_vs_communication_dnn_intrusion_detection.py
 ```
 You will find the output files and figures in `<automon_root>/experiments/test_results/results_test_max_error_vs_communication_inner_product_xxx` folders.
+To generate figures that summarize the four experiments, replace the xxx in the following command with the suffixes of the result folders, and run:
+```bash
+python visualization/plot_error_communication_tradeoff.py test_results \
+    results_test_max_error_vs_communication_inner_product_xxx \
+    results_test_max_error_vs_communication_quadratic_xxx \
+    results_test_max_error_vs_communication_dnn_intrusion_detection_xxx \
+    results_test_max_error_vs_communication_kld__air_quality_xxx
+```
 
 ## Scalability: Dimensions, Nodes, Runtime (Sec. 4.4)
 To reproduce _Scalability to Dimensionality_ results run:
@@ -39,8 +60,13 @@ python test_dimension_impact_kld_air_quality.py
 python test_dimension_impact_mlp.py
 ```
 These generate the output folders `<automon_root>/experiments/test_results/results_test_dimension_impact_xxx`.
-Open the script `<automon_root>/experiments/visualization/plot_dimensions_stats.py` and update the name of the three output folders
-at the bottom of the file and run the script.
+To generate figures that summarize the three experiments, replace the xxx in the following command with the suffixes of the result folders, and run:
+```bash
+python visualization/plot_dimensions_stats.py test_results \
+    results_test_dimension_impact_inner_product_xxx \
+    results_test_dimension_impact_kld_air_quality_xxx \
+    results_test_dimension_impact_mlp_xxx
+```
 The script generates four figures:
 1. dimension_communication.pdf shows the total number of messages in each run for different functions and input dimensions.
 2. dimension_coordinator_runtime.pdf shows the average time for the full sync of an AutoMon coordinator.
@@ -53,8 +79,12 @@ python test_num_nodes_impact_inner_product.py
 python test_num_nodes_impact_mlp_40.py
 ```
 These generate the output folders `<automon_root>/experiments/test_results/results_test_num_nodes_impact_xxx`.
-Open the script `<automon_root>/experiments/visualization/plot_num_nodes_impact.py` and update the name of the two output folders
-at the bottom of the file and run the script.
+To generate figures that summarize the two experiments, replace the xxx in the following command with the suffixes of the result folders, and run:
+```bash
+python visualization/plot_num_nodes_impact.py test_results \
+    results_test_dimension_impact_inner_product_xxx \
+    results_test_dimension_impact_mlp_40_xxx
+```
 The script generates the figure num_nodes_vs_communication.pdf that illustrates how the number of messages grows with
 the number of AutoMon nodes.
 
@@ -67,18 +97,31 @@ python test_optimal_and_tuned_neighborhood_mlp_2.py
 These generate the output folders `<automon_root>/experiments/test_results/results_optimal_and_tuned_neighborhood_xxx` where you will find the
 figure neighborhood_size_error_bound_connection_avg.pdf and other output files.
 
-Open the scripts `<automon_root>/experiments/test_neighborhood_impact_on_communication_rozenbrock.py` and `<automon_root>/experiments/test_neighborhood_impact_on_communication_mlp_2.py`
-and update at the bottom of the files the output folders `results_optimal_and_tuned_neighborhood_xxx` respectively. Run:
+Replace the xxx in the following commands with the suffixes of the result folders, and run:
 ```bash
-python test_neighborhood_impact_on_communication_rozenbrock.py
-python test_neighborhood_impact_on_communication_mlp_2.py
+python test_neighborhood_impact_on_communication_rozenbrock.py test_results/results_optimal_and_tuned_neighborhood_rozenbrock_xxx
+python test_neighborhood_impact_on_communication_mlp_2.py test_results/results_optimal_and_tuned_neighborhood_mlp_2_xxx
 ```
 You will find the output files and figures in `<automon_root>/experiments/test_results/results_comm_neighborhood_xxx` folders.
+To generate figures that summarize the four experiments, replace the xxx in the following command with the suffixes of the result folders, and run:
+```bash
+python visualization/plot_neighborhood_impact.py test_results \
+    results_optimal_and_tuned_neighborhood_rozenbrock_xxx \
+    results_optimal_and_tuned_neighborhood_mlp_2_xxx \
+    results_comm_neighborhood_rozenbrock_xxx \
+    results_comm_neighborhood_mlp_2_xxx
+```
 
 ## Impact of ADCD, Slack, and Lazy Sync (Sec. 4.6)
 To reproduce the _Ablation Study_ results run:
 ```bash
-python test_ablation_study_mlp_2.py
 python test_ablation_study_quadratic_inverse.py
+python test_ablation_study_mlp_2.py
 ```
 You will find the output files and figures in `<automon_root>/experiments/test_results/results_ablation_study_xxx` folders.
+To generate figures that summarize the two experiments, replace the xxx in the following command with the suffixes of the result folders, and run:
+```bash
+python visualization/plot_monitoring_stats_ablation_study.py test_results \
+    results_ablation_study_quadratic_inverse_xxx \
+    results_ablation_study_mlp_2_xxx
+```

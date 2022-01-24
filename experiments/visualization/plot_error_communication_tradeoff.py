@@ -3,6 +3,7 @@ from matplotlib import rcParams, rcParamsDefault
 from test_utils.stats_analysis_utils import get_period_approximation_error
 from test_utils.test_utils import read_config_file, write_config_to_file
 import os
+import sys
 import numpy as np
 import matplotlib.ticker as tick
 import pickle as pkl
@@ -171,14 +172,14 @@ def max_error_vs_communication(parent_test_folder, func_name, ax, b_use_aggregat
     ax.set_ylim(bottom=0)
     ax.set_xlim(left=0)
 
-    print("error_bound_arr:", error_bound_arr)
-    print("periods:", periods)
+    #print("error_bound_arr:", error_bound_arr)
+    #print("periods:", periods)
 
-    print("max_error_arr_automon:", max_error_arr_automon)
-    print("num_messages_arr_automon:", num_messages_arr_automon)
+    #print("max_error_arr_automon:", max_error_arr_automon)
+    #print("num_messages_arr_automon:", num_messages_arr_automon)
 
-    print("max_error_arr_periodic:", max_error_arr_periodic)
-    print("num_messages_arr_periodic:", num_messages_arr_periodic)
+    #print("max_error_arr_periodic:", max_error_arr_periodic)
+    #print("num_messages_arr_periodic:", num_messages_arr_periodic)
 
     return num_messages_arr_automon, max_error_arr_automon, error_bound_arr, avg_error_arr_automon, p99_error_arr_automon, centralization_num_messages
 
@@ -221,7 +222,8 @@ def plot_max_error_vs_communication(parent_test_folder, func_name):
 
 
 def plot_max_error_vs_communication_combined(parent_test_folder_inner_prod, parent_test_folder_quadratic,
-                                             parent_test_folder_dnn_intrusion_detection, parent_test_folder_kld):
+                                             parent_test_folder_dnn_intrusion_detection, parent_test_folder_kld,
+                                             result_dir="./"):
     rcParams['pdf.fonttype'] = 42
     rcParams['ps.fonttype'] = 42
     rcParams.update({'legend.fontsize': 5.4})
@@ -246,7 +248,7 @@ def plot_max_error_vs_communication_combined(parent_test_folder_inner_prod, pare
     handles, labels = axs[0].get_legend_handles_labels()
     fig.legend(handles, labels, loc="lower center", ncol=5, columnspacing=1.5, frameon=False, bbox_to_anchor=(0.5, -0.04))
     plt.subplots_adjust(top=0.9, bottom=0.38, left=0.06, right=0.99, wspace=0.35)
-    fig.savefig("max_error_vs_communication.pdf")
+    fig.savefig(result_dir + "/max_error_vs_communication.pdf")
     plt.close(fig)
 
 
@@ -299,7 +301,7 @@ def plot_max_error_vs_communication_combined(parent_test_folder_inner_prod, pare
     fig.legend(handles, labels, loc="upper right", ncol=1, frameon=False, handletextpad=0.3, handlelength=1.85, bbox_to_anchor=(1.02, 1))
 
     plt.subplots_adjust(top=0.89, bottom=0.31, left=0.14, right=0.85, wspace=0.2)
-    fig.savefig("percent_error_kld_and_dnn.pdf")
+    fig.savefig(result_dir + "/percent_error_kld_and_dnn.pdf")
     plt.close(fig)
 
     rcParams.update(rcParamsDefault)
@@ -308,12 +310,20 @@ def plot_max_error_vs_communication_combined(parent_test_folder_inner_prod, pare
 if __name__ == "__main__":
     # Figure 5 and Figure 6
 
-    parent_test_folder_prefix = "../test_results/results_test_max_error_vs_communication_"
-    parent_test_folder_inner_prod = parent_test_folder_prefix + "inner_product_2021-10-10_20-19-30"
-    parent_test_folder_quadratic = parent_test_folder_prefix + "quadratic_2021-10-10_20-21-35"
-    parent_test_folder_dnn_intrusion_detection = parent_test_folder_prefix + "dnn_intrusion_detection_2021-10-11_09-02-11"
-    parent_test_folder_kld = parent_test_folder_prefix + "kld_air_quality_2021-10-10_20-27-53"
+    if len(sys.argv) > 1:
+        result_dir = sys.argv[1]
+        parent_test_folder_inner_prod = result_dir + "/" + sys.argv[2]
+        parent_test_folder_quadratic = result_dir + "/" + sys.argv[3]
+        parent_test_folder_dnn_intrusion_detection = result_dir + "/" + sys.argv[4]
+        parent_test_folder_kld = result_dir + "/" + sys.argv[5]
+    else:
+        result_dir = "./"
+        parent_test_folder_prefix = "../test_results/results_test_max_error_vs_communication_"
+        parent_test_folder_inner_prod = parent_test_folder_prefix + "inner_product_2021-10-10_20-19-30"
+        parent_test_folder_quadratic = parent_test_folder_prefix + "quadratic_2021-10-10_20-21-35"
+        parent_test_folder_dnn_intrusion_detection = parent_test_folder_prefix + "dnn_intrusion_detection_2021-10-11_09-02-11"
+        parent_test_folder_kld = parent_test_folder_prefix + "kld_air_quality_2021-10-10_20-27-53"
 
     # Remote
     plot_max_error_vs_communication_combined(parent_test_folder_inner_prod, parent_test_folder_quadratic,
-                                             parent_test_folder_dnn_intrusion_detection, parent_test_folder_kld)
+                                             parent_test_folder_dnn_intrusion_detection, parent_test_folder_kld, result_dir)

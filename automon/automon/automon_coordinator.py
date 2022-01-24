@@ -1,5 +1,4 @@
 import warnings
-
 from scipy.optimize import minimize
 from timeit import default_timer as timer
 import logging

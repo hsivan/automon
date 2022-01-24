@@ -4,6 +4,7 @@ import numpy as np
 from experiments.visualization.visualization_utils import get_figsize, reformat_large_tick_values
 from test_utils.test_utils import read_config_file
 import os
+import sys
 import matplotlib.ticker as tick
 
 
@@ -89,7 +90,7 @@ def get_time_stats_arrs(test_folder):
         node_avg_inside_safe_zone_evaluation, node_std_inside_safe_zone_evaluation = get_mean_and_std(dimension_folder, "inside_safe_zone evaluation time")
         node_avg_inside_bounds_evaluation, node_std_inside_bound_evaluation = get_mean_and_std(dimension_folder, "inside_bounds evaluation time")
         node_avg_data_update, node_std_data_update = get_mean_and_std(dimension_folder, "data update time")
-        print(dim, num_messages)
+        #print(dim, num_messages)
         dimension_arr.append(dim)
         num_messages_arr.append(num_messages)
         node_avg_data_update_time_arr.append(node_avg_data_update)
@@ -109,7 +110,7 @@ def get_time_stats_arrs(test_folder):
            np.array(node_avg_inside_bounds_evaluation_arr)*sec_to_ms, np.array(node_std_inside_bounds_evaluation_arr)*sec_to_ms
 
 
-def plot_dimensions_figures(kld_test_folder, inner_product_test_folder, mlp_test_folder):
+def plot_dimensions_figures(kld_test_folder, inner_product_test_folder, mlp_test_folder, result_dir="./"):
     rcParams['pdf.fonttype'] = 42
     rcParams['ps.fonttype'] = 42
     rcParams.update({'legend.fontsize': 5.4})
@@ -171,7 +172,7 @@ def plot_dimensions_figures(kld_test_folder, inner_product_test_folder, mlp_test
                 horizontalalignment='right',
                 verticalalignment='bottom')
     plt.subplots_adjust(top=0.85, bottom=0.27, left=0.23, right=0.95)
-    fig.savefig("dimension_communication.pdf")
+    fig.savefig(result_dir + "/dimension_communication.pdf")
 
 
     ################# Node runtime on data update figure #################
@@ -203,7 +204,7 @@ def plot_dimensions_figures(kld_test_folder, inner_product_test_folder, mlp_test
     ax.set_yticks([10 ** -2, 10 ** -1, 10 ** 0, 10 ** 1])
     ax.set_xticks([10, 50, 100, 150, 200])
     plt.subplots_adjust(top=0.85, bottom=0.27, left=0.28, right=0.99)
-    fig.savefig("dimension_node_runtime.pdf")
+    fig.savefig(result_dir + "/dimension_node_runtime.pdf")
 
 
     ################# Coordinator full sync runtime figure #################
@@ -220,7 +221,7 @@ def plot_dimensions_figures(kld_test_folder, inner_product_test_folder, mlp_test
     ax.fill_between(dimension_arr,
                     coordinator_avg_full_sync_time_arr_kld - coordinator_std_full_sync_time_arr_kld,
                     coordinator_avg_full_sync_time_arr_kld + coordinator_std_full_sync_time_arr_kld, alpha=.3)
-    print("coordinator_avg_full_sync_time_arr_kld", coordinator_avg_full_sync_time_arr_kld)
+    #print("coordinator_avg_full_sync_time_arr_kld", coordinator_avg_full_sync_time_arr_kld)
     ax.plot(dimension_arr, coordinator_avg_full_sync_time_arr_mlp, linestyle='--', marker='x', markersize=4, linewidth=1, label="MLP-d")
     ax.fill_between(dimension_arr,
                     coordinator_avg_full_sync_time_arr_mlp - coordinator_std_full_sync_time_arr_mlp,
@@ -235,7 +236,7 @@ def plot_dimensions_figures(kld_test_folder, inner_product_test_folder, mlp_test
     fig.legend(framealpha=0, frameon=False, loc="upper center", bbox_to_anchor=(0.5, 1.05), ncol=3, columnspacing=0.8,
                handletextpad=0.29)
     plt.subplots_adjust(top=0.85, bottom=0.27, left=0.23, right=0.95)
-    fig.savefig("dimension_coordinator_runtime.pdf")
+    fig.savefig(result_dir + "/dimension_coordinator_runtime.pdf")
 
 
     ################# Node runtime on inside_bounds and inside_safe_zone figure #################
@@ -267,14 +268,23 @@ def plot_dimensions_figures(kld_test_folder, inner_product_test_folder, mlp_test
     ax.set_yticks([10 ** -3, 10 ** -2, 10 ** -1, 10 ** 0])
     plt.legend(loc="upper center", ncol=2, bbox_to_anchor=(0.5, 1.6), frameon=False, labelspacing=0.5)
     plt.subplots_adjust(top=0.75, bottom=0.25, left=0.14, right=0.99)
-    fig.savefig("dimension_node_runtime_in_parts.pdf")
+    fig.savefig(result_dir + "/dimension_node_runtime_in_parts.pdf")
 
     rcParams.update(rcParamsDefault)
 
 
 if __name__ == "__main__":
     # Figure 7 (a) and more (scalability to dimensions and runtime)
-    kld_test_folder = "../test_results/results_test_dimension_impact_kld_air_quality_2021-10-10_16-00-18"
-    inner_product_test_folder = "../test_results/results_test_dimension_impact_inner_product_2021-10-10_13-31-18"
-    mlp_test_folder = "../test_results/results_test_dimension_impact_mlp_2021-10-10_13-40-24"
-    plot_dimensions_figures(kld_test_folder, inner_product_test_folder, mlp_test_folder)
+
+    if len(sys.argv) > 1:
+        result_dir = sys.argv[1]
+        inner_product_test_folder = result_dir + "/" + sys.argv[2]
+        kld_test_folder = result_dir + "/" + sys.argv[3]
+        mlp_test_folder = result_dir + "/" + sys.argv[4]
+    else:
+        result_dir = "./"
+        kld_test_folder = "../test_results/results_test_dimension_impact_kld_air_quality_2021-10-10_16-00-18"
+        inner_product_test_folder = "../test_results/results_test_dimension_impact_inner_product_2021-10-10_13-31-18"
+        mlp_test_folder = "../test_results/results_test_dimension_impact_mlp_2021-10-10_13-40-24"
+
+    plot_dimensions_figures(kld_test_folder, inner_product_test_folder, mlp_test_folder, result_dir)

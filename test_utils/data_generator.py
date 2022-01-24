@@ -106,6 +106,12 @@ class DataGenerator:
         else:
             return self.monitoring_data.shape[0]
 
+    def get_num_samples_left(self):
+        if self.state == DataGeneratorState.NeighborhoodTuning:
+            return self.tuning_data.shape[0] - self.data_ptr_tuning
+        else:
+            return self.monitoring_data.shape[0] - self.data_ptr_monitoring
+
     def get_num_iterations(self):
         if self.state == DataGeneratorState.NeighborhoodTuning:
             return self.num_iterations_for_tuning
