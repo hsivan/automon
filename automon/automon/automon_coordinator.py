@@ -1,3 +1,5 @@
+import warnings
+
 from scipy.optimize import minimize
 from timeit import default_timer as timer
 import logging
@@ -219,6 +221,19 @@ class AutomonCoordinator(CommonCoordinator):
         self.b_tune_neighborhood_mode = False
         # This flag is set to False only during fixed neighborhood size experiments. It is ignored during neighborhood size tuning procedure.
         self.b_fix_neighborhood_dynamically = True
+        # Trigger the ADCD-E/ADCD-X component, which uses the automatic differentiation tool.
+        # In case the AD tool is Jax, it uses jit, which compiles some functions the first time it is called. This
+        # compilation latency is, therefore, absorbed in the initialization process, before the data loop starts.
+        if self.b_hessian_const:
+            self.adcd_helper.adcd_e(self.x0)
+        else:
+            try:
+                with warnings.catch_warnings():
+                    warnings.filterwarnings('ignore', r'invalid value encountered')
+                    self.adcd_helper.adcd_x(self.x0, self.neighborhood, self.iteration)
+            except:
+                # For the first time AD could fail for some functions as x0 is 0
+                pass
 
     def _is_neighborhood_size_update_required(self):
         # Return if neighborhood size update is required.
@@ -310,10 +325,10 @@ class AutomonCoordinator(CommonCoordinator):
     def _update_l_u_threshold(self):
         super()._update_l_u_threshold()
         self._update_neighborhood()
-        if not self.b_hessian_const:  # for non-const Hessian use ADCD-X
-            dc_type, dc_argument = self.adcd_helper.adcd_x(self.x0, self.neighborhood, self.iteration)
-        else:  # for const Hessian use ADCD-E
+        if self.b_hessian_const:  # for const Hessian use ADCD-E
             dc_type, dc_argument = self.adcd_helper.adcd_e(self.x0)
+        else:  # for non-const Hessian use ADCD-X
+            dc_type, dc_argument = self.adcd_helper.adcd_x(self.x0, self.neighborhood, self.iteration)
 
         self.dc_type = dc_type
         self.dc_argument = dc_argument

@@ -108,7 +108,11 @@ class AutomonNode(CommonNode):
         start = timer()
 
         f_at_x = self.func_to_monitor(x)
-        b_inside_bounds = self.l_thresh <= f_at_x <= self.u_thresh
+        # If l_thresh is smaller than min_f_val, than the global vector could not violate the lower bound constraint.
+        # Similarly, if u_thresh is larger than max_f_val, than the global vector could not violate the upper bound constraint.
+        # Note that x (which is self.x minus the slack) could lead to f_at_x < l_thresh or f_at_x > u_thresh), e.g. in variance,
+        # since x is not a "natural" vector, and it should be ignored if we aware that l_thresh < min_f_val or u_thresh > max_f_val.
+        b_inside_bounds = (self.l_thresh <= f_at_x or self.l_thresh <= self.min_f_val) and (f_at_x <= self.u_thresh or self.u_thresh >= self.max_f_val)
 
         end = timer()
         self.inside_bounds_evaluation_accumulated_time += end - start
