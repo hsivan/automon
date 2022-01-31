@@ -2,7 +2,7 @@ import time
 import boto3
 import paramiko
 from botocore.client import ClientError
-from examples.aws_utils.utils import read_credentials_file, create_iam_role
+from aws_experiments.utils import read_credentials_file, create_iam_role
 import os
 
 

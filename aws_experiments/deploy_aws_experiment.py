@@ -2,7 +2,6 @@ import time
 import boto3
 import json
 import os
-from examples.aws_utils.aws_ec2_coordinator import run_coordinator_on_ec2_instance
 
 
 def get_service_ips(ecs_client, cluster, tasks, region):

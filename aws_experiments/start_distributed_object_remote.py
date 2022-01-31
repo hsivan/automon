@@ -1,8 +1,8 @@
 import os
 import shutil
 import subprocess
-from examples.aws_utils.stop_and_ternimate_ec2 import stop_and_terminate_ec2_instance
-from examples.aws_utils.write_results_to_s3 import copy_result_folder_to_s3
+from aws_experiments.stop_and_ternimate_ec2 import stop_and_terminate_ec2_instance
+from aws_experiments.write_results_to_s3 import copy_result_folder_to_s3
 
 # sudo apt-get install -y nethogs
 # sudo nethogs -t -v2 &> nethogs_out.txt

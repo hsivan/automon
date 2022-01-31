@@ -206,7 +206,7 @@ The full [instructions](experiments/README.md) and scripts are in the `experimen
 
 ## Distributed experiment on a real-world WAN
 We include code for a series of cross-region experiments on AWS.
-The [instructions](examples/aws_utils/README.md) for running these experiments, as well as the scripts are in the `examples/aws_utils` folder.
+The [instructions](aws_experiments/README.md) for running these experiments, as well as the scripts are in the `aws_experiments` folder.
 
 
 ## Citing AutoMon

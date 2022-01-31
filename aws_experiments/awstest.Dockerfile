@@ -18,4 +18,4 @@ RUN pip install /app
 EXPOSE 6400
 ENV PYTHONPATH "${PYTHONPATH}:/app"
 
-CMD python /app/examples/start_distributed_object_remote.py
+CMD python /app/aws_experiments/start_distributed_object_remote.py

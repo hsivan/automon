@@ -1,7 +1,7 @@
 import os
 import boto3
 from botocore.client import ClientError
-from examples.aws_utils.utils import read_credentials_file
+from aws_experiments.utils import read_credentials_file
 
 
 def get_s3_bucket():

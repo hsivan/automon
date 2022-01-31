@@ -4,12 +4,12 @@ import boto3
 import importlib.resources as pkg_resources
 from zipfile import ZipFile
 import io
-from examples.aws_utils.utils import create_iam_role
+from aws_experiments.utils import create_iam_role
 
 
 def make_zip_file_bytes():
     buf = io.BytesIO()
-    with pkg_resources.path('examples.aws_utils', 'lambda_function_stop_and_terminate_ec2.py') as full_path:
+    with pkg_resources.path('examples.aws_experiments', 'lambda_function_stop_and_terminate_ec2.py') as full_path:
         with ZipFile(buf, 'w') as z:
             z.write(full_path, "lambda_function_stop_and_terminate_ec2.py")
     return buf.getvalue()
