@@ -1,4 +1,5 @@
 import argparse
+import logging
 import os
 from automon import AutomonNode, AutomonCoordinator, SlackType, SyncType
 from test_utils.data_generator import DataGeneratorKldAirQuality
@@ -21,7 +22,7 @@ if __name__ == "__main__":
                                         0.1: 0.2361111111111111, 0.12: 0.2361111111111111, 0.14: 0.2361111111111111}
 
     try:
-        test_folder = start_test("distributed_kld_air_quality")
+        test_folder = start_test("distributed_kld_air_quality", logging_level=logging.INFO)
         log_num_packets_sent_and_received(test_folder)  # Log before start
 
         data_folder = os.path.abspath(os.path.abspath(os.path.dirname(__file__))) + '/../datasets/air_quality/'

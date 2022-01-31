@@ -1,4 +1,5 @@
 import argparse
+import logging
 import os
 import time
 import numpy as np
@@ -7,7 +8,7 @@ from test_utils.functions_to_monitor import set_H, set_net_params
 from test_utils.jax_dnn_intrusion_detection import load_net
 from test_utils.stats_analysis_utils import log_num_packets_sent_and_received
 from test_utils.test_utils import start_test, end_test, write_config_to_file, read_config_file
-from experiments.test_utils_zmq_sockets_centralization import run_centralization_node, run_dummy_coordinator
+from test_utils.test_utils_zmq_sockets_centralization import run_centralization_node, run_dummy_coordinator
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -18,7 +19,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     try:
-        test_folder = start_test("distributed_" + args.type + "_centralization")
+        test_folder = start_test("distributed_" + args.type + "_centralization", logging_level=logging.INFO)
         log_num_packets_sent_and_received(test_folder)  # Log before start
 
         if args.type == "quadratic":

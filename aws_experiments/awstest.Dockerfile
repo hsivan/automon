@@ -6,6 +6,7 @@ RUN apt-get install -y net-tools
 
 RUN pip install boto3
 RUN pip install botocore
+RUN pip install paramiko
 RUN pip install matplotlib
 RUN pip install pandas
 

@@ -24,11 +24,11 @@ def verify_requirements():
     """
     if sys.version_info.major != 3:
         print("Running this script requires Python 3")
-        exit(1)
+        sys.exit(1)
     result = subprocess.run('docker version', shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     if '\'docker\' is not recognized as an internal or external command' in result.stderr.decode():
         print("Running this script requires docker engine. See https://docs.docker.com/engine/install.")
-        exit(1)
+        sys.exit(1)
 
 
 def download_repository():
@@ -85,13 +85,14 @@ def download_intrusion_detection_dataset(project_root):
     :return:
     """
     gz_files = ['kddcup.data_10_percent.gz', 'corrected.gz']
-    for gz_file in gz_files:
+    target_file_names = ['kddcup.data_10_percent_corrected', 'corrected']
+    for i, gz_file in enumerate(gz_files):
         # Check if the file already exists
         if os.path.isfile(project_root + '/datasets/intrusion_detection/' + gz_file.replace(".gz", "")):
             continue
         urllib.request.urlretrieve('http://kdd.ics.uci.edu/databases/kddcup99/' + gz_file, gz_file)
         with gzip.open(gz_file, 'rb') as f_in:
-            with open(project_root + '/datasets/intrusion_detection/' + gz_file.replace(".gz", ""), 'wb') as f_out:
+            with open(project_root + '/datasets/intrusion_detection/' + target_file_names[i], 'wb') as f_out:
                 shutil.copyfileobj(f_in, f_out)
         os.remove(gz_file)
 
@@ -117,11 +118,11 @@ def execute_shell_command(cmd, stdout_verification=None, b_stderr_verification=F
     if stdout_verification is not None:
         if stdout_verification not in result.stdout.decode():
             print("Verification string", stdout_verification, "not in stdout")
-            exit(1)
+            raise Exception
     if b_stderr_verification:
         if result.stderr != b'':
-            print("stderr is not empty.")
-            exit(1)
+            print("stderr is not empty:", result.stderr)
+            raise Exception
 
 
 def execute_shell_command_with_live_output(cmd):
@@ -140,8 +141,8 @@ def execute_shell_command_with_live_output(cmd):
             print(output.strip().decode('utf-8'))
     rc = process.poll()
     if rc != 0:
-        print("RC not 0 (RC=" + rc + ") for command:", cmd)
-        exit(1)
+        print("RC not 0 (RC=" + str(rc) + ") for command:", cmd)
+        raise Exception
     return rc
 
 
@@ -342,19 +343,31 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--dd", dest="b_download_dataset", help="if --dd is specified, the script only downloads the external datasets", action='store_true')
+    parser.add_argument("--aws", dest="b_aws_experiments", help="if --aws is specified, run AWS experiments in addition to the simulation experiments", action='store_true')
     args = parser.parse_args()
 
-    if not args.b_download_dataset:
-        verify_requirements()
     project_root = download_repository()
     download_external_datasets(project_root)
     print("Downloaded external datasets")
     if args.b_download_dataset:
-        exit(0)
+        sys.exit()
+
+    verify_requirements()
+    os.chdir(project_root)
+
+    if args.b_aws_experiments:
+        # Include the following only here, after the source code was downloaded
+        from aws_experiments.reproduce import run_aws_experiments
+        # Verify the new_user_credentials.csv exists
+        if not os.path.isfile('aws_experiments/new_user_credentials.csv'):
+            print("To run AWS experiments, you must have an AWS account. After opening the account, create AWS IAM user with "
+                  "AdministratorAccess permissions and download the csv file new_user_credentials.csv that contains the key ID and the secret key. "
+                  "Place the new_user_credentials.csv file in " + project_root + "/aws_experiments/new_user_credentials.csv and re-run this script.\n"
+                  "Note: AWS cli will be installed on your computer and will be configured!")
+            sys.exit(1)
 
     try:
         # Build docker image with .dockerignore which does not ignore the experiments folder
-        os.chdir(project_root)
         edit_dockerignore()
         execute_shell_command_with_live_output('sudo docker build -f experiments/experiments.Dockerfile -t automon_experiment .')
         print("Successfully built docker image for the experiments")
@@ -362,6 +375,7 @@ if __name__ == "__main__":
         # Run the experiments
         docker_result_dir = '/app/experiments/test_results'
         local_result_dir = os.getcwd() + "/test_results"
+        os.makedirs(local_result_dir)
         docker_run_command_prefix = 'sudo docker run -v ' + local_result_dir + ':' + docker_result_dir + ' --rm automon_experiment python /app/experiments/'
 
         print("Experiment results are written to:", local_result_dir)
@@ -373,7 +387,9 @@ if __name__ == "__main__":
         run_neighborhood_size_tuning_experiment(local_result_dir, docker_result_dir, docker_run_command_prefix)
         run_ablation_study_experiment(local_result_dir, docker_result_dir, docker_run_command_prefix)
 
-        # TODO: Add option to run the AWS experiments.
+        if args.b_aws_experiments:
+            run_aws_experiments()
+
         # TODO: build the paper from its source files with the new figures
 
     finally:

@@ -1,4 +1,5 @@
 import argparse
+import logging
 import os
 import numpy as np
 from automon import AutomonNode, AutomonCoordinator, SlackType, SyncType
@@ -17,7 +18,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     try:
-        test_folder = start_test("distributed_quadratic")
+        test_folder = start_test("distributed_quadratic", logging_level=logging.INFO)
         log_num_packets_sent_and_received(test_folder)  # Log before start
 
         data_folder = os.path.abspath(os.path.dirname(__file__)) + '/../datasets/quadratic/'

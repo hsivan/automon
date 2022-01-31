@@ -8,7 +8,7 @@ import sys
 logger = logging.getLogger('automon')
 
 
-def _prepare_test_folder(test_name, test_folder=""):
+def _prepare_test_folder(test_name, test_folder="", logging_level=logging.WARNING):
     if test_folder == "":
         test_timestamp = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
         test_folder = os.path.join(os.getcwd(), 'test_results/results_' + test_name + "_" + test_timestamp)
@@ -22,7 +22,7 @@ def _prepare_test_folder(test_name, test_folder=""):
     output_file_handler.setLevel(logging.INFO)  # Can change to DEBUG to see send and received message logs from messages_common
     output_file_handler.setFormatter(formatter)
     stdout_handler = logging.StreamHandler(sys.stdout)
-    stdout_handler.setLevel(logging.WARNING)  # Can change to DEBUG/INFO to see all log messages
+    stdout_handler.setLevel(logging_level)  # Can change to DEBUG/INFO to see all log messages
     stdout_handler.setFormatter(formatter)
     logger.addHandler(output_file_handler)
     logger.addHandler(stdout_handler)
@@ -33,8 +33,8 @@ def _prepare_test_folder(test_name, test_folder=""):
     return test_folder
 
 
-def start_test(test_name, test_folder=""):
-    test_folder = _prepare_test_folder(test_name, test_folder)
+def start_test(test_name, test_folder="", logging_level=logging.WARNING):
+    test_folder = _prepare_test_folder(test_name, test_folder, logging_level)
     return test_folder
 
 

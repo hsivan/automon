@@ -8,11 +8,11 @@ import os
 
 def create_keypair(ec2_client, keypair_name):
     # Search for existing *.pem file (private key) or create one if not found.
-    keypair_file_name = keypair_name + '.pem'
-    if not os.path.exists(os.path.abspath(os.path.dirname(__file__)) + "/" + keypair_file_name):
+    keypair_file_name = os.path.abspath(os.path.dirname(__file__)) + "/" + keypair_name + '.pem'
+    if not os.path.exists(keypair_file_name):
         # Create new key pair
         response = ec2_client.create_key_pair(KeyName=keypair_name)
-        with open(keypair_name + '.pem', 'w') as private_key_file:
+        with open(keypair_file_name, 'w') as private_key_file:
             private_key_file.write(response['KeyMaterial'])
             private_key_file.close()
     key = paramiko.RSAKey.from_private_key_file(keypair_file_name)
@@ -64,8 +64,8 @@ def execute_ssh_command(ssh_client, cmd, stdout_verification=None, b_stderr_veri
             exit(1)
 
 
-def attach_cloudwatch_policy_to_ec2_instance(region, ec2_client, instance_id):
-    iam_client = boto3.client('iam', region_name=region)
+def attach_cloudwatch_policy_to_ec2_instance(region, ec2_client, instance_id, session):
+    iam_client = session.client('iam', region_name=region)
 
     instance_profile_name = 'AutomonInstanceProfile'
     try:
@@ -76,7 +76,7 @@ def attach_cloudwatch_policy_to_ec2_instance(region, ec2_client, instance_id):
         print(e)
 
     role_name = 'AutomonEc2CloudWatchRole'
-    create_iam_role(role_name)
+    create_iam_role(role_name, session)
 
     try:
         response = iam_client.add_role_to_instance_profile(InstanceProfileName=instance_profile_name, RoleName=role_name)
@@ -101,15 +101,18 @@ def attach_cloudwatch_policy_to_ec2_instance(region, ec2_client, instance_id):
         print(e)
 
 
-def run_coordinator_on_ec2_instance(region='us-west-2', node_type='inner_product', error_bound=0.05):
-    ec2_client = boto3.client('ec2', region_name=region)
+def run_coordinator_on_ec2_instance(region='us-west-2', node_type='inner_product', error_bound=0.05, command='python /app/aws_experiments/start_distributed_object_remote.py'):
+    username, access_key_id, secret_access_key = read_credentials_file()
+    session = boto3.session.Session(aws_access_key_id=access_key_id, aws_secret_access_key=secret_access_key)
+
+    ec2_client = session.client('ec2', region_name=region)
     keypair_name = "aws_automon_private_key"
 
     try:
         # Create the instance and connect/ssh to it
         key, ssh_client = create_keypair(ec2_client, keypair_name)
         instance_id = create_instance(ec2_client, keypair_name)
-        time.sleep(20)  # Wait until the instance obtains its public IP
+        time.sleep(40)  # Wait until the instance obtains its public IP
         instance_public_ip = get_public_ip(ec2_client, instance_id)
         ssh_client.connect(hostname=instance_public_ip, username="ubuntu", pkey=key)
 
@@ -129,8 +132,6 @@ def run_coordinator_on_ec2_instance(region='us-west-2', node_type='inner_product
         execute_ssh_command(ssh_client, 'aws --version', stdout_verification="aws-cli")
 
         # Configure aws cli
-        account_id = boto3.client('sts').get_caller_identity().get('Account')
-        username, access_key_id, secret_access_key = read_credentials_file()
         execute_ssh_command(ssh_client, 'aws configure set aws_access_key_id ' + access_key_id)
         execute_ssh_command(ssh_client, 'aws configure set aws_secret_access_key ' + secret_access_key)
         execute_ssh_command(ssh_client, 'aws configure set region ' + region)
@@ -138,10 +139,11 @@ def run_coordinator_on_ec2_instance(region='us-west-2', node_type='inner_product
         execute_ssh_command(ssh_client, 'aws configure get region', stdout_verification=region)  # Verify configuration worked
 
         # Pull docker images from ECR
+        account_id = session.client('sts').get_caller_identity().get('Account')
         execute_ssh_command(ssh_client, 'aws ecr get-login-password --region us-east-2 | sudo docker login --username AWS --password-stdin ' + account_id + '.dkr.ecr.us-east-2.amazonaws.com/automon', stdout_verification="Login Succeeded")
         execute_ssh_command(ssh_client, 'sudo docker pull ' + account_id + '.dkr.ecr.us-east-2.amazonaws.com/automon', stdout_verification="Downloaded newer image")
 
-        attach_cloudwatch_policy_to_ec2_instance(region, ec2_client, instance_id)
+        attach_cloudwatch_policy_to_ec2_instance(region, ec2_client, instance_id, session)
 
         # Run the docker image
         s3_write = 1
@@ -157,7 +159,7 @@ def run_coordinator_on_ec2_instance(region='us-west-2', node_type='inner_product
                          ' --log-opt awslogs-region=us-east-2' + \
                          ' --log-opt awslogs-group=' + node_type.replace("_", "-") + "_" + str(error_bound).replace(".", "-") + \
                          ' --log-opt awslogs-create-group=true' + \
-                         ' -d -it --rm ' + account_id + '.dkr.ecr.us-east-2.amazonaws.com/automon'
+                         ' -d -it --rm ' + account_id + '.dkr.ecr.us-east-2.amazonaws.com/automon ' + command
         execute_ssh_command(ssh_client, docker_run_cmd, b_stderr_verification=True)
 
         ssh_client.close()

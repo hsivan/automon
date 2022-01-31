@@ -1,4 +1,5 @@
 import argparse
+import logging
 import os
 from automon import AutomonNode, AutomonCoordinator, SlackType, SyncType
 from test_utils.data_generator import DataGeneratorDnnIntrusionDetection
@@ -23,7 +24,7 @@ if __name__ == "__main__":
 
     try:
         test_folder = start_test("distributed_dnn_intrusion_detection")
-        log_num_packets_sent_and_received(test_folder)  # Log before start
+        log_num_packets_sent_and_received(test_folder, logging_level=logging.INFO)  # Log before start
 
         data_folder = os.path.abspath(os.path.abspath(os.path.dirname(__file__))) + '/../datasets/intrusion_detection/'
         conf = read_config_file(data_folder)

@@ -10,8 +10,8 @@ from experiments.visualization.plot_dimensions_stats import get_num_messages
 from experiments.visualization.visualization_utils import get_figsize, reformat_large_tick_values
 
 
-# Create local folder for the results in S3: mkdir test_results/max_error_vs_communication_inner_product_2021-10-05_aws
-# cd test_results/max_error_vs_communication_inner_product_2021-10-05_aws
+# Create local folder for the results in S3: mkdir test_results/max_error_vs_communication_inner_product_aws_2021-10-05
+# cd test_results/max_error_vs_communication_inner_product_aws_2021-10-05
 # Download S3 folder with AWS cli, for example: aws s3 cp s3://automon-experiment-results/max_error_vs_comm_inner_product . --recursive
 
 
@@ -218,9 +218,9 @@ def ccordinator_nethogs_vs_automon(parent_test_folder):
 
 
 if __name__ == "__main__":
-    parent_test_folder = "../../examples/test_results/max_error_vs_communication_inner_product_2021-10-05_aws"
-    #parent_test_folder = "../../examples/test_results/max_error_vs_communication_quadratic_2021-10-06_aws"
-    #parent_test_folder = "../../examples/test_results/max_error_vs_communication_kld_2021-10-07_aws"
+    parent_test_folder = "../test_results/max_error_vs_communication_inner_product_aws_2021-10-05"
+    #parent_test_folder = "../test_results/max_error_vs_communication_quadratic_aws_2021-10-06"
+    #parent_test_folder = "../test_results/max_error_vs_communication_kld_aws_2021-10-07"
 
     create_approximate_error_file(parent_test_folder)
     #coordinator_cpu_info(parent_test_folder)

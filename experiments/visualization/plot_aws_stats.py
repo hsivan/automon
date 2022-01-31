@@ -1,4 +1,5 @@
 import os
+import sys
 import struct
 import numpy as np
 import pickle
@@ -12,8 +13,8 @@ import matplotlib.ticker as tick
 import datetime
 from experiments.visualization.visualization_utils import get_figsize, reformat_large_tick_values
 
-# Create local folder for the results in S3: mkdir test_results/max_error_vs_communication_inner_product_2021-10-05_aws
-# cd test_results/max_error_vs_communication_inner_product_2021-10-05_aws
+# Create local folder for the results in S3: mkdir test_results/max_error_vs_communication_inner_product_aws_2021-10-05
+# cd test_results/max_error_vs_communication_inner_product_aws_2021-10-05
 # Download S3 folder with AWS cli, for example: aws s3 cp s3://automon-experiment-results/max_error_vs_comm_inner_product . --recursive
 
 
@@ -125,16 +126,16 @@ def get_num_messages_and_max_error_aws(parent_test_folder):
     test_folders = get_all_test_folders(parent_test_folder)
     test_folders.sort()
     if "inner_product" in parent_test_folder:
-        data_folder = '../../datasets/inner_product/'
+        data_folder = relative_path + 'datasets/inner_product/'
         real_function_value = np.genfromtxt(data_folder + "real_function_value.csv")
     if "kld" in parent_test_folder:
-        data_folder = '../../datasets/air_quality/'
+        data_folder = relative_path + 'datasets/air_quality/'
         real_function_value = np.genfromtxt(data_folder + "real_function_value.csv")
     if "quadratic" in parent_test_folder:
-        data_folder = '../../datasets/quadratic/'
+        data_folder = relative_path + 'datasets/quadratic/'
         real_function_value = np.genfromtxt(data_folder + "real_function_value.csv")
     if "dnn" in parent_test_folder:
-        data_folder = '../../datasets/intrusion_detection/'
+        data_folder = relative_path + 'datasets/intrusion_detection/'
         real_function_value = np.genfromtxt(data_folder + "real_function_value.csv")
 
     error_bound_arr = []
@@ -197,7 +198,7 @@ def get_num_messages_and_max_error_aws(parent_test_folder):
 
 # Transfer volume in MB (centralization, which is data size with message header that is composed of message type, node idx, and payload len, with network overhead)
 def get_centralization_transfer_volume(parent_test_folder_centralization):
-    with open(parent_test_folder_centralization + "/nethogs.txt", 'r') as f:
+    with open(parent_test_folder_centralization + "/coordinator/nethogs.txt", 'r') as f:
         log = f.read()
         num_received_bytes = int(log.split("nethogs_num_received_bytes ")[1].split(" ")[0])
         num_sent_bytes = int(log.split("nethogs_num_sent_bytes ")[1].split(" ")[0])
@@ -303,7 +304,7 @@ def read_data(parent_test_folder_sim, parent_test_folder_aws, parent_test_folder
            centralization_transfer_volume, num_bytes_arr_periodic, centralization_num_messages, sim_error_bound_arr, sim_num_messages_arr_automon, sim_max_error_arr_automon
 
 
-def plot_max_error_vs_transfer_volume(parent_test_folder_sim, parent_test_folder_aws, parent_test_folder_centralization, function):
+def plot_max_error_vs_transfer_volume(parent_test_folder_sim, parent_test_folder_aws, parent_test_folder_centralization, function, result_dir="./"):
     rcParams['pdf.fonttype'] = 42
     rcParams['ps.fonttype'] = 42
     rcParams.update({'legend.fontsize': 5.4})
@@ -352,7 +353,7 @@ def plot_max_error_vs_transfer_volume(parent_test_folder_sim, parent_test_folder
     handles, labels = axs[0].get_legend_handles_labels()
     plt.legend(handles, labels, loc="upper center", ncol=4, bbox_to_anchor=(-0.2, 1.33), columnspacing=1.5, handletextpad=0.6, frameon=False, framealpha=0, handlelength=1.5)
     plt.subplots_adjust(top=0.88, bottom=0.32, left=0.11, right=0.97, wspace=0.1)
-    fig.savefig("max_error_vs_communication_sim_and_aws_" + function + ".pdf")
+    fig.savefig(result_dir + "/max_error_vs_communication_sim_and_aws_" + function + ".pdf")
     plt.close(fig)
 
     # Figure stacked barchart of bytes per error bound - at the bottom AutoMon bytes and on top network bytes (ZMQ + TCP)
@@ -383,7 +384,7 @@ def plot_max_error_vs_transfer_volume(parent_test_folder_sim, parent_test_folder
 
     ax.legend(frameon=False, ncol=2)
     plt.subplots_adjust(top=0.9, bottom=0.3, left=0.16, right=0.99)
-    fig.savefig("communication_automon_vs_network_" + function + ".pdf")
+    fig.savefig(result_dir + "/communication_automon_vs_network_" + function + ".pdf")
     plt.close(fig)
 
     rcParams.update(rcParamsDefault)
@@ -414,7 +415,8 @@ def plot_max_error_vs_transfer_volume_single(ax, func_name, aws_num_bytes_arr_au
 
 def plot_max_error_vs_transfer_volume_combined(parent_test_folder_sim_kld, parent_test_folder_sim_inner_prod, parent_test_folder_sim_quadratic, parent_test_folder_sim_dnn,
                                                parent_test_folder_aws_kld, parent_test_folder_aws_inner_prod, parent_test_folder_aws_quadratic, parent_test_folder_aws_dnn,
-                                               parent_test_folder_centralization_kld, parent_test_folder_centralization_inner_prod, parent_test_folder_centralization_quadratic, parent_test_folder_centralization_dnn):
+                                               parent_test_folder_centralization_kld, parent_test_folder_centralization_inner_prod, parent_test_folder_centralization_quadratic, parent_test_folder_centralization_dnn,
+                                               result_dir="./"):
     rcParams['pdf.fonttype'] = 42
     rcParams['ps.fonttype'] = 42
     rcParams.update({'legend.fontsize': 5.4})
@@ -469,7 +471,7 @@ def plot_max_error_vs_transfer_volume_combined(parent_test_folder_sim_kld, paren
     plt.legend(handles, labels, loc="upper center", ncol=3, bbox_to_anchor=(-1.5, -0.59), columnspacing=1.5,
                handletextpad=0.6, frameon=False, framealpha=0, handlelength=1.5)
     plt.subplots_adjust(top=0.88, bottom=0.41, left=0.07, right=0.98, wspace=0.4)
-    fig.savefig("max_error_vs_transfer_volume.pdf")
+    fig.savefig(result_dir + "/max_error_vs_transfer_volume.pdf")
     plt.close(fig)
 
     rcParams.update(rcParamsDefault)
@@ -531,7 +533,8 @@ def plot_communication_automon_vs_network(ax, func_name, aws_error_bound_arr, aw
 
 def plot_communication_automon_vs_network_combined(parent_test_folder_sim_kld, parent_test_folder_sim_inner_prod, parent_test_folder_sim_quadratic, parent_test_folder_sim_dnn,
                                                    parent_test_folder_aws_kld, parent_test_folder_aws_inner_prod, parent_test_folder_aws_quadratic, parent_test_folder_aws_dnn,
-                                                   parent_test_folder_centralization_kld, parent_test_folder_centralization_inner_prod, parent_test_folder_centralization_quadratic, parent_test_folder_centralization_dnn):
+                                                   parent_test_folder_centralization_kld, parent_test_folder_centralization_inner_prod, parent_test_folder_centralization_quadratic, parent_test_folder_centralization_dnn,
+                                                   result_dir="./"):
     rcParams['pdf.fonttype'] = 42
     rcParams['ps.fonttype'] = 42
     rcParams.update({'legend.fontsize': 5.4})
@@ -579,13 +582,13 @@ def plot_communication_automon_vs_network_combined(parent_test_folder_sim_kld, p
     labels = [labels[2], labels[3], labels[1], labels[0]]
     plt.legend(handles, labels, loc="upper center", ncol=4, bbox_to_anchor=(-1.95, -0.71), columnspacing=1.4, handletextpad=0.4, frameon=False, framealpha=0, handlelength=1.5)
     plt.subplots_adjust(top=0.9, bottom=0.45, left=0.08, right=0.99, wspace=0.5)
-    fig.savefig("communication_automon_vs_network.pdf")
+    fig.savefig(result_dir + "/communication_automon_vs_network.pdf")
     plt.close(fig)
 
     rcParams.update(rcParamsDefault)
 
 
-def check_rtt_between_aws_regions(parent_test_folder_aws_kld, parent_test_folder_aws_inner_prod, parent_test_folder_aws_quadratic, parent_test_folder_aws_dnn):
+def check_rtt_between_aws_regions(parent_test_folder_aws_kld, parent_test_folder_aws_inner_prod, parent_test_folder_aws_quadratic, parent_test_folder_aws_dnn, result_dir="./"):
     test_folders = get_all_test_folders(parent_test_folder_aws_kld)
     test_folders += get_all_test_folders(parent_test_folder_aws_inner_prod)
     test_folders += get_all_test_folders(parent_test_folder_aws_quadratic)
@@ -634,35 +637,62 @@ def check_rtt_between_aws_regions(parent_test_folder_aws_kld, parent_test_folder
 if __name__ == "__main__":
     # Figure 5 and Figure 6
 
-    parent_test_folder_prefix = "../test_results/results_test_max_error_vs_communication_"
-    parent_test_folder_inner_prod_sim = parent_test_folder_prefix + "inner_product_2021-09-29_05-42-23"
-    parent_test_folder_quadratic_sim = parent_test_folder_prefix + "quadratic_2021-09-29_05-38-15"
-    parent_test_folder_kld_sim = parent_test_folder_prefix + "kld_air_quality_2021-09-19_23-02-36"
-    parent_test_folder_dnn_sim = parent_test_folder_prefix + "dnn_intrusion_detection_2021-09-19_23-05-20"
+    if len(sys.argv) > 1:
+        result_dir = sys.argv[1]
+        relative_path = '../'
 
-    parent_test_folder_kld_aws = "../../examples/test_results/max_error_vs_communication_kld_2021-10-26_aws"
-    parent_test_folder_inner_prod_aws = "../../examples/test_results/max_error_vs_communication_inner_product_2021-10-10_aws"
-    parent_test_folder_quadratic_aws = "../../examples/test_results/max_error_vs_communication_quadratic_2021-10-10_aws"
-    parent_test_folder_dnn_aws = "../../examples/test_results/max_error_vs_communication_dnn_2021-10-26_aws"
+        inner_product_test_folder = result_dir + "/" + sys.argv[2]
+        kld_test_folder = result_dir + "/" + sys.argv[3]
+        mlp_test_folder = result_dir + "/" + sys.argv[4]
 
-    parent_test_folder_kld_centralization = "../test_results/results_dist_centralization_kld_2021-10-18_20-01-13"
-    parent_test_folder_inner_prod_centralization = "../test_results/results_dist_centralization_inner_product_2021-10-18_19-47-14"
-    parent_test_folder_quadratic_centralization = "../test_results/results_dist_centralization_quadratic_2021-10-18_19-51-19"
-    parent_test_folder_dnn_centralization = "../test_results/results_dist_centralization_dnn_2021-10-18_20-16-53"
+        parent_test_folder_inner_prod_sim = result_dir + "/" + sys.argv[2]
+        parent_test_folder_quadratic_sim = result_dir + "/" + sys.argv[3]
+        parent_test_folder_kld_sim = result_dir + "/" + sys.argv[4]
+        parent_test_folder_dnn_sim = result_dir + "/" + sys.argv[5]
+
+        parent_test_folder_inner_prod_aws = result_dir + "/" + sys.argv[6]
+        parent_test_folder_quadratic_aws = result_dir + "/" + sys.argv[7]
+        parent_test_folder_kld_aws = result_dir + "/" + sys.argv[8]
+        parent_test_folder_dnn_aws = result_dir + "/" + sys.argv[9]
+
+        parent_test_folder_inner_prod_centralization = result_dir + "/" + sys.argv[10]
+        parent_test_folder_quadratic_centralization = result_dir + "/" + sys.argv[11]
+        parent_test_folder_kld_centralization = result_dir + "/" + sys.argv[12]
+        parent_test_folder_dnn_centralization = result_dir + "/" + sys.argv[13]
+    else:
+        result_dir = "./"
+        relative_path = '../../'
+
+        parent_test_folder_inner_prod_sim = "../test_results/results_test_max_error_vs_communication_inner_product_2021-09-29_05-42-23"
+        parent_test_folder_quadratic_sim = "../test_results/results_test_max_error_vs_communication_quadratic_2021-09-29_05-38-15"
+        parent_test_folder_kld_sim = "../test_results/results_test_max_error_vs_communication_kld_air_quality_2021-09-19_23-02-36"
+        parent_test_folder_dnn_sim = "../test_results/results_test_max_error_vs_communication_dnn_intrusion_detection_2021-09-19_23-05-20"
+
+        parent_test_folder_inner_prod_aws = "../test_results/max_error_vs_communication_inner_product_aws_2021-10-10"
+        parent_test_folder_quadratic_aws = "../test_results/max_error_vs_communication_quadratic_aws_2021-10-10"
+        parent_test_folder_kld_aws = "../test_results/max_error_vs_communication_kld_aws_2021-10-26"
+        parent_test_folder_dnn_aws = "../test_results/max_error_vs_communication_dnn_aws_2021-10-26"
+
+        parent_test_folder_inner_prod_centralization = "../test_results/results_dist_centralization_inner_product_2021-10-18_19-47-14"
+        parent_test_folder_quadratic_centralization = "../test_results/results_dist_centralization_quadratic_2021-10-18_19-51-19"
+        parent_test_folder_kld_centralization = "../test_results/results_dist_centralization_kld_2021-10-18_20-01-13"
+        parent_test_folder_dnn_centralization = "../test_results/results_dist_centralization_dnn_2021-10-18_20-16-53"
 
     # Remote
 
-    plot_max_error_vs_transfer_volume(parent_test_folder_kld_sim, parent_test_folder_kld_aws, parent_test_folder_kld_centralization, "kld")
-    plot_max_error_vs_transfer_volume(parent_test_folder_inner_prod_sim, parent_test_folder_inner_prod_aws, parent_test_folder_inner_prod_centralization, "inner_product")
-    plot_max_error_vs_transfer_volume(parent_test_folder_quadratic_sim, parent_test_folder_quadratic_aws, parent_test_folder_quadratic_centralization, "quadratic")
-    plot_max_error_vs_transfer_volume(parent_test_folder_dnn_sim, parent_test_folder_dnn_aws, parent_test_folder_dnn_centralization, "dnn")
+    plot_max_error_vs_transfer_volume(parent_test_folder_kld_sim, parent_test_folder_kld_aws, parent_test_folder_kld_centralization, "kld", result_dir)
+    plot_max_error_vs_transfer_volume(parent_test_folder_inner_prod_sim, parent_test_folder_inner_prod_aws, parent_test_folder_inner_prod_centralization, "inner_product", result_dir)
+    plot_max_error_vs_transfer_volume(parent_test_folder_quadratic_sim, parent_test_folder_quadratic_aws, parent_test_folder_quadratic_centralization, "quadratic", result_dir)
+    plot_max_error_vs_transfer_volume(parent_test_folder_dnn_sim, parent_test_folder_dnn_aws, parent_test_folder_dnn_centralization, "dnn", result_dir)
 
     plot_communication_automon_vs_network_combined(parent_test_folder_kld_sim, parent_test_folder_inner_prod_sim, parent_test_folder_quadratic_sim, parent_test_folder_dnn_sim,
                                                    parent_test_folder_kld_aws, parent_test_folder_inner_prod_aws, parent_test_folder_quadratic_aws, parent_test_folder_dnn_aws,
-                                                   parent_test_folder_kld_centralization, parent_test_folder_inner_prod_centralization, parent_test_folder_quadratic_centralization, parent_test_folder_dnn_centralization)
+                                                   parent_test_folder_kld_centralization, parent_test_folder_inner_prod_centralization, parent_test_folder_quadratic_centralization, parent_test_folder_dnn_centralization,
+                                                   result_dir)
 
     plot_max_error_vs_transfer_volume_combined(parent_test_folder_kld_sim, parent_test_folder_inner_prod_sim, parent_test_folder_quadratic_sim, parent_test_folder_dnn_sim,
                                                parent_test_folder_kld_aws, parent_test_folder_inner_prod_aws, parent_test_folder_quadratic_aws, parent_test_folder_dnn_aws,
-                                               parent_test_folder_kld_centralization, parent_test_folder_inner_prod_centralization, parent_test_folder_quadratic_centralization, parent_test_folder_dnn_centralization)
+                                               parent_test_folder_kld_centralization, parent_test_folder_inner_prod_centralization, parent_test_folder_quadratic_centralization, parent_test_folder_dnn_centralization,
+                                               result_dir)
 
-    check_rtt_between_aws_regions(parent_test_folder_kld_aws, parent_test_folder_inner_prod_aws, parent_test_folder_quadratic_aws, parent_test_folder_dnn_aws)
+    check_rtt_between_aws_regions(parent_test_folder_kld_aws, parent_test_folder_inner_prod_aws, parent_test_folder_quadratic_aws, parent_test_folder_dnn_aws, result_dir)

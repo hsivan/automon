@@ -11,6 +11,7 @@ After having these tools installed and configured follow these steps:
 4. Build AutoMon's docker image, push it to AWS ECR, and start the experiment:
 ```bash
 sudo docker build -f aws_experiments/awstest.Dockerfile  -t automon .
+aws ecr describe-repositories --repository-names automon || aws ecr create-repository --repository-name automon
 aws ecr get-login-password --region us-east-2 | sudo docker login --username AWS --password-stdin <your_AWS_account_number>.dkr.ecr.us-east-2.amazonaws.com/automon
 sudo docker tag automon <your_AWS_account_number>.dkr.ecr.us-east-2.amazonaws.com/automon
 sudo docker push <your_AWS_account_number>.dkr.ecr.us-east-2.amazonaws.com/automon
