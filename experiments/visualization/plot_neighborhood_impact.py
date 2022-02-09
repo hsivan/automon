@@ -11,46 +11,44 @@ import matplotlib.ticker as tick
 import pickle as pkl
 
 
-def plot_impact_of_neighborhood_size_on_violations_four_error_bounds(error_bounds, data_folders, result_dir="./"):
+def plot_impact_of_neighborhood_size_on_violations_three_error_bounds(error_bounds, data_folders, result_dir="./"):
     rcParams['pdf.fonttype'] = 42
     rcParams['ps.fonttype'] = 42
     rcParams.update({'legend.fontsize': 5.4})
     rcParams.update({'font.size': 5.8})
 
-    fig, axs = plt.subplots(2, 2, figsize=get_figsize(hf=0.45), sharex=True, sharey=True)
+    fig, axs = plt.subplots(1, 3, figsize=get_figsize(hf=0.28), sharex=True, sharey=True)
 
     for i in range(len(error_bounds)):
         neighborhood_sizes, neighborhood_violations_arr, safe_zone_violations_arr = get_violations_per_neighborhood_size(data_folders[i])
 
-        axs[i // 2, i % 2].stackplot(neighborhood_sizes, neighborhood_violations_arr, safe_zone_violations_arr, labels=['neighborhood violations', 'safe zone violations'])
+        axs[i].stackplot(neighborhood_sizes, neighborhood_violations_arr, safe_zone_violations_arr, labels=['neighborhood violations', 'safe zone violations'])
 
-        axs[i // 2, i % 2].annotate(r"$\epsilon$=" + str(error_bounds[i]), xy=(0.4, 0.7), xycoords='axes fraction')
+        axs[i].annotate(r"$\epsilon$=" + str(error_bounds[i]), xy=(0.4, 0.7), xycoords='axes fraction')
 
         total_violations = [neighborhood_violations_arr[i] + safe_zone_violations_arr[i] for i in range(len(neighborhood_violations_arr))]
         optimal_neighborhood_size = neighborhood_sizes[np.argmin(total_violations)]
         min_violation = np.min(total_violations)
-        axs[i // 2, i % 2].plot(optimal_neighborhood_size, min_violation, 'o', label=r"optimal neighborhood size $r^*$", markersize=2, color='black')
-        axs[i // 2, i % 2].spines['right'].set_visible(False)
-        axs[i // 2, i % 2].spines['top'].set_visible(False)
-        axs[i // 2, i % 2].spines['bottom'].set_linewidth(0.5)
-        axs[i // 2, i % 2].spines['left'].set_linewidth(0.5)
-        axs[i // 2, i % 2].tick_params(width=0.5)
+        axs[i].plot(optimal_neighborhood_size, min_violation, 'o', label=r"optimal neighborhood size $r^*$", markersize=2, color='black')
+        axs[i].spines['right'].set_visible(False)
+        axs[i].spines['top'].set_visible(False)
+        axs[i].spines['bottom'].set_linewidth(0.5)
+        axs[i].spines['left'].set_linewidth(0.5)
+        axs[i].tick_params(width=0.5)
 
-    axs[1, 0].set_xlabel('neighborhood size $r$')
-    axs[1, 1].set_xlabel('neighborhood size $r$')
-    axs[0, 0].set_ylabel('#violations')
-    axs[1, 0].set_ylabel('#violations')
+    axs[0].set_xlabel('neighborhood size $r$')
+    axs[1].set_xlabel('neighborhood size $r$')
+    axs[2].set_xlabel('neighborhood size $r$')
+    axs[0].set_ylabel('#violations')
 
-    axs[0, 0].set_yticks([0, 2500, 5000])
-    axs[1, 0].set_yticks([0, 2500, 5000])
-    axs[0, 0].yaxis.set_major_formatter(tick.FuncFormatter(reformat_large_tick_values))
-    axs[1, 0].yaxis.set_major_formatter(tick.FuncFormatter(reformat_large_tick_values))
+    axs[0].set_yticks([0, 2500, 5000])
+    axs[0].yaxis.set_major_formatter(tick.FuncFormatter(reformat_large_tick_values))
 
-    handles, labels = axs[1, 0].get_legend_handles_labels()
-    fig.legend(handles, labels, loc="upper center", ncol=3, columnspacing=1.05, bbox_to_anchor=(0.49, 1.04), frameon=False, handletextpad=0.25, handlelength=1.7)
+    handles, labels = axs[0].get_legend_handles_labels()
+    fig.legend(handles, labels, loc="upper center", ncol=3, columnspacing=1.05, bbox_to_anchor=(0.49, 1.07), frameon=False, handletextpad=0.25, handlelength=1.7)
 
-    plt.subplots_adjust(top=0.88, bottom=0.21, left=0.13, right=0.97, hspace=0.22, wspace=0.1)
-    fig.savefig(result_dir + "/impact_of_neighborhood_on_violations_four_error_bounds.pdf")
+    plt.subplots_adjust(top=0.86, bottom=0.33, left=0.13, right=0.97, hspace=0.22, wspace=0.1)
+    fig.savefig(result_dir + "/impact_of_neighborhood_on_violations_three_error_bounds.pdf")
     plt.close(fig)
 
     rcParams.update(rcParamsDefault)
@@ -349,17 +347,13 @@ if __name__ == "__main__":
         data_folder_tiny_mlp = "../test_results/results_comm_neighborhood_mlp_2_2021-04-10_12-27-37/"
 
     # Figure 3: figure with 4 specific error bounds for Rozenbrock
-    error_bounds = [0.05, 0.15, 0.25, 0.95]
+    error_bounds = [0.05, 0.25, 0.95]
     test_folder = neighborhood_size_error_bound_connection_rozenbrock_data_folder + "/0/"
-    data_folder_error_bound_0_075 = test_folder + "thresh_0_05/"
-    data_folder_error_bound_0_1 = test_folder + "thresh_0_15000000000000002/"
-    data_folder_error_bound_0_15 = test_folder + "thresh_0_25000000000000006/"
-    data_folder_error_bound_0_8 = test_folder + "thresh_0_9500000000000002/"
-    data_folders = [data_folder_error_bound_0_075, data_folder_error_bound_0_1, data_folder_error_bound_0_15, data_folder_error_bound_0_8]
-    plot_impact_of_neighborhood_size_on_violations_four_error_bounds(error_bounds, data_folders, result_dir)
+    data_folders = [test_folder + "thresh_0_05/", test_folder + "thresh_0_25000000000000006/", test_folder + "thresh_0_9500000000000002/"]
+    plot_impact_of_neighborhood_size_on_violations_three_error_bounds(error_bounds, data_folders, result_dir)
 
-    # Figure 8: optimal neighborhood and tuned neighborhood
+    '''# Figure 8: optimal neighborhood and tuned neighborhood
     plot_neighborhood_size_error_bound_connection_avg_rozenbrock_mlp_2(neighborhood_size_error_bound_connection_rozenbrock_data_folder, neighborhood_size_error_bound_connection_mlp_data_folder, result_dir)
 
     # Figure 9: 5 lines - optimal neighborhood, tuned neighborhood, and 3 constant neighborhood sizes
-    plot_communication_or_violation_error_bound_connection_rozenbrock_mlp_2(data_folder_rozenbrock, data_folder_tiny_mlp, result_dir)
+    plot_communication_or_violation_error_bound_connection_rozenbrock_mlp_2(data_folder_rozenbrock, data_folder_tiny_mlp, result_dir)'''
