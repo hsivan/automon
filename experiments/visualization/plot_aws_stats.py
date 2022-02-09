@@ -115,9 +115,6 @@ def ccordinator_nethogs_vs_automon(parent_test_folder):
                 nethogs_num_sent_bytes = int(info[0].split(" ")[7])
                 received_diff = nethogs_num_received_bytes - num_received_bytes
                 sent_diff = nethogs_num_sent_bytes - num_sent_bytes
-                received_diff_percent = received_diff * 100.0 / num_received_bytes
-                sent_diff_percent = sent_diff * 100.0 / num_sent_bytes
-                print(test_folder, ": received_diff_percent", received_diff_percent, "sent_diff_percent", sent_diff_percent)
                 num_bytes_arr_zmq.append(nethogs_num_received_bytes + nethogs_num_sent_bytes)
     return num_bytes_arr_zmq
 
@@ -184,15 +181,12 @@ def get_num_messages_and_max_error_aws(parent_test_folder):
             num_messages = get_num_messages(coordinator_sub_folder)
             num_bytes = get_num_bytes(coordinator_sub_folder)
             num_bytes_arr_automon.append(num_bytes)
-            print("max approximation error for error bound", conf["error_bound"], "is:", np.max(approximation_error), "num messages:", num_messages)
             with open(test_folder + "/function_approximation_error.csv", 'wb') as f:
                 np.savetxt(f, approximation_error)
 
             num_messages_arr_automon.append(num_messages)
             max_error_arr_automon.append(np.max(approximation_error))
 
-    #print("num_messages_arr_automon=", np.array2string(np.array(num_messages_arr_automon), separator=', '))
-    #print("max_error_arr_automon=", np.array2string(np.array(max_error_arr_automon), separator=', '))
     return error_bound_arr, num_messages_arr_automon, max_error_arr_automon, real_function_value, num_nodes, num_bytes_arr_automon, periodic_message_size, num_bytes_arr_zmq
 
 
@@ -206,7 +200,7 @@ def get_centralization_transfer_volume(parent_test_folder_centralization):
     return transfer_volume
 
 
-def read_data(parent_test_folder_sim, parent_test_folder_aws, parent_test_folder_centralization, function):
+def read_data(parent_test_folder_sim, parent_test_folder_aws, parent_test_folder_centralization, function, b_print=False):
     aws_result_folder = "./aws_results/" + function + "/"
     if not os.path.isdir(aws_result_folder):
         max_error_arr_periodic = []
@@ -267,15 +261,12 @@ def read_data(parent_test_folder_sim, parent_test_folder_aws, parent_test_folder
         sim_num_messages_arr_automon = pickle.load(open(aws_result_folder + "sim_num_messages_arr_automon.pkl", 'rb'))
         sim_max_error_arr_automon = pickle.load(open(aws_result_folder + "sim_max_error_arr_automon.pkl", 'rb'))
 
-    if "dnn" in function:
-        percent_diff_distributed_to_simulation = (np.array(aws_num_messages_arr_automon) - np.array(sim_num_messages_arr_automon)[[1, 3, 4, 5, 7, 9]]) / np.array(sim_num_messages_arr_automon)[[1, 3, 4, 5, 7, 9]] * 100
-    else:
-        percent_diff_distributed_to_simulation = (np.array(aws_num_messages_arr_automon) - sim_num_messages_arr_automon) / sim_num_messages_arr_automon * 100
-    print(function, "percent_diff_distributed_to_simulation:", percent_diff_distributed_to_simulation)
-    print(function, "diff avg:", np.mean(percent_diff_distributed_to_simulation),
-          "median:", np.median(percent_diff_distributed_to_simulation),
-          "max:", np.max(percent_diff_distributed_to_simulation),
-          "min:", np.min(percent_diff_distributed_to_simulation))
+    if b_print:
+        if "dnn" in function:
+            percent_diff_distributed_to_simulation = (np.array(aws_num_messages_arr_automon) - np.array(sim_num_messages_arr_automon)[[1, 3, 4, 5, 7, 9]]) / np.array(sim_num_messages_arr_automon)[[1, 3, 4, 5, 7, 9]] * 100
+        else:
+            percent_diff_distributed_to_simulation = (np.array(aws_num_messages_arr_automon) - sim_num_messages_arr_automon) / sim_num_messages_arr_automon * 100
+        print(function, "median of differences between simulation total payload and distributed experiment total payload:", np.median(percent_diff_distributed_to_simulation), "%")
 
     # Remove points to the left of Centralization vertical line
     limit = centralization_num_messages
@@ -313,7 +304,7 @@ def plot_max_error_vs_transfer_volume(parent_test_folder_sim, parent_test_folder
     aws_error_bound_arr, aws_num_messages_arr_automon, aws_max_error_arr_automon, real_function_value, num_nodes, aws_num_bytes_arr_automon, aws_num_bytes_arr_zmq, \
     periodic_message_size, num_messages_arr_periodic, max_error_arr_periodic, \
     centralization_transfer_volume, num_bytes_arr_periodic, centralization_num_messages, sim_error_bound_arr, sim_num_messages_arr_automon, sim_max_error_arr_automon = \
-        read_data(parent_test_folder_sim, parent_test_folder_aws, parent_test_folder_centralization, function)
+        read_data(parent_test_folder_sim, parent_test_folder_aws, parent_test_folder_centralization, function, b_print=True)
     centralization_transfer_volume_wo_overhead = periodic_message_size * centralization_num_messages
 
     # Figure with error as a function of number of messages - simulation and AWS
@@ -499,9 +490,9 @@ def plot_communication_automon_vs_network(ax, func_name, aws_error_bound_arr, aw
         ax.set_xlabel('error bound \u03B5', labelpad=3)
 
     transfer_volume_reduction = np.array(centralization_transfer_volume) - np.array(aws_num_bytes_arr_zmq)
-    print(func_name, "transfer volume reduction max:", np.max(transfer_volume_reduction), "avg:", np.mean(transfer_volume_reduction),
-          "scaled max:", np.max(transfer_volume_reduction)/centralization_transfer_volume*100,
-          "scaled avg:", np.mean(transfer_volume_reduction)/centralization_transfer_volume*100)
+    print(func_name, "data transfer volume reduction (compared to Centralization transfer volume) "
+          "max:", np.max(transfer_volume_reduction) / centralization_transfer_volume * 100, "%, "
+          "avg:", np.mean(transfer_volume_reduction) / centralization_transfer_volume * 100, "%")
 
     indices = np.where(np.in1d(aws_error_bound_arr, chosen_error_bounds))[0]
     aws_error_bound_arr = np.take(np.array(aws_error_bound_arr), indices)
@@ -619,19 +610,13 @@ def check_rtt_between_aws_regions(parent_test_folder_aws_kld, parent_test_folder
                     rtt_arr.append(rtt)
                     rtt_arr_all.append(rtt)
             if len(rtt_arr) == 0:
-                print(test_folder, 'does not contain sync')
                 continue
-            avg_rtt = np.mean(rtt_arr)
-            max_rtt = np.max(rtt_arr)
-            median_rtt = np.median(rtt_arr)
-            std_rtt = np.std(rtt_arr)
-            print(test_folder, "avg_rtt (ms):", avg_rtt, "max_rtt (ms):", max_rtt, "median_rtt (ms):", median_rtt, "std_rtt (ms):", std_rtt)
 
     avg_rtt = np.mean(rtt_arr_all)
     max_rtt = np.max(rtt_arr_all)
     median_rtt = np.median(rtt_arr_all)
     std_rtt = np.std(rtt_arr_all)
-    print("avg_rtt_all (ms):", avg_rtt, "max_rtt_all (ms):", max_rtt, "median_rtt_all (ms):", median_rtt, "std_rtt_all (ms):", std_rtt)
+    print("RTT (round trip time) between the AWS regions average (ms):", avg_rtt, ", max RTT (ms):", max_rtt, ", median RTT (ms):", median_rtt, ", std (ms):", std_rtt)
 
 
 if __name__ == "__main__":
@@ -668,10 +653,10 @@ if __name__ == "__main__":
         parent_test_folder_kld_sim = "../test_results/results_test_max_error_vs_communication_kld_air_quality_2021-09-19_23-02-36"
         parent_test_folder_dnn_sim = "../test_results/results_test_max_error_vs_communication_dnn_intrusion_detection_2021-09-19_23-05-20"
 
-        parent_test_folder_inner_prod_aws = "../test_results/max_error_vs_communication_inner_product_aws_2021-10-10"
-        parent_test_folder_quadratic_aws = "../test_results/max_error_vs_communication_quadratic_aws_2021-10-10"
-        parent_test_folder_kld_aws = "../test_results/max_error_vs_communication_kld_aws_2021-10-26"
-        parent_test_folder_dnn_aws = "../test_results/max_error_vs_communication_dnn_aws_2021-10-26"
+        parent_test_folder_inner_prod_aws = "../../aws_experiments/test_results/max_error_vs_communication_inner_product_aws_2021-10-10"
+        parent_test_folder_quadratic_aws = "../../aws_experiments/test_results/max_error_vs_communication_quadratic_aws_2021-10-10"
+        parent_test_folder_kld_aws = "../../aws_experiments/test_results/max_error_vs_communication_kld_aws_2021-10-26"
+        parent_test_folder_dnn_aws = "../../aws_experiments/test_results/max_error_vs_communication_dnn_aws_2021-10-26"
 
         parent_test_folder_inner_prod_centralization = "../test_results/results_dist_centralization_inner_product_2021-10-18_19-47-14"
         parent_test_folder_quadratic_centralization = "../test_results/results_dist_centralization_quadratic_2021-10-18_19-51-19"

@@ -164,7 +164,7 @@ if __name__ == "__main__":
     parser.add_argument("--coordinator_aws_instance_type", type=str, dest="coordinator_aws_instance_type",
                         help="coordinator AWS instance type. Could be one of: ec2 / fargate. Use ECS Fargate coordinator for cases that do not require strong coordinator "
                              "(e.g., inner_product), or use strong EC2 coordinator.",
-                        default='fargate')
+                        default='ec2')
     parser.add_argument("--centralized", dest="b_centralized",
                         help="if --centralized is specified, a centralization (not AutoMon) experiment ie deployed",
                         action='store_true')

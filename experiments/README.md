@@ -5,10 +5,13 @@ We provide a single script that runs all the experiments and generates the paper
 The script can be run as a standalone, and in that case it also downloads the project source code,
 or it can be run as part of a cloned project.
 
-To run the script as a standalone download only the file `experiments/reproduce.py` and run it.
+To run the script as a standalone, download only the file [`reproduce_experiments.py`](../reproduce_experiments.py) and run it.
 To run the script from within a cloned project, first clone the project,
 `git clone https://github.com/hsivan/automon`,
-and then run the script: `python <automon_root>/experiments/reproduce.py`.
+and then run the script: `python <automon_root>/reproduce_experiments.py`.
+
+To run the distributed experiments on AWS, in addition to the simulation experiments,
+use the `--aws` flag when running the script. Read [this](../aws_experiments/README.md) for more information.
 
 ## Reproduce experiments manually
 
