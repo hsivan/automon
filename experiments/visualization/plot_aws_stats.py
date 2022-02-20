@@ -264,6 +264,8 @@ def read_data(parent_test_folder_sim, parent_test_folder_aws, parent_test_folder
     if b_print:
         if "dnn" in function:
             percent_diff_distributed_to_simulation = (np.array(aws_num_messages_arr_automon) - np.array(sim_num_messages_arr_automon)[[1, 3, 4, 5, 7, 9]]) / np.array(sim_num_messages_arr_automon)[[1, 3, 4, 5, 7, 9]] * 100
+        elif "kld" in function:
+            percent_diff_distributed_to_simulation = (np.array(aws_num_messages_arr_automon) - np.array(sim_num_messages_arr_automon)[[2, 3, 4, 5, 6, 7, 8, 10]]) / np.array(sim_num_messages_arr_automon)[[2, 3, 4, 5, 6, 7, 8, 10]] * 100
         else:
             percent_diff_distributed_to_simulation = (np.array(aws_num_messages_arr_automon) - sim_num_messages_arr_automon) / sim_num_messages_arr_automon * 100
         print(function, "median of differences between simulation total payload and distributed experiment total payload:", np.median(percent_diff_distributed_to_simulation), "%")

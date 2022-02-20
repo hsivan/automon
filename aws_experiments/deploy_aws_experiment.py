@@ -191,8 +191,13 @@ if __name__ == "__main__":
         if args.node_type == "quadratic":
             error_bounds = [0.015, 0.02, 0.03, 0.04, 0.05, 0.08, 0.1, 1.0]
         if args.node_type == "kld":
-            error_bounds = [0.003, 0.004, 0.005, 0.01, 0.02, 0.04, 0.06, 0.08, 0.1, 0.12, 0.14]
+            # Use only 8 error bounds to have less than 100 ECS instances in the same region, as Amazon has 100 ECS instance limit for a single region (8 error
+            # bounds x 12 nodes = 96 ECS instance, plus 8 EC2/ECS coordinator instances in a different region). The original list is:
+            # [0.003, 0.004, 0.005, 0.01, 0.02, 0.04, 0.06, 0.08, 0.1, 0.12, 0.14]
+            error_bounds = [0.005, 0.01, 0.02, 0.04, 0.06, 0.08, 0.1, 0.14]
         if args.node_type == "dnn":
+            # Use only 6 error bounds to save time and money. The original list is:
+            # [0.001, 0.002, 0.0027, 0.003, 0.005, 0.007, 0.01, 0.016, 0.025, 0.05]
             error_bounds = [0.002, 0.003, 0.005, 0.007, 0.016, 0.05]
 
     if args.node_type == "inner_product":
