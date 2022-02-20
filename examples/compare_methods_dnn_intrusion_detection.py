@@ -1,5 +1,5 @@
 from automon import AutomonNode, AutomonCoordinator, RlvNode, RlvCoordinator
-from test_utils.functions_to_monitor import set_net_params, func_dnn_intrusion_detection
+from test_utils.functions_to_monitor import get_func_dnn_intrusion_detection
 from test_utils.data_generator import DataGeneratorDnnIntrusionDetection
 from test_utils.test_utils import start_test, end_test, run_test, write_config_to_file, read_config_file
 from test_utils.stats_analysis_utils import plot_monitoring_stats
@@ -17,7 +17,6 @@ if __name__ == "__main__":
         conf = read_config_file(data_folder)
         write_config_to_file(test_folder, conf)
         net_params, net_apply = load_net(data_folder)
-        set_net_params(net_params, net_apply)
         data_generator = DataGeneratorDnnIntrusionDetection(num_iterations=conf["num_iterations"], num_nodes=conf["num_nodes"], d=conf["d"], test_folder=test_folder, num_iterations_for_tuning=conf["num_iterations_for_tuning"], sliding_window_size=conf["sliding_window_size"])
 
         '''
@@ -26,9 +25,10 @@ if __name__ == "__main__":
                           neighborhood_size=0.5, num_iterations_for_tuning=500)
         write_config_to_file(test_folder, conf)
         net_params, net_apply = train_net(test_folder)
-        set_net_params(net_params, net_apply)
         data_generator = DataGeneratorDnnIntrusionDetection(num_iterations=conf["num_iterations"], num_nodes=conf["num_nodes"], d=conf["d"], test_folder=test_folder, num_iterations_for_tuning=conf["num_iterations_for_tuning"], sliding_window_size=conf["sliding_window_size"])
         '''
+
+        func_dnn_intrusion_detection = get_func_dnn_intrusion_detection(net_params, net_apply)
 
         logging.info("\n###################### Start DNN intrusion_detection RLV test ######################")
         data_generator.reset()

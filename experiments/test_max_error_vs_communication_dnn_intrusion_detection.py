@@ -6,11 +6,11 @@ from test_utils.test_utils import start_test, end_test, run_test, write_config_t
 from test_utils.stats_analysis_utils import plot_monitoring_stats
 import logging
 from test_utils.object_factory import get_objects
-from test_utils.functions_to_monitor import set_net_params, func_dnn_intrusion_detection
+from test_utils.functions_to_monitor import get_func_dnn_intrusion_detection
 from experiments.visualization.plot_error_communication_tradeoff import plot_max_error_vs_communication
 
 
-def test_error_bounds(error_bound, parent_test_folder):
+def test_error_bounds(error_bound, parent_test_folder, func_dnn_intrusion_detection):
     conf = read_config_file(parent_test_folder)
     data_generator = DataGeneratorDnnIntrusionDetection(num_iterations=conf["num_iterations"], num_nodes=conf["num_nodes"],
                                                         data_file_name="data_file.txt", test_folder=parent_test_folder, d=conf["d"],
@@ -39,7 +39,7 @@ if __name__ == "__main__":
 
     data_folder = '../datasets/intrusion_detection/'
     net_params, net_apply = load_net(data_folder)
-    set_net_params(net_params, net_apply)
+    func_dnn_intrusion_detection = get_func_dnn_intrusion_detection(net_params, net_apply)
 
     parent_test_folder = start_test("test_max_error_vs_communication_dnn_intrusion_detection")
     end_test()  # To close the logging
@@ -54,6 +54,6 @@ if __name__ == "__main__":
     error_bounds = [0.001, 0.002, 0.0027, 0.003, 0.005, 0.007, 0.01, 0.016, 0.025, 0.05]
 
     for error_bound in error_bounds:
-        test_error_bounds(error_bound, parent_test_folder)
+        test_error_bounds(error_bound, parent_test_folder, func_dnn_intrusion_detection)
 
     plot_max_error_vs_communication(parent_test_folder, "DNN Intrusion Detection")

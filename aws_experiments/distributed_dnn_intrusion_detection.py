@@ -3,7 +3,7 @@ import logging
 import os
 from automon import AutomonNode, AutomonCoordinator, SlackType, SyncType
 from test_utils.data_generator import DataGeneratorDnnIntrusionDetection
-from test_utils.functions_to_monitor import set_net_params, func_dnn_intrusion_detection
+from test_utils.functions_to_monitor import get_func_dnn_intrusion_detection
 from test_utils.jax_dnn_intrusion_detection import load_net
 from test_utils.stats_analysis_utils import log_num_packets_sent_and_received
 from test_utils.test_utils import start_test, end_test, write_config_to_file, read_config_file
@@ -32,7 +32,7 @@ if __name__ == "__main__":
         conf["neighborhood_size"] = error_bound_to_neighborhood_size[args.error_bound]
         write_config_to_file(test_folder, conf)
         net_params, net_apply = load_net(data_folder)
-        set_net_params(net_params, net_apply)
+        func_dnn_intrusion_detection = get_func_dnn_intrusion_detection(net_params, net_apply)
 
         if args.node_idx == -1:
             coordinator = AutomonCoordinator(conf["num_nodes"], func_dnn_intrusion_detection, slack_type=SlackType(conf["slack_type"]), sync_type=SyncType(conf["sync_type"]),

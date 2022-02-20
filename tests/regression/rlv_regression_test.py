@@ -1,7 +1,7 @@
 from automon import RlvNode, RlvCoordinator, SlackType, SyncType
 from test_utils.data_generator import DataGeneratorKldAirQuality, DataGeneratorQuadratic, DataGeneratorRozenbrock
 from test_utils.test_utils import start_test, end_test, get_config
-from test_utils.functions_to_monitor import set_H, func_kld, func_quadratic, func_rozenbrock
+from test_utils.functions_to_monitor import func_kld, get_func_quadratic, func_rozenbrock
 from tests.regression.regression_test_utils import compare_results
 import numpy as np
 from test_utils.object_factory import get_objects
@@ -39,7 +39,7 @@ if __name__ == "__main__":
         data_generator = DataGeneratorQuadratic(num_iterations=conf["num_iterations"], num_nodes=conf["num_nodes"],
                                                 data_file_name=regression_test_files_folder + "data_file_quadratic.txt", d=conf["d"], sliding_window_size=conf["sliding_window_size"])
         H = np.loadtxt(regression_test_files_folder + 'H_matrix.txt', dtype=np.float32)
-        set_H(conf["d"], H)
+        func_quadratic = get_func_quadratic(H)
         test_func("quadratic", RlvNode, data_generator, conf, test_folder, func_quadratic)
 
 

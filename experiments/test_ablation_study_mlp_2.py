@@ -7,7 +7,7 @@ from test_utils.stats_analysis_utils import plot_monitoring_stats
 import logging
 from test_utils.jax_mlp import train_net, draw_f_approx_contour_and_node_trail
 from test_utils.object_factory import get_objects
-from test_utils.functions_to_monitor import set_net_params, func_mlp
+from test_utils.functions_to_monitor import get_func_mlp
 logging = logging.getLogger('automon')
 
 if __name__ == "__main__":
@@ -21,7 +21,6 @@ if __name__ == "__main__":
         conf = read_config_file(data_folder)
         write_config_to_file(test_folder, conf)
         net_params, net_apply = load_net(data_folder)
-        set_net_params(net_params, net_apply)
         data_generator = DataGeneratorMlp(num_iterations=conf["num_iterations"], num_nodes=conf["num_nodes"], data_file_name="data_file.txt", test_folder=data_folder, d=conf["d"], num_iterations_for_tuning=conf["num_iterations_for_tuning"], sliding_window_size=conf["sliding_window_size"])
         '''
 
@@ -30,9 +29,9 @@ if __name__ == "__main__":
                           neighborhood_size=0.5, num_iterations_for_tuning=200)
         write_config_to_file(test_folder, conf)
         net_params, net_apply = train_net(test_folder, num_train_iter=20000, step_size=1e-4)
-        set_net_params(net_params, net_apply)
         data_generator = DataGeneratorMlp(num_iterations=conf["num_iterations"], num_nodes=conf["num_nodes"], d=conf["d"], test_folder=test_folder, num_iterations_for_tuning=conf["num_iterations_for_tuning"], sliding_window_size=conf["sliding_window_size"])
 
+        func_mlp = get_func_mlp(net_params, net_apply)
         draw_f_approx_contour_and_node_trail(net_apply, net_params, data_generator.data, test_folder)
 
         logging.info("\n###################### Start MLP RLV test  (no ADCD no slack) ######################")

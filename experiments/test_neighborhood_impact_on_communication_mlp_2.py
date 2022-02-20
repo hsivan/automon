@@ -8,7 +8,7 @@ from test_utils.stats_analysis_utils import plot_monitoring_stats
 import logging
 import traceback
 from test_utils.object_factory import get_objects
-from test_utils.functions_to_monitor import set_net_params, func_mlp
+from test_utils.functions_to_monitor import get_func_mlp
 from test_utils.jax_mlp import load_net
 from experiments.visualization.plot_neighborhood_impact import plot_communication_or_violation_error_bound_connection
 
@@ -20,7 +20,7 @@ def neighborhood_size_impact(experiment_folder, test_folder, neighborhood_sizes,
 
     data_folder = '../datasets/MLP_2/'
     net_params, net_apply = load_net(data_folder)
-    set_net_params(net_params, net_apply)
+    func_mlp = get_func_mlp(net_params, net_apply)
 
     for i in range(len(neighborhood_sizes)):
         try:

@@ -44,35 +44,24 @@ def func_entropy(p_vec):
     return res
 
 
-############ DNN Exp: x*exp(-x^2 -y^2)   and   DNN intrusion detection ############
+############ MLP which approximates x*exp(-x^2 -y^2)   and   DNN intrusion detection ############
 
-network_params = None
-net_apply = None
-
-
-def set_net_params(network_params_, net_apply_):
-    global network_params
-    global net_apply
-    network_params = network_params_
-    net_apply = net_apply_
+# Only works with Jax
+def get_func_mlp(network_params, net_apply):
+    @maybe_jit
+    def func_mlp(X):
+        predictions = net_apply(network_params, X)
+        return predictions[0]
+    return func_mlp
 
 
 # Only works with Jax
-@maybe_jit
-def func_mlp(X):
-    global network_params
-    global net_apply
-    predictions = net_apply(network_params, X)
-    return predictions[0]
-
-
-# Only works with Jax
-@maybe_jit
-def func_dnn_intrusion_detection(X):
-    global network_params
-    global net_apply
-    predictions = net_apply(network_params, X, rng=key)
-    return predictions[0]
+def get_func_dnn_intrusion_detection(network_params, net_apply):
+    @maybe_jit
+    def func_dnn_intrusion_detection(X):
+        predictions = net_apply(network_params, X, rng=key)
+        return predictions[0]
+    return func_dnn_intrusion_detection
 
 
 ############ KL-Divergence ############
@@ -138,30 +127,13 @@ def func_cosine_similarity(X):
 
 
 ############ Quadratic Form ############
-
-H = None
-
-
-def set_H(X_len, H_=None):
-    global H
-    if H_ is None:
-        H = numpy.random.randn(X_len, X_len).astype(np.float32)
-    else:
-        H = H_.copy()
-
-
-def get_H():
-    global H
-    return H
-
-
-#@maybe_jit
-def func_quadratic(X):
-    global H
-
+# Returns function that only has one argument X.
+def get_func_quadratic(H):
     # Autograd and Jax version of the function
-    res = X @ H @ X.T
-    return res
+    #@maybe_jit
+    def func_quadratic(X):
+        return X @ H @ X.T
+    return func_quadratic
 
 
 ############ Rozenbrock ############

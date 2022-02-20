@@ -4,7 +4,7 @@ from test_utils.test_utils import start_test, end_test, run_test, write_config_t
 from test_utils.stats_analysis_utils import plot_monitoring_stats
 import logging
 from test_utils.object_factory import get_objects
-from test_utils.functions_to_monitor import set_H, func_quadratic
+from test_utils.functions_to_monitor import get_func_quadratic
 import numpy as np
 from experiments.visualization.plot_error_communication_tradeoff import plot_max_error_vs_communication
 
@@ -12,7 +12,7 @@ from experiments.visualization.plot_error_communication_tradeoff import plot_max
 def test_error_bounds(error_bound, parent_test_folder):
     conf = read_config_file(parent_test_folder)
     H = np.loadtxt(parent_test_folder + '/H_matrix.txt', dtype=np.float32)
-    set_H(conf["d"], H)
+    func_quadratic = get_func_quadratic(H)
     data_generator = DataGeneratorQuadratic(num_iterations=conf["num_iterations"], num_nodes=conf["num_nodes"], data_file_name="data_file.txt", test_folder=parent_test_folder, d=conf["d"], sliding_window_size=conf["sliding_window_size"])
 
     try:
@@ -40,15 +40,13 @@ if __name__ == "__main__":
 
     '''conf = get_config(num_nodes=10, num_iterations=1020, sliding_window_size=20, d=40, slack_type=SlackType.Drift.value, sync_type=SyncType.LazyLRU.value)
     write_config_to_file(parent_test_folder, conf)
-    set_H(conf["d"])
-    H = get_H().copy()
+    H = np.random.randn(conf["d"], conf["d"]).astype(np.float32)
     np.savetxt(parent_test_folder + '/H_matrix.txt', H, fmt='%f')
     data_generator = DataGeneratorQuadratic(num_iterations=conf["num_iterations"], num_nodes=conf["num_nodes"], d=conf["d"], test_folder=parent_test_folder, sliding_window_size=conf["sliding_window_size"])'''
 
     data_folder = '../datasets/quadratic/'
     conf = read_config_file(data_folder)
     H = np.loadtxt(data_folder + 'H_matrix.txt', dtype=np.float32)
-    set_H(conf["d"], H)
     np.savetxt(parent_test_folder + '/H_matrix.txt', H, fmt='%f')
     write_config_to_file(parent_test_folder, conf)
     data_generator = DataGeneratorQuadratic(num_iterations=conf["num_iterations"], num_nodes=conf["num_nodes"], d=conf["d"], data_file_name=data_folder + "data_file.txt", sliding_window_size=conf["sliding_window_size"])

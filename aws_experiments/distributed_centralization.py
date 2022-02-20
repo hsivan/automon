@@ -2,10 +2,7 @@ import argparse
 import logging
 import os
 import time
-import numpy as np
 from test_utils.data_generator import DataGeneratorQuadratic, DataGeneratorKldAirQuality, DataGeneratorDnnIntrusionDetection, DataGeneratorInnerProduct
-from test_utils.functions_to_monitor import set_H, set_net_params
-from test_utils.jax_dnn_intrusion_detection import load_net
 from test_utils.stats_analysis_utils import log_num_packets_sent_and_received
 from test_utils.test_utils import start_test, end_test, write_config_to_file, read_config_file
 from test_utils.test_utils_zmq_sockets_centralization import run_centralization_node, run_dummy_coordinator
@@ -25,8 +22,6 @@ if __name__ == "__main__":
         if args.type == "quadratic":
             data_folder = os.path.abspath(os.path.dirname(__file__)) + '/../datasets/quadratic/'
             conf = read_config_file(data_folder)
-            H = np.loadtxt(data_folder + 'H_matrix.txt', dtype=np.float32)
-            set_H(conf["d"], H)
             data_generator = DataGeneratorQuadratic(num_iterations=conf["num_iterations"], num_nodes=conf["num_nodes"], d=conf["d"], data_file_name="data_file.txt", test_folder=data_folder, sliding_window_size=conf["sliding_window_size"])
         if args.type == "inner_product":
             data_folder = os.path.abspath(os.path.dirname(__file__)) + "/../datasets/inner_product/"
@@ -40,8 +35,6 @@ if __name__ == "__main__":
             data_folder = os.path.abspath(os.path.abspath(os.path.dirname(__file__))) + '/../datasets/intrusion_detection/'
             conf = read_config_file(data_folder)
             write_config_to_file(test_folder, conf)
-            net_params, net_apply = load_net(data_folder)
-            set_net_params(net_params, net_apply)
             data_generator = DataGeneratorDnnIntrusionDetection(num_iterations=conf["num_iterations"], num_nodes=conf["num_nodes"], d=conf["d"], test_folder=test_folder, num_iterations_for_tuning=conf["num_iterations_for_tuning"], sliding_window_size=conf["sliding_window_size"])
         write_config_to_file(test_folder, conf)
 

@@ -8,7 +8,7 @@ import logging
 import numpy as np
 import traceback
 from test_utils.object_factory import get_objects
-from test_utils.functions_to_monitor import set_net_params, func_mlp
+from test_utils.functions_to_monitor import get_func_mlp
 from test_utils.jax_mlp import load_net
 
 
@@ -17,7 +17,7 @@ def neighborhood_size_impact(experiment_folder, error_bound):
 
     data_folder = '../datasets/MLP_2/'
     net_params, net_apply = load_net(data_folder)
-    set_net_params(net_params, net_apply)
+    func_mlp = get_func_mlp(net_params, net_apply)
 
     test_folder = experiment_folder + "/thresh_" + str(error_bound).replace(".", "_")
     test_folder = start_test("neighborhood_size_impact_mlp_2", test_folder)

@@ -4,7 +4,7 @@ import os
 import numpy as np
 from automon import AutomonNode, AutomonCoordinator, SlackType, SyncType
 from test_utils.data_generator import DataGeneratorQuadratic
-from test_utils.functions_to_monitor import set_H, func_quadratic
+from test_utils.functions_to_monitor import get_func_quadratic
 from test_utils.stats_analysis_utils import log_num_packets_sent_and_received
 from test_utils.test_utils import start_test, end_test, write_config_to_file, read_config_file
 from test_utils.test_utils_zmq_sockets import run_node, run_coordinator
@@ -26,7 +26,7 @@ if __name__ == "__main__":
         conf["error_bound"] = args.error_bound
         write_config_to_file(test_folder, conf)
         H = np.loadtxt(data_folder + 'H_matrix.txt', dtype=np.float32)
-        set_H(conf["d"], H)
+        func_quadratic = get_func_quadratic(H)
 
         if args.node_idx == -1:
             coordinator = AutomonCoordinator(conf["num_nodes"], func_quadratic, slack_type=SlackType(conf["slack_type"]), sync_type=SyncType(conf["sync_type"]),

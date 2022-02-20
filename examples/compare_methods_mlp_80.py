@@ -6,7 +6,7 @@ from test_utils.stats_analysis_utils import plot_monitoring_stats
 import logging
 from test_utils.jax_mlp import load_net
 from test_utils.object_factory import get_objects
-from test_utils.functions_to_monitor import set_net_params, func_mlp
+from test_utils.functions_to_monitor import get_func_mlp
 
 if __name__ == "__main__":
     try:
@@ -19,7 +19,6 @@ if __name__ == "__main__":
         conf = read_config_file(data_folder)
         write_config_to_file(test_folder, conf)
         net_params, net_apply = load_net(data_folder)
-        set_net_params(net_params, net_apply)
         data_generator = DataGeneratorMlp(num_iterations=conf["num_iterations"], num_nodes=conf["num_nodes"], data_file_name="data_file.txt",
                                           d=conf["d"], test_folder=data_folder, num_iterations_for_tuning=conf["num_iterations_for_tuning"], sliding_window_size=conf["sliding_window_size"])
 
@@ -29,10 +28,11 @@ if __name__ == "__main__":
                           neighborhood_size=0.4, num_iterations_for_tuning=200)
         write_config_to_file(test_folder, conf)
         net_params, net_apply = train_net(test_folder, x_dim, 15000, 1e-4)
-        set_net_params(net_params, net_apply)
         data_generator = DataGeneratorMlp(num_iterations=conf["num_iterations"], num_nodes=conf["num_nodes"],
                                           d=conf["d"], test_folder=test_folder, num_iterations_for_tuning=conf["num_iterations_for_tuning"], sliding_window_size=conf["sliding_window_size"])
         '''
+
+        func_mlp = get_func_mlp(net_params, net_apply)
 
         logging.info("\n###################### Start MLP RLV test ######################")
         data_generator.reset()

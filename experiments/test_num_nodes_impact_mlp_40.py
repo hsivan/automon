@@ -6,11 +6,11 @@ from test_utils.stats_analysis_utils import plot_monitoring_stats
 import logging
 from test_utils.jax_mlp import load_net
 from test_utils.object_factory import get_objects
-from test_utils.functions_to_monitor import set_net_params, func_mlp
+from test_utils.functions_to_monitor import get_func_mlp
 from experiments.visualization.plot_num_nodes_impact import plot_num_nodes_impact_on_communication
 
 
-def test_num_nodes(num_nodes, parent_test_folder):
+def test_num_nodes(num_nodes, parent_test_folder, func_mlp):
     conf = read_config_file(parent_test_folder)
 
     try:
@@ -43,11 +43,11 @@ if __name__ == "__main__":
     conf = read_config_file(data_folder)
     write_config_to_file(parent_test_folder, conf)
     net_params, net_apply = load_net(data_folder)
-    set_net_params(net_params, net_apply)
+    func_mlp = get_func_mlp(net_params, net_apply)
 
     num_nodes_arr = [10, 20, 40, 60, 100, 500]
 
     for num_nodes in num_nodes_arr:
-        test_num_nodes(num_nodes, parent_test_folder)
+        test_num_nodes(num_nodes, parent_test_folder, func_mlp)
 
     plot_num_nodes_impact_on_communication(parent_test_folder)
