@@ -80,12 +80,12 @@ class ExtremeEigenvalueHelper:
         max_eigenvalue = maxeigenval(x, hess)
         return -1.0 * max_eigenvalue
     
-    def func_extreme_eigenvalues(self, x0, domain, iteration):
+    def func_extreme_eigenvalues(self, x0, neighborhood, iteration):
         start = timer()
-        sol_min = minimize(self._min_eigenvalue, x0, args=self.func_to_monitor_hessian, bounds=domain, options={"maxiter": 5}, method=self.optimization_method)
-        sol_max = minimize(self._max_eigenvalue, x0, args=self.func_to_monitor_hessian, bounds=domain, options={"maxiter": 5}, method=self.optimization_method)
-        logging.debug("Iteration " + str(iteration) + ": Minimal eigenvalue of hessian in the domain: " + str(sol_min.fun) + " at " + str(sol_min.x))
-        logging.debug("Iteration " + str(iteration) + ": Maximal eigenvalue of hessian in the domain: " + str(-1.0 * sol_max.fun) + " at " + str(sol_max.x))
+        sol_min = minimize(self._min_eigenvalue, x0, args=self.func_to_monitor_hessian, bounds=neighborhood, options={"maxiter": 5}, method=self.optimization_method)
+        sol_max = minimize(self._max_eigenvalue, x0, args=self.func_to_monitor_hessian, bounds=neighborhood, options={"maxiter": 5}, method=self.optimization_method)
+        logging.debug("Iteration " + str(iteration) + ": Minimal eigenvalue of hessian in the neighborhood: " + str(sol_min.fun) + " at " + str(sol_min.x))
+        logging.debug("Iteration " + str(iteration) + ": Maximal eigenvalue of hessian in the neighborhood: " + str(-1.0 * sol_max.fun) + " at " + str(sol_max.x))
         min_eigenvalue = sol_min.fun
         max_eigenvalue = -1.0 * sol_max.fun
 
@@ -94,8 +94,8 @@ class ExtremeEigenvalueHelper:
         if numpy.isnan(max_eigenvalue):
             max_eigenvalue = numpy.inf
 
-        logging.debug("Iteration " + str(iteration) + ": Minimal eigenvalue of hessian in the domain: " + str(min_eigenvalue))
-        logging.debug("Iteration " + str(iteration) + ": Maximal eigenvalue of hessian in the domain: " + str(max_eigenvalue))
+        logging.debug("Iteration " + str(iteration) + ": Minimal eigenvalue of hessian in the neighborhood: " + str(min_eigenvalue))
+        logging.debug("Iteration " + str(iteration) + ": Maximal eigenvalue of hessian in the neighborhood: " + str(max_eigenvalue))
         end = timer()
         optimization_time = end - start
         logging.info("Optimization time: " + str(optimization_time))
@@ -156,8 +156,8 @@ class AdcdHelper:
     
     # ADCD-X.
     
-    def adcd_x(self, x0, domain, iteration):
-        min_eigenvalue, max_eigenvalue = self.extreme_eigenvalue_helper.func_extreme_eigenvalues(x0, domain, iteration)
+    def adcd_x(self, x0, neighborhood, iteration):
+        min_eigenvalue, max_eigenvalue = self.extreme_eigenvalue_helper.func_extreme_eigenvalues(x0, neighborhood, iteration)
         lambda_min_minus = numpy.minimum(min_eigenvalue, 0)
         lambda_max_plus = numpy.maximum(max_eigenvalue, 0)
 
