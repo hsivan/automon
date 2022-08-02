@@ -1,19 +1,23 @@
 """
+Reproduce AutoMon's experiments. The script downloads the code from https://github.com/hsivan/automon, downloads the
+external datasets, and runs the experiments.
 Run this script on Linux (Ubuntu 18.04 or later).
 
 Requirements:
 (1) Python 3
-(2) Docker engine (see https://docs.docker.com/engine/install)
+(2) Docker engine (see https://docs.docker.com/engine/install/ubuntu/, and make sure running 'sudo docker run hello-world' works as expected)
 
 The script uses only libraries from the Python standard library, which prevents the need to install external packages.
 
-Note: in case the script is called with the --aws options it installs AWS cli and configures it. It then runs the
-distributed experiments on AWS.
+Note: in case the script is called with the --aws options it installs AWS cli and configures it.
+After running the simulations, it runs the distributed experiments on AWS.
 It requires the user to have an AWS account; after opening the account, the user must create AWS IAM user with
 AdministratorAccess permissions, download the csv file new_user_credentials.csv that contains the key ID and the secret
-key, and place the new_user_credentials.csv file in project_root/aws_experiments/new_user_credentials.csv and re-run this script.
-Running the AWS experiments would cost several hundred dollars!
-The user must monitor his ECS tasks and EC2 instances, and manually shutdown any dangling tasks/instances in case of failures.
+key, and place the new_user_credentials.csv file in project_root/aws_experiments/new_user_credentials.csv.
+After completing these steps, re-run this script.
+Running the AWS experiments would cost a few hundred dollars!
+The user must monitor the ECS tasks and EC2 instances, and manually shutdown any dangling tasks/instances in case of
+failures.
 """
 import urllib.request
 import zipfile
@@ -26,6 +30,14 @@ from pathlib import Path
 from timeit import default_timer as timer
 import datetime
 import argparse
+from argparse import RawTextHelpFormatter
+
+
+def print_to_std_and_file(str_to_log):
+    print(str_to_log)
+    with open(log_file, 'a') as f:
+        test_timestamp = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+        f.write(test_timestamp + ": " + str_to_log + "\n")
 
 
 def verify_requirements():
@@ -38,24 +50,24 @@ def verify_requirements():
         sys.exit(1)
     result = subprocess.run('docker version', shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     if '\'docker\' is not recognized as an internal or external command' in result.stderr.decode():
-        print("Running this script requires docker engine. See https://docs.docker.com/engine/install.")
+        print_to_std_and_file("Running this script requires docker engine. See https://docs.docker.com/engine/install.")
         sys.exit(1)
 
 
 def download_repository():
     """
-    Checks if the script as part of AutoMon cloned project or a standalone.
+    Checks if the script is part of AutoMon's cloned project or a standalone.
     If the script is part of a cloned project there is no need to download the source code.
     Otherwise, downloads AutoMon's code from GitHub.
     :return: the location of the source code (the project_root)
     """
     script_abs_dir = os.path.abspath(__file__).replace("reproduce_experiments.py", "")
     if os.path.isfile(script_abs_dir + "./requirements.txt"):
-        print("The reproduce_experiments.py script is part of a cloned AutoMon project. No need to download AutoMon's source code.")
+        print_to_std_and_file("The reproduce_experiments.py script is part of a cloned AutoMon project. No need to download AutoMon's source code.")
         project_root = '..'
         return project_root
 
-    print("The reproduce_experiments.py script is a standalone. Downloading AutoMon's source code.")
+    print_to_std_and_file("The reproduce_experiments.py script is a standalone. Downloading AutoMon's source code.")
     zipped_project = 'automon-main.zip'
     project_root = script_abs_dir + '/' + zipped_project.replace(".zip", "")
     if os.path.isdir(project_root):
@@ -66,7 +78,7 @@ def download_repository():
         zip_ref.extractall()
     os.remove(zipped_project)
 
-    print("Downloaded the project to", project_root)
+    print_to_std_and_file("Downloaded the project to " + project_root)
     return project_root
 
 
@@ -120,7 +132,7 @@ def download_external_datasets(project_root):
 
 def execute_shell_command(cmd, stdout_verification=None, b_stderr_verification=False):
     result = subprocess.run(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    print("Executed command:", cmd)
+    print_to_std_and_file("Executed command: " + cmd)
     print("STDOUT:")
     print(result.stdout)
     print("STDERR:")
@@ -128,11 +140,11 @@ def execute_shell_command(cmd, stdout_verification=None, b_stderr_verification=F
 
     if stdout_verification is not None:
         if stdout_verification not in result.stdout.decode():
-            print("Verification string", stdout_verification, "not in stdout")
+            print_to_std_and_file("Verification string " + stdout_verification + " not in stdout")
             raise Exception
     if b_stderr_verification:
         if result.stderr != b'':
-            print("stderr is not empty:", result.stderr)
+            print_to_std_and_file("stderr is not empty: " + result.stderr)
             raise Exception
 
 
@@ -143,7 +155,7 @@ def execute_shell_command_with_live_output(cmd):
     :return:
     """
     process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-    print("Executed command:", cmd)
+    print_to_std_and_file("Executed command: " + cmd)
     while True:
         output = process.stdout.readline()
         if process.poll() is not None:
@@ -152,7 +164,7 @@ def execute_shell_command_with_live_output(cmd):
             print(output.strip().decode('utf-8'))
     rc = process.poll()
     if rc != 0:
-        print("RC not 0 (RC=" + str(rc) + ") for command:", cmd)
+        print_to_std_and_file("RC not 0 (RC=" + str(rc) + ") for command: " + cmd)
         raise Exception
     return rc
 
@@ -214,7 +226,7 @@ def run_experiment(local_result_dir, docker_run_command_prefix, functions, test_
     for i, function in enumerate(functions):
         test_folder = get_latest_test_folder(local_result_dir, result_folder_prefix + function)
         if test_folder and os.path.isfile(local_result_dir + "/" + test_folder + "/" + file_to_verify_execution):
-            print("Found existing test folder for " + function + ": " + test_folder + ". Skipping.")
+            print_to_std_and_file("Found existing test folder for " + function + ": " + test_folder + ". Skipping.")
         else:
             cmd = docker_run_command_prefix + test_name_prefix + function + '.py'
             if args:
@@ -222,7 +234,7 @@ def run_experiment(local_result_dir, docker_run_command_prefix, functions, test_
             start = timer()
             execute_shell_command_with_live_output(cmd)
             end = timer()
-            print("The experiment", test_name_prefix + function + '.py', "took: ", str(end - start), " seconds")
+            print_to_std_and_file('The experiment ' + test_name_prefix + function + '.py took: ' + str(end - start) + ' seconds')
             test_folder = get_latest_test_folder(local_result_dir, result_folder_prefix + function)
         assert test_folder
         assert os.path.isfile(local_result_dir + "/" + test_folder + "/" + file_to_verify_execution)
@@ -252,7 +264,7 @@ def run_error_communication_tradeoff_experiment(local_result_dir, docker_result_
     :param docker_run_command_prefix: docker run command prefix, which includes mapping of result folder and docker image name
     :return:
     """
-    print("Executing Error-Communication Tradeoff experiment")
+    print_to_std_and_file("Executing Error-Communication Tradeoff experiment")
     test_name_prefix = "test_max_error_vs_communication_"
     result_folder_prefix = "results_" + test_name_prefix
     functions = ["inner_product", "quadratic", "dnn_intrusion_detection", "kld_air_quality"]
@@ -260,7 +272,7 @@ def run_error_communication_tradeoff_experiment(local_result_dir, docker_result_
     test_folders = run_experiment(local_result_dir, docker_run_command_prefix, functions, test_name_prefix, result_folder_prefix, "max_error_vs_communication.pdf")
     generate_figures(docker_result_dir, docker_run_command_prefix, test_folders, 'plot_error_communication_tradeoff.py')
 
-    print("Successfully executed Error-Communication Tradeoff experiment")
+    print_to_std_and_file("Successfully executed Error-Communication Tradeoff experiment")
 
 
 def run_scalability_to_dimensionality_experiment(local_result_dir, docker_result_dir, docker_run_command_prefix):
@@ -272,7 +284,7 @@ def run_scalability_to_dimensionality_experiment(local_result_dir, docker_result
     :param docker_run_command_prefix: docker run command prefix, which includes mapping of result folder and docker image name
     :return:
     """
-    print("Executing Scalability to Dimensionality experiment")
+    print_to_std_and_file("Executing Scalability to Dimensionality experiment")
     test_name_prefix = "test_dimension_impact_"
     result_folder_prefix = "results_" + test_name_prefix
     functions = ["inner_product", "kld_air_quality", "mlp"]
@@ -280,7 +292,7 @@ def run_scalability_to_dimensionality_experiment(local_result_dir, docker_result
     test_folders = run_experiment(local_result_dir, docker_run_command_prefix, functions, test_name_prefix, result_folder_prefix, "dimension_200/results.txt")
     generate_figures(docker_result_dir, docker_run_command_prefix, test_folders, 'plot_dimensions_stats.py')
 
-    print("Successfully executed Scalability to Dimensionality experiment")
+    print_to_std_and_file("Successfully executed Scalability to Dimensionality experiment")
 
 
 def run_scalability_to_number_of_nodes_experiment(local_result_dir, docker_result_dir, docker_run_command_prefix):
@@ -292,7 +304,7 @@ def run_scalability_to_number_of_nodes_experiment(local_result_dir, docker_resul
     :param docker_run_command_prefix: docker run command prefix, which includes mapping of result folder and docker image name
     :return:
     """
-    print("Executing Scalability to Number of Nodes experiment")
+    print_to_std_and_file("Executing Scalability to Number of Nodes experiment")
     test_name_prefix = "test_num_nodes_impact_"
     result_folder_prefix = "results_" + test_name_prefix
     functions = ["inner_product", "mlp_40"]
@@ -300,7 +312,7 @@ def run_scalability_to_number_of_nodes_experiment(local_result_dir, docker_resul
     test_folders = run_experiment(local_result_dir, docker_run_command_prefix, functions, test_name_prefix, result_folder_prefix, "num_nodes_vs_communication.pdf")
     generate_figures(docker_result_dir, docker_run_command_prefix, test_folders, 'plot_num_nodes_impact.py')
 
-    print("Successfully executed Scalability to Number of Nodes experiment")
+    print_to_std_and_file("Successfully executed Scalability to Number of Nodes experiment")
 
 
 def run_neighborhood_size_tuning_experiment(local_result_dir, docker_result_dir, docker_run_command_prefix):
@@ -312,7 +324,7 @@ def run_neighborhood_size_tuning_experiment(local_result_dir, docker_result_dir,
     :param docker_run_command_prefix: docker run command prefix, which includes mapping of result folder and docker image name
     :return:
     """
-    print("Executing Neighborhood Size Tuning experiment")
+    print_to_std_and_file("Executing Neighborhood Size Tuning experiment")
     test_name_prefix = "test_optimal_and_tuned_neighborhood_"
     result_folder_prefix = "results_optimal_and_tuned_neighborhood_"
     functions = ["rozenbrock", "mlp_2"]
@@ -327,7 +339,7 @@ def run_neighborhood_size_tuning_experiment(local_result_dir, docker_result_dir,
 
     generate_figures(docker_result_dir, docker_run_command_prefix, test_folders, 'plot_neighborhood_impact.py')
 
-    print("Successfully executed Neighborhood Size Tuning experiment")
+    print_to_std_and_file("Successfully executed Neighborhood Size Tuning experiment")
 
 
 def run_ablation_study_experiment(local_result_dir, docker_result_dir, docker_run_command_prefix):
@@ -339,7 +351,7 @@ def run_ablation_study_experiment(local_result_dir, docker_result_dir, docker_ru
     :param docker_run_command_prefix: docker run command prefix, which includes mapping of result folder and docker image name
     :return:
     """
-    print("Executing Ablation Study experiment")
+    print_to_std_and_file("Executing Ablation Study experiment")
     test_name_prefix = "test_ablation_study_"
     result_folder_prefix = "results_ablation_study_"
     functions = ["quadratic_inverse", "mlp_2"]
@@ -347,7 +359,7 @@ def run_ablation_study_experiment(local_result_dir, docker_result_dir, docker_ru
     test_folders = run_experiment(local_result_dir, docker_run_command_prefix, functions, test_name_prefix, result_folder_prefix, "results.txt")
     generate_figures(docker_result_dir, docker_run_command_prefix, test_folders, 'plot_monitoring_stats_ablation_study.py')
 
-    print("Successfully executed Ablation Study experiment")
+    print_to_std_and_file("Successfully executed Ablation Study experiment")
 
 
 def run_aws_experiment(node_type, coordinator_aws_instance_type, local_result_dir, b_centralized):
@@ -360,7 +372,7 @@ def run_aws_experiment(node_type, coordinator_aws_instance_type, local_result_di
 
     test_folder = get_latest_test_folder(local_result_dir, "max_error_vs_comm_" + node_name + "_aws/")
     if test_folder:
-        print("Found existing local AWS test folder for " + node_name + ": " + test_folder + ". Skipping.")
+        print_to_std_and_file("Found existing local AWS test folder for " + node_name + ": " + test_folder + ". Skipping.")
         return
 
     start = timer()
@@ -374,7 +386,7 @@ def run_aws_experiment(node_type, coordinator_aws_instance_type, local_result_di
     # This command requires AWS cli installed and configured
     execute_shell_command_with_live_output('aws s3 cp s3://automon-experiment-results/max_error_vs_comm_' + node_name + '_aws ' + test_folder + ' --recursive')
     end = timer()
-    print("The distributed experiment", node_name, "took: ", str(end - start), " seconds")
+    print_to_std_and_file('The distributed experiment' + node_name + ' took: ' + str(end - start) + ' seconds')
 
 
 def generate_aws_figures(local_result_dir, docker_result_dir, docker_run_command_prefix):
@@ -430,7 +442,7 @@ def configure_aws_cli(region='us-east-2'):
 
 def build_and_push_docker_image_to_aws_ecr():
     execute_shell_command_with_live_output('sudo docker build -f aws_experiments/awstest.Dockerfile  -t automon_aws_experiment .')
-    print("Successfully built docker image for the AWS experiments")
+    print_to_std_and_file("Successfully built docker image for the AWS experiments")
     # Get the AWS account id from the new_user_credentials.csv file, without using pandas, boto3, etc.
     with open('./aws_experiments/new_user_credentials.csv', 'r') as f:
         credentials = f.read()
@@ -438,11 +450,11 @@ def build_and_push_docker_image_to_aws_ecr():
     # These two commands require AWS cli installed and configured
     execute_shell_command_with_live_output('aws ecr describe-repositories --repository-names automon || aws ecr create-repository --repository-name automon')
     execute_shell_command_with_live_output('aws ecr get-login-password --region us-east-2 | sudo docker login --username AWS --password-stdin ' + account_id + '.dkr.ecr.us-east-2.amazonaws.com/automon')
-    print("Successfully obtained ECR login password")
+    print_to_std_and_file("Successfully obtained ECR login password")
     execute_shell_command_with_live_output('sudo docker tag automon_aws_experiment ' + account_id + '.dkr.ecr.us-east-2.amazonaws.com/automon')
-    print("Successfully tagged docker image")
+    print_to_std_and_file("Successfully tagged docker image")
     execute_shell_command_with_live_output('sudo docker push ' + account_id + '.dkr.ecr.us-east-2.amazonaws.com/automon')
-    print("Successfully pushed docker image to ECR")
+    print_to_std_and_file("Successfully pushed docker image to ECR")
 
 
 def run_aws_experiments(local_result_dir, docker_result_dir, docker_run_command_prefix):
@@ -468,14 +480,32 @@ def run_aws_experiments(local_result_dir, docker_result_dir, docker_run_command_
 
 if __name__ == "__main__":
 
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--dd", dest="b_download_dataset", help="if --dd is specified, the script only downloads the external datasets", action='store_true')
-    parser.add_argument("--aws", dest="b_aws_experiments", help="if --aws is specified, run AWS experiments in addition to the simulation experiments", action='store_true')
+    parser = argparse.ArgumentParser(description="Reproduce AutoMon's experiments. The script downloads the code from https://github.com/hsivan/automon, downloads the external datasets, and runs the experiments.\n"
+                                                 "Run this script on Linux (Ubuntu 18.04 or later).\n\n"
+                                                 "Requirements:\n"
+                                                 "(1) Python 3\n"
+                                                 "(2) Docker engine (see https://docs.docker.com/engine/install/ubuntu, and make sure running 'sudo docker run hello-world' works as expected)\n\n"
+                                                 "The script uses only libraries from the Python standard library, which prevents the need to install external packages.", formatter_class=RawTextHelpFormatter)
+
+    parser.add_argument("--dd", dest="b_download_dataset", help="if --dd is specified, the script only downloads the repository and external datasets and exits (without running any experiments)", action='store_true')
+    parser.add_argument("--aws", dest="b_aws_experiments", help="if --aws is specified, also run AWS experiments (in addition to the simulation experiments).\n"
+                                                                "Note: in case the script is called with the --aws options it installs AWS cli and configures it. After running\n"
+                                                                "the simulations, it runs the distributed experiments on AWS.\n"
+                                                                "It requires the user to have an AWS account; after opening the account, the user must create AWS IAM user with\n"
+                                                                "AdministratorAccess permissions, download the csv file new_user_credentials.csv that contains the key ID and the secret\n"
+                                                                "key, and place the new_user_credentials.csv file in project_root/aws_experiments/new_user_credentials.csv.\n"
+                                                                "After completing these steps, re-run this script.\n"
+                                                                "Running the AWS experiments would cost a few hundred dollars!\n"
+                                                                "The user must monitor the ECS tasks and EC2 instances, and manually shutdown any dangling tasks/instances in case of failures.", action='store_true')
     args = parser.parse_args()
+
+    log_file = os.path.abspath(__file__).replace("reproduce_experiments.py", "reproduce_experiments.log")
+    print_to_std_and_file("======================== Reproduce AutoMon's Experiments ========================")
+    print("The script log is at", log_file)
 
     project_root = download_repository()
     download_external_datasets(project_root)
-    print("Downloaded external datasets")
+    print_to_std_and_file("Downloaded external datasets")
     if args.b_download_dataset:
         sys.exit()
 
@@ -486,17 +516,17 @@ if __name__ == "__main__":
         # Include the following only here, after the source code was downloaded
         # Verify the new_user_credentials.csv exists
         if not os.path.isfile('aws_experiments/new_user_credentials.csv'):
-            print("To run AWS experiments, you must have an AWS account. After opening the account, create AWS IAM user with "
-                  "AdministratorAccess permissions and download the csv file new_user_credentials.csv that contains the key ID and the secret key. "
-                  "Place the new_user_credentials.csv file in " + project_root + "/aws_experiments/new_user_credentials.csv and re-run this script.\n"
-                  "Note: AWS cli will be installed on your computer and will be configured!")
+            print_to_std_and_file("To run AWS experiments, you must have an AWS account. After opening the account, create AWS IAM user with "
+                                  "AdministratorAccess permissions and download the csv file new_user_credentials.csv that contains the key ID and the secret key. "
+                                  "Place the new_user_credentials.csv file in " + project_root + "/aws_experiments/new_user_credentials.csv and re-run this script.\n"
+                                  "Note: AWS cli will be installed on your computer and will be configured!")
             sys.exit(1)
 
     try:
         # Build docker image with .dockerignore which does not ignore the experiments folder
         edit_dockerignore()
         execute_shell_command_with_live_output('sudo docker build -f experiments/experiments.Dockerfile -t automon_experiment .')
-        print("Successfully built docker image for the experiments")
+        print_to_std_and_file("Successfully built docker image for the experiments")
 
         # Run the experiments
         docker_result_dir = '/app/experiments/test_results'
@@ -507,9 +537,8 @@ if __name__ == "__main__":
             pass
         docker_run_command_prefix = 'sudo docker run -v ' + local_result_dir + ':' + docker_result_dir + ' --rm automon_experiment python /app/experiments/'
 
-        print("Experiment results are written to:", local_result_dir)
+        print_to_std_and_file("Experiment results are written to: " + local_result_dir)
 
-        # Run Error-Communication Tradeoff experiment and generates Figures 5 and 6 (Sec. 4.3 in the paper)
         run_error_communication_tradeoff_experiment(local_result_dir, docker_result_dir, docker_run_command_prefix)
         run_scalability_to_dimensionality_experiment(local_result_dir, docker_result_dir, docker_run_command_prefix)
         run_scalability_to_number_of_nodes_experiment(local_result_dir, docker_result_dir, docker_run_command_prefix)

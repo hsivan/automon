@@ -82,7 +82,7 @@ def _test_data_loop(coordinator, nodes, data_generator, b_single_sample_per_roun
         now = timer()
         # Print progress message every 5 minutes
         if now - prev > 5 * 60:
-            print("Completed " + str(i/num_samples) + "%")
+            print("Completed " + str(100.0 * i / num_samples) + "%")
             sys.stdout.flush()
             prev = now
         local_vector, node_idx = data_generator.get_next_data_point()
