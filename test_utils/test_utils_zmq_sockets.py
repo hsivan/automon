@@ -1,3 +1,4 @@
+import os
 import traceback
 import zmq
 import time
@@ -49,10 +50,10 @@ class NodeDataLoop(threading.Thread):
         threading.Thread.__init__(self)
 
     def data_update(self, data_client, idx):
-        # TODO: should change these values according to the network latency and coordinator full sync time
+        # Change these values according to the network latency and coordinator full sync time
         lazy_sync_latency_seconds_first_time = 10
-        lazy_sync_latency_seconds = 1.0
-        full_sync_latency_seconds = 4.0
+        lazy_sync_latency_seconds = float(os.getenv('LS_LATENCY', '1.0'))
+        full_sync_latency_seconds = float(os.getenv('FS_LATENCY', '4.0'))
         latency_diff_between_full_and_lazy_sync = full_sync_latency_seconds - lazy_sync_latency_seconds
 
         if idx == self.node_idx:

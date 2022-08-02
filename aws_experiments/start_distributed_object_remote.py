@@ -98,7 +98,10 @@ if __name__ == "__main__":
 
         # Start Nethogs
         outfile = open('nethogs_out.txt', 'w')
-        nethogs_proc = subprocess.Popen(["nethogs", "-t", "-v2", "-d", "5"], stdout=outfile)  # trace mode with view mode of total bytes and refresh rate of 5 seconds
+        if node_type == "dnn":
+            nethogs_proc = subprocess.Popen(["nethogs", "-t", "-v2", "-d", "600"], stdout=outfile)  # trace mode with view mode of total bytes and refresh rate of 600 seconds (long experiment - avoid flooding the log)
+        else:
+            nethogs_proc = subprocess.Popen(["nethogs", "-t", "-v2", "-d", "5"], stdout=outfile)  # trace mode with view mode of total bytes and refresh rate of 5 seconds
 
         # Start AutoMon experiment
         try:

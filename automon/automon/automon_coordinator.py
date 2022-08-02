@@ -6,6 +6,7 @@ from automon.common_coordinator import CommonCoordinator, SlackType, SyncType
 from automon.automon.automon_node import AutomonNode
 import numpy
 import os
+import time
 from automon.common_messages import prepare_message_lazy_sync, ViolationOrigin
 from automon.automon.automon_messages import DcType, prepare_message_sync_automon
 
@@ -101,6 +102,15 @@ class ExtremeEigenvalueHelper:
         logging.info("Optimization time: " + str(optimization_time))
         self.optimization_history_times.append(end - start)
         assert (min_eigenvalue <= max_eigenvalue)
+        # This is a hack to accelerate the distributed DNN intrusion detection experiment on AWS: we make sure that for
+        # every full sync, the optimization time is at least 2 seconds. It than possible for the nodes to distinguish
+        # between a full sync and a lazy sync (which is less than 1 second). The nodes then know to wait a longer time
+        # after full sync and shorter after lazy sync, but still remain synchronized. The longer (and more expensive)
+        # alternative, is for the nodes to always wait the longer time, even after lazy sync, which we try to avoid.
+        node_type = os.getenv('NODE_TYPE', 'none')
+        if node_type == "dnn" and optimization_time < 2.0:
+            # Only relevant for DNN experiment on AWS, otherwise NODE_TYPE is not defined.
+            time.sleep(2.0 - optimization_time)
         return min_eigenvalue, max_eigenvalue
     
     def eigenvalues_eigenvectors(self, x):

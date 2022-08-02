@@ -32,7 +32,8 @@ def get_service_ips(ecs_client, cluster, tasks, region):
     return ips
 
 
-def run_task(ecs_client, automon_task, cluster_name, node_idx, host, node_type, error_bound, subnet_id, sg_id, command):
+def run_task(ecs_client, automon_task, cluster_name, node_idx, host, node_type, error_bound, subnet_id, sg_id, command,
+             lazy_sync_latency=1.0, full_sync_latency=4.0):
     task_name = "node-" + str(node_idx) + "_" + cluster_name
     if node_idx == -1:
         task_name = "coordinator_" + cluster_name
@@ -91,6 +92,14 @@ def run_task(ecs_client, automon_task, cluster_name, node_idx, host, node_type, 
                         {
                             'name': 'ERROR_BOUND',
                             'value': str(error_bound)
+                        },
+                        {
+                            'name': 'LS_LATENCY',
+                            'value': str(lazy_sync_latency)
+                        },
+                        {
+                            'name': 'FS_LATENCY',
+                            'value': str(full_sync_latency)
                         }
                     ],
                 }
@@ -148,14 +157,15 @@ def run_coordinator_on_ecs_fargate(coordinator_region, node_type, error_bound, a
     return coordinator_ip
 
 
-def run_nodes_on_ecs_fargate(nodes_region, node_type, error_bound, automon_task, coordinator_ip, command):
+def run_nodes_on_ecs_fargate(nodes_region, node_type, error_bound, automon_task, coordinator_ip, command,
+                             lazy_sync_latency, full_sync_latency):
     ecs_client = session.client('ecs', region_name=nodes_region)
     cluster_name = node_type.replace("_", "-") + "_" + str(error_bound).replace(".", "-") + "_" + nodes_region
     print("Cluster:", cluster_name)
     _ = ecs_client.create_cluster(clusterName=cluster_name)  # Use different cluster for every experiment
     sg_id, subnet_id = get_default_security_group(nodes_region)
     for node_idx in range(NUM_NODES):
-        run_task(ecs_client, automon_task, cluster_name, node_idx, coordinator_ip, node_type, error_bound, subnet_id, sg_id, command)
+        run_task(ecs_client, automon_task, cluster_name, node_idx, coordinator_ip, node_type, error_bound, subnet_id, sg_id, command, lazy_sync_latency, full_sync_latency)
 
 
 if __name__ == "__main__":
@@ -200,6 +210,9 @@ if __name__ == "__main__":
             # [0.001, 0.002, 0.0027, 0.003, 0.005, 0.007, 0.01, 0.016, 0.025, 0.05]
             error_bounds = [0.002, 0.003, 0.005, 0.007, 0.016, 0.05]
 
+    lazy_sync_latency = 1.0
+    full_sync_latency = 4.0
+
     if args.node_type == "inner_product":
         NUM_NODES = 10
     if args.node_type == "quadratic":
@@ -208,6 +221,8 @@ if __name__ == "__main__":
         NUM_NODES = 12
     if args.node_type == "dnn":
         NUM_NODES = 9
+        lazy_sync_latency = 0.4
+        full_sync_latency = 10.0
 
     if args.b_block:
         num_experiments = num_completed_experiments(node_name)
@@ -235,7 +250,8 @@ if __name__ == "__main__":
 
         # Nodes
         nodes_region = "us-east-2"
-        run_nodes_on_ecs_fargate(nodes_region, args.node_type, error_bound, automon_task, coordinator_ip, command)
+        run_nodes_on_ecs_fargate(nodes_region, args.node_type, error_bound, automon_task, coordinator_ip, command,
+                                 lazy_sync_latency, full_sync_latency)
 
     if args.b_block:
         # Wait for the experiment to finish by checking the result folders in S3, and then collect the result from S3.
