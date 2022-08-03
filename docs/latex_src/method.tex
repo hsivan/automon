@@ -1,0 +1,59 @@
+\section{Automatic Distributed Monitoring} \label{sec:method}
+
+We aim to provide an automatic method for distributed monitoring of arbitrary functions of the global aggregate $\bar{x}$.
+Given a function specified by a computer program, we automatically generate a communication-efficient scheme to monitor this function.
+
+We first describe ADCD (for \emph{Automatic DC Decomposition}), the automatic local constraint technique that lies at the heart of AutoMon.
+ADCD uses automatic differentiation and numerical optimization to derive local constraints for arbitrary functions.
+We describe two variants of ADCD, one for general functions (\S\ref{sec:adcd_by_extreme_eigenvalue}) and the other for functions with constant Hessian (\S\ref{sec:adcd_by_eigendecomposition}).
+ADCD detects the type of the function and uses the best ADCD variant accordingly to provide a DC decomposition, which it then converts to a GM-style local constraint (\S\ref{sub_sec:adcd}) that can be plugged-in to the GM protocol.
+%
+We also explore how the type of DC decomposition (convex or concave)  affects the quality of the derived constraints, and propose a heuristic for choosing between convex difference and concave difference (\S\ref{sub_sec:convex_vs_concave_difference}). 
+
+We then describe how AutoMon combines ADCD with the GM protocol to do functional monitoring~(\S\ref{sub_sec:basic-protocol}).
+%
+Additionally, we consider a novel aspect of the problem: the impact of limiting the monitoring to a small part of the domain in a neighborhood around the reference point, using local constraints that are customized to this neighborhood (\S\ref{sub_sec:sub_domain_size}).
+%
+Finally, we discuss correctness guarantees (\S\ref{sec:correctness_guarantees}) and implementation considerations (\S\ref{sec:implementation}).
+
+
+\input{adcd}
+\input{basic_protocol}
+\input{sub_domain_size}
+
+
+
+\subsection{Assumptions and Correctness Guarantees}
+\label{sec:correctness_guarantees}
+
+AutoMon's correctness guarantees are given under three core assumptions.
+First, we make the mild assumption that automatic differentiating obtains accurate Hessians.
+Second, we assume nodes and coordinator communicate using an underlying messaging fabric which guarantees delivery.
+Third, we assume that the rate in which each node receives local data is lower than the maximum time to resolve violations, which depends on the network latency and the time it takes the coordinator to compute local constraints.
+
+Under these assumptions,
+AutoMon provides a deterministic correctness guarantee if the representation used to derive the ADCD local constraints is a true DC decomposition in $\FB$, i.e. $\check{g} , \check{h}$ are convex or $\hat{g}, \hat{h}$ are concave in $\FB$.
+In this case, the local constraints are convex (\S\ref{sub_sec:adcd}).
+This convexity implies that if all local vectors $x^i$ are within AutoMon's safe zone, then any convex combination of $x^i$, including $\bar{x}=\frac{1}{n}\sum x^i$, is inside the safe zone, thus $L \le f(\bar{x}) \le U$.
+
+Therefore, ADCD provides strong correctness guarantee when approximating functions with constant Hessian, as ADCD-E obtains true DC decomposition.
+%
+In addition, ADCD-X provides correctness guarantee when approximating convex and concave functions.
+For any convex function the minimal eigenvalue of $H(x)$ at every $x \in \FD$ is non-negative.
+Hence $\hat{\lambda}$ found by the optimization process is non-negative and $\lambda^-_{\min}=0$.
+Since $0 \le \lambda^+_{\max}$, the DC Heuristic chooses the convex difference, which is a true DC decomposition as $\lambda^-_{\min}$ is a lower bound for $\lambda_{\min}$.
+
+ADCD-X does not necessarily guarantee correctness for other arbitrary functions since the optimization problem \eqref{eq:numerical_eigenvalues} may converge on a local solution; inaccurate $\lambda^-_{\min}$ and $\lambda^+_{\max}$ values can result in representation that is not a DC decomposition.
+%
+We mitigate this using a simple sanity check.
+Recall that by construction, AutoMon's safe zone defined by the local constraints is included in the admissible region.
+Thus, whenever the local vector $x$ is inside the safe zone, nodes also verify that $L \leq f(x) \leq U$ (i.e., $x \in \FA$).
+%
+In the rare case where this verification fails, the node notifies the coordinator about a violation and indicates that the local constraints are faulty;
+the coordinator then initiates a full sync.
+%
+Our evaluation shows AutoMon provides a good approximation for even highly non-convex functions with discontinuous derivatives
+such as neural networks with ReLU activations (\S\ref{sec:evaluation}).
+
+
+\input{implementation}

@@ -346,14 +346,14 @@ if __name__ == "__main__":
         data_folder_rozenbrock = "../test_results/results_comm_neighborhood_rozen_2021-04-10_10-13-41/"
         data_folder_tiny_mlp = "../test_results/results_comm_neighborhood_mlp_2_2021-04-10_12-27-37/"
 
-    # Figure 3: figure with 4 specific error bounds for Rozenbrock
+    # Figure 3: figure with 3 specific error bounds for Rozenbrock
     error_bounds = [0.05, 0.25, 0.95]
     test_folder = neighborhood_size_error_bound_connection_rozenbrock_data_folder + "/0/"
     data_folders = [test_folder + "thresh_0_05/", test_folder + "thresh_0_25000000000000006/", test_folder + "thresh_0_9500000000000002/"]
     plot_impact_of_neighborhood_size_on_violations_three_error_bounds(error_bounds, data_folders, result_dir)
 
-    '''# Figure 8: optimal neighborhood and tuned neighborhood
+    # Figure (omitted): optimal neighborhood and tuned neighborhood
     plot_neighborhood_size_error_bound_connection_avg_rozenbrock_mlp_2(neighborhood_size_error_bound_connection_rozenbrock_data_folder, neighborhood_size_error_bound_connection_mlp_data_folder, result_dir)
 
-    # Figure 9: 5 lines - optimal neighborhood, tuned neighborhood, and 3 constant neighborhood sizes
-    plot_communication_or_violation_error_bound_connection_rozenbrock_mlp_2(data_folder_rozenbrock, data_folder_tiny_mlp, result_dir)'''
+    # Figure 8: 5 lines - optimal neighborhood, tuned neighborhood, and 3 constant neighborhood sizes
+    plot_communication_or_violation_error_bound_connection_rozenbrock_mlp_2(data_folder_rozenbrock, data_folder_tiny_mlp, result_dir)

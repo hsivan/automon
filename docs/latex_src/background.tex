@@ -1,0 +1,88 @@
+\section{Background} \label{sec:background}
+
+Consider a distributed system with a single coordinator node and $n$ nodes, where each node $i$ holds a \emph{dynamic} local data vector $x^i$ computed from its local data stream; $x^i$ changes arbitrarily over time and nodes only communicate with the coordinator\footnotemark{}~\cite{cormode2013}.
+When clear from context, we omit $i$ and use $x$ to denote a local vector.
+
+\footnotetext{
+These assumptions are for clarity and are not central to our design.
+First, communication need not be direct -- we assume an underlying message passing protocol or distributed control plane.
+Similarly, the coordinator holds little state and need not be unique.
+AutoMon can be implemented using converge-casting~\cite{bhaduri2008local}, hierarchical violation resolution~\cite{keren2014heterogeneous}, or consensus protocols~\cite{zooKeeper,DPaxos}. %; these are outside the scope of our work.
+}
+
+Let $f$ be an arbitrary real multivariate function $f :\mathbb{R}^d \to \mathbb{R}$ of the average vector of local data $\bar{x} = \frac{1}{n} \sum_{i=1}^{n} x^i$.
+Given $f$ expressed as code in a high-level language (e.g., Python or C++) and an approximation error bound $\epsilon$, we wish to maintain an $\epsilon$-approximation of $f(\bar{x})$, and do so with minimal communication.
+%
+This is a variation of the \emph{distributed functional monitoring} task~\cite{woodruff2012}.\footnotemark{}
+The difference is that we aim to support arbitrary functions expressed as programs.
+
+\footnotetext{Though not immediately obvious, a huge variety of computations can be expressed as $f(\bar{x}$) by augmenting the local vectors $x^i$~\cite{garofalakis2013sketch, papapetrou2014skylines, lazerson:lightweight_monitoring, lazerson:one_for_all, gabel:entropy_approximation, gabel:monitoring_least_squares,keren2014heterogeneous}.}
+
+
+Note that we can use threshold monitoring to obtain such an approximation: given a \emph{reference point} $x_0$, which is the value of $\bar{x}$ at some point in time, we can provide an additive approximation by setting two thresholds, $L$ and $U$, to be $f(x_0) \pm\epsilon$ and require that $L \le f(\bar{x}) \le U$;
+to obtain a multiplicative approximation of $f(\bar{x})$ we set $L$ and $U$ to $(1\pm\epsilon)f(x_0)$.
+As long as $L \le f(\bar{x}) \le U$, $f(x_0)$ is an $\epsilon$-approximation of $f(\bar{x})$; if not, we update $x_0$, $U$, and $L$.
+
+Our strategy is to automatically compute local constraints on the local data of each node.
+These constraints should be: 
+\begin{enumerate*}
+    \item \emph{correct} -- as long as all local constraints hold, the \emph{global condition} $L \le f(\bar{x}) \le U$ is guaranteed to hold; 
+ \item \emph{efficient} -- the number of times the local constraints are violated is minimal, resulting in less communication; and
+ \item \emph{automatic} -- can be computed using the source code of $f$, without requiring mathematical insight or developer effort.
+\end{enumerate*}
+
+Finding local constraints that are correct, efficient, and automatic is a challenging task, and even more so for an arbitrary function.
+We now briefly review the necessary background. We describe our method in \S\ref{sec:method} and its implementation details in \S\ref{sec:implementation}.
+
+
+\betterparagraph{DC Decomposition}
+%
+We use a \emph{DC decomposition}~\cite{dc_Decomposition} of $f$ to derive local constraints that provide correctness.
+%
+DC decomposition is a representation of a function as the difference of two convex or concave functions.
+We use the term \emph{convex difference} for the representation of a function as a difference of two convex functions, and the term \emph{concave difference} for the representation of a function as a difference of two concave functions.
+Hence, if $\check{g}(x)$ and $\check{h}(x)$ are convex functions such that $f(x) = \check{g}(x) - \check{h}(x)$, we can rewrite the global condition $L \le f(\bar{x}) \le U$ as
+$\check{g}(\bar{x}) \le \check{h}(\bar{x}) + U$ and $\check{h}(\bar{x}) \le \check{g}(\bar{x}) - L$.
+Similarly, if $\hat{g}(x)$ and $\hat{h}(x)$ are concave functions such that $f(x) = \hat{g}(x) - \hat{h}(x)$, then we can rewrite the global condition as
+$\hat{h}(\bar{x}) \ge \hat{g}(\bar{x}) - U$ and $\hat{g}(\bar{x}) \ge \hat{h}(\bar{x}) + L$.
+
+\betterparagraph{Automatic Differentiation}
+We use \emph{automatic differentiation} (AD) to find a DC decomposition of a function.
+AD is a general method for taking a function specified by a computer program and automatically constructing a procedure to compute the derivatives of that function~\cite{survey_on_automatic_differentiation}.
+Unlike symbolic differentiation, which outputs a closed-form symbolic formula for the derivative, AD outputs a computational graph that can be evaluated efficiently at runtime for specific inputs.
+This means AD can be applied to standard numeric program code, making it suitable for our purposes.
+Upon initialization, AD explicitly constructs the computational graph of the function, and repeatedly applies the chain rule to this graph to compute the function's derivatives of arbitrary order.
+This results in a procedure for computing derivatives.
+
+
+
+\betterparagraph{Geometric Monitoring Protocol}
+%
+AutoMon adopts the geometric monitoring (GM) protocol for continuous threshold monitoring in a distributed system, which has been widely adopted by distributed monitoring methods \cite{gabel:entropy_approximation,gabel:monitoring_least_squares,gabel:variance_monitoring}.
+\S\ref{sec:method} provides a detailed description of the AutoMon protocol; what follows is a brief summary of the generic GM protocol.
+
+The GM protocol comprises two basic parts: the coordinator algorithm and the node algorithm.
+Each node receives local data and updates its dynamic local vector $x$.
+A node is responsible for monitoring the local constraints, reporting violation of these constraints to the coordinator, and receiving updated constraints from the coordinator.
+The correctness of local constraints guarantees that if all nodes have no reported violation, the global condition is maintained.
+%
+The coordinator is responsible for resolving violations of the local constraints by distributing updated local constraints to nodes or approximation bounds $L,U$, as needed.
+When the coordinator is notified of local violations, it collects the local vectors from the nodes and, if needed, also updates the reference point $x_0$ to the average vector $\bar{x}$ at the time.
+After the data centralization, the coordinator computes new local constraints that resolve the violations and synchronizes the nodes with the new constraints.
+
+
+%% Central concepts in GM
+Let $\FD$ denote the domain where $f(x)$ is defined.
+GM defines an \emph{admissible region} $\FA$ as the subset of $\FD$, where $L \le f(\bar{x}) \le U$.
+Given a local constraint, GM also defines a \emph{safe zone}: the subset of $\FD$ in which the local constraints of a node are satisfied.
+If the safe zone is convex and is a subset of the admissible region, the GM protocol guarantees that the approximation bound defined by the thresholds (i.e., the global condition $L \le f(\bar{x}) \le U$) is maintained~\cite{gabel:entropy_approximation,lazerson:one_for_all}.
+When the resulting safe zone is not convex, this gives rise to the possibility of \emph{missed violations}.
+This occurs when the global condition is not maintained ($\bar{x}$ is outside the admissible region), yet there is no violation in any of the local constraints.
+
+
+\betterparagraph{Automatically Deriving Local Constraints}
+The GM protocol itself is conceptually simple, since much of the ``heavy lifting'' is done by the local constraint required by the protocol.
+Indeed, the convexity of the safe zone is a key non-trivial requirement on the local constraint.
+Previous work relied on manual analysis and researcher expertise to find local constraint for specific functions~\cite{gabel:entropy_approximation,yeuda2017graph,papapetrou2014skylines,gabel:monitoring_least_squares,gabel:variance_monitoring}.
+However, we are faced with the greater challenge of doing so automatically for arbitrary functions expressed as code, without requiring in-depth mathematical analysis of each function.
+In the next section, we describe how we overcome this challenge using automatic differentiation and numerical optimization.

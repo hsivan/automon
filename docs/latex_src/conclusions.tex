@@ -1,0 +1,26 @@
+\section{Discussion} \label{sec:discussion}
+AutoMon is an easy-to-use algorithmic building block for automatically approximating arbitrary real multivariate functions over distributed data streams.
+Given a source code snippet of an arbitrary function of the global aggregate, AutoMon automatically provides communication-efficient distributed monitoring of the function approximation, without requiring any manual analysis by the user.
+Our evaluation on synthetic and real-world datasets shows that AutoMon's error-communication tradeoff is comparable to previous hand-crafted algorithms, while using up to 50 times fewer messages on functions for which such efficient algorithms are not known.
+
+
+Future work will concentrate on addressing AutoMon's limitations, and on improving its accuracy and performance.
+
+First, AutoMon requires that $f$ be a function of the average vector $\bar{x}$, and does not capture functions such as $\sum_i \sum_j x^i x^j$ used in support vector machines~\cite{steinwart2008support}.
+Though many functions can be rewritten in terms of $\bar{x}$~\cite{garofalakis2013sketch, lazerson:lightweight_monitoring, lazerson:one_for_all, gabel:entropy_approximation, papapetrou2014skylines, gabel:monitoring_least_squares}, %although
+this is currently done manually.
+We plan to explore automatic function rewriting, as well as support for more aggregations (e.g., max, sum of inner products).
+
+Second, for functions not covered by the guarantees in \S\ref{sec:correctness_guarantees} the numerical optimization could yield inaccurate extreme eigenvalues and, therefore, violation of the error bounds.
+Bounding the Hessian eigenvalues~\cite{2008_bound_hessian_eigenvalues,interval_matrix_branch_and_bound} can alleviate this issue. 
+%
+We also intend to study what factors impact AutoMon's performance.
+The error-communication tradeoff is determined by both the function as well as the data and window size.
+For example, when the extreme eigenvalues are exceptionally large/small, the derived safe zone can be very small leading to many safe zone violations.
+Inferring this \emph{a priori} is hard for complex, hard-to-analyze functions -- if we could easily understand their behavior analytically, we would not need AutoMon in the first place.
+However, we can use such observations to improve performance by switching on the fly to other monitoring approaches (e.g. Periodic).
+
+
+Lastly, approximation error can be high if numerical optimization in the coordinator takes too long, which limits incoming data rate (\S\ref{sec:correctness_guarantees}, \S\ref{sec:scalability}).
+To scale AutoMon to higher dimensions and data rates, we plan to explore Hessian spectrum approximations~\cite{lanczos_algo},
+as well as pre-computing future constraints when the coordinator is idle.

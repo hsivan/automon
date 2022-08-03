@@ -672,11 +672,13 @@ if __name__ == "__main__":
     plot_max_error_vs_transfer_volume(parent_test_folder_quadratic_sim, parent_test_folder_quadratic_aws, parent_test_folder_quadratic_centralization, "quadratic", result_dir)
     plot_max_error_vs_transfer_volume(parent_test_folder_dnn_sim, parent_test_folder_dnn_aws, parent_test_folder_dnn_centralization, "dnn", result_dir)
 
+    # Figure 10 (bottom)
     plot_communication_automon_vs_network_combined(parent_test_folder_kld_sim, parent_test_folder_inner_prod_sim, parent_test_folder_quadratic_sim, parent_test_folder_dnn_sim,
                                                    parent_test_folder_kld_aws, parent_test_folder_inner_prod_aws, parent_test_folder_quadratic_aws, parent_test_folder_dnn_aws,
                                                    parent_test_folder_kld_centralization, parent_test_folder_inner_prod_centralization, parent_test_folder_quadratic_centralization, parent_test_folder_dnn_centralization,
                                                    result_dir)
 
+    # Figure 10 (top)
     plot_max_error_vs_transfer_volume_combined(parent_test_folder_kld_sim, parent_test_folder_inner_prod_sim, parent_test_folder_quadratic_sim, parent_test_folder_dnn_sim,
                                                parent_test_folder_kld_aws, parent_test_folder_inner_prod_aws, parent_test_folder_quadratic_aws, parent_test_folder_dnn_aws,
                                                parent_test_folder_kld_centralization, parent_test_folder_inner_prod_centralization, parent_test_folder_quadratic_centralization, parent_test_folder_dnn_centralization,

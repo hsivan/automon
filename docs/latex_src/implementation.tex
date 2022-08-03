@@ -1,0 +1,19 @@
+\subsection{Library API} 
+\label{sec:implementation}
+
+AutoMon is not a complete distributed data processing system.
+Like sketches (\S\ref{sec:related_work}), AutoMon is an algorithmic building block for building such systems (potentially using existing software frameworks~\cite{flink}).
+We therefore design AutoMon as an agnostic library that focuses strictly on the monitoring algorithm.
+Application details and system-level support for reading data, messaging, deployment, and so on are outside the scope of this library, and are the responsibility of the user.
+In particular, the developer must mediate between AutoMon and a messaging fabric of their choice:
+the developer uses the library API to produce or consume message contents, which the messaging fabric transfers over the network.\footnotemark{}
+\footnotetext{We provide an example of a ZeroMQ~\cite{zeromq} mediation layer in AutoMon's code repo.}
+
+
+Given a function presented as a numeric program in a high-level language, AutoMon provides the basic API required to perform distributed monitoring of the function.
+The user first initializes an AutoMon node, \lstinline[frame=no]{node = AutoMonNode(f, epsilon)}, passing the function to monitor and the required approximation.
+Retrieving the current approximated value of the function is simply a matter of calling the \lstinline{node.current_value()} method which returns $f(x_0)$.  
+%
+The user must notify AutoMon when the local vector $x$ has changed by calling \lstinline{node.update_data(x)}, and send any resulting message (e.g., safe zone violation) to the coordinator;
+AutoMon will provide and process the contents of such messages.
+Similarly, when a message has been received from the coordinator the user must call \lstinline{node.message_received(msg)}, then send back any reply.

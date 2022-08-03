@@ -1,0 +1,68 @@
+\section{Introduction} \label{sec:introduction}
+
+Consider the problem of determining whether a network is currently under attack using the aggregate of local statistics from multiple routers~\cite{2015_Bohatei}.
+State-of-the-art approaches use machine learning models trained to detect attacks or find outliers given network metrics~\cite{8066291, 10.1016/j.cose.2014.05.011}.
+%
+For example, we might detect attacks by continuously evaluating the output of a trained neural network:
+\[
+    f_{nn}(\bar{x}) = W_3 \cdot \tanh \left( W_2 \cdot \tanh \left( W_1 \cdot \bar{x}  + b_1  \right) + b_2  \right) + b_3 \text{~,}
+\]
+where the input vector $\bar{x}=\frac{1}{k}\sum_{i=1}^{k} x^i$ is the average of $k$ \emph{dynamic} router metric vectors $x^i \in \mathbb{R}^d$ that change over time,
+the matrices $W_i$ and vectors $b_i$ are the weights of the neural network, and $\tanh$ is applied element-wise.
+In a centralized setting, computing $f_{nn}$ is a straightforward task for the average software developer:
+\begin{lstlisting}
+from numpy import tanh
+def f_nn(x, W1, b1, W2, b2, W3, b3):
+   return W3 @ tanh(W2 @ tanh(W1 @ x + b1) + b2) + b3
+\end{lstlisting}
+When the vectors $x^i$ change, we can simply recompute $f_{nn}(\bar{x})$ as needed, assuming sufficient computational power.
+
+However, the problem becomes much more difficult once the vectors $x^i$ are distributed, even if we assume sufficient computational power and allow an approximation of $f_{nn}$ rather than computing the exact value.
+The root problem is that $f_{nn}$ is highly non-linear, making it difficult to understand how it will be affected by a change in $x^i$.
+Although, in theory, we could centralize all data updates, this can be infeasible or undesirable in a geographically-distributed environment since communication incurs power and bandwidth costs at the origin nodes of $x^i$~\cite{kang2017neurosurgeon,anastasi2009energy,Stylianopoulos2018gmsystems}.
+Returning to our previous example, continuously sending statistics from the routers may use up too much network bandwidth~\cite{gigascope,gabel:entropy_approximation,giatrakos2012prediction,2019_nitrosketch}.
+Yet, only sending periodic updates risks missing or delaying the detection of an attack~\cite{benbasat2018memento,gabel:entropy_approximation}.
+Resource-limited data sources in mobile computing and Internet-of-Things have further heightened the need for communication-efficient distributed data stream monitoring~\cite{distributed_data_management,ecmlpkdd2019,ecmlpkdd2020}, since the wide geographical distribution of data sources coupled with resource limitation prohibits centralizing all data updates~\cite{garofalakis2013sketch}.
+Other scenarios where complex decisions must be made based on global data include battery-powered wireless sensor networks and edge computing. 
+Distributed monitoring in these settings is hotly studied since centralizing data is impractical due to battery limitations and limited links~\cite{anastasi2009energy,10.1145/3093337.3037698,mortazavi2020feather}.
+
+The task of continuously evaluating a multivariate function from an aggregate of several data vectors that change over time is a variant of \emph{distributed functional monitoring} in the \emph{continuous distributed monitoring model}~\cite{woodruff2012,2011_ke_yidistributed_functional_monitoring,cormode2013}.
+Any general approach for this task faces two main challenges.
+First, given a function $f$, how can we maintain an estimate of $f(\bar{x})$ while avoiding the need to send all data updates of $x^i$? 
+Second, how do we make it accessible to an average software developer, who may not have the mathematical skills required to tailor the approach to a specific problem?
+
+
+Most existing work on general distributed functional monitoring focuses on a single aspect of the problem.
+For example, while Geometric Monitoring~\cite{2008_shape_sensitive_gm, lazerson:one_for_all} and Convex Bound~\cite{lazerson:lightweight_monitoring} have been used to compute a wide variety of functions such as variance~\cite{gabel:variance_monitoring}, spectral gap~\cite{yeuda2017graph}, skylines~\cite{papapetrou2014skylines}, and least-squares regression~\cite{gabel:monitoring_least_squares}, applying these approaches for each new function requires in-depth mathematical analysis.
+Conversely,  Universal Sketching techniques~\cite{zero_one_frequency_laws} provide multiplicative approximation that are easy to use, but are limited to a subset of monotone functions of item counts (i.e., $\bar{x}$ must be a frequency vector).
+Distributed data analysis frameworks~\cite{flink,2018_sonata,mortazavi2020feather,nemo,univmon_2016} 
+require no math to use, but can only optimize a limited set of primitives.\footnotemark{} 
+Neither approach is suitable for low-communication monitoring of more complex functions such as neural networks (i.e., $f_{nn}$), which can be more accurate in detecting outliers, failures, and network attacks~\cite{10.1016/j.cose.2014.05.011, 10.4108/eai.3-12-2015.2262516}.
+\footnotetext{For example, SQL-based approaches are limited to grouping, ordering, count, sum, average, and so on~\cite{wanalytics}, while stream processing frameworks are similarly limited to built-in aggregates, windowing, and maps~\cite{flink}.
+Such approaches only express a small part of the space of possible computations~\cite{liu2021sketchy}.}
+
+
+
+\betterparagraph{Our Contributions}
+We describe AutoMon, short for Automatic Monitoring, an algorithmic building block
+that enables automatic distributed functional monitoring for difficult functions for which no hand-crafted solution is known while addressing both of the above challenges.
+Given a source code snippet for any function $f$ of the aggregate vector $\bar{x}$ and the desired approximation error, AutoMon \emph{automatically} implements a communication-efficient approximation for $f$ over multiple nodes, each with its own dynamic data vector.
+%
+In particular, we make the following contributions:
+\begin{itemize}[leftmargin=*]
+    \item A novel communication-efficient scheme for monitoring arbitrary functions of the global aggregated vector.
+    Given a function's source code, we leverage automatic differentiation~\cite{survey_on_automatic_differentiation}, numerical optimization, and the Geometric Monitoring protocol~\cite{lazerson:one_for_all,2021_icde_distance_lemma} to derive local constraints that the nodes can check locally, avoiding communication when changes to local data are too small to violate the approximation bounds.
+    
+    \item An extensive evaluation on synthetic and real-world datasets, and on a range of different functions, including KL-divergence, inner product, and neural networks (DNN).
+    AutoMon provides a superior error-communication tradeoff to existing methods.
+    For example, on a DNN approximation task -- for which no efficient distributed approximation is known -- AutoMon 
+    reduces number of messages and bandwidth usage by up to two orders of magnitude, compared to centralization.
+
+    \item A prototype open source implementation of AutoMon.
+    Our prototype library provides an unobtrusive API designed to facilitate development of stand-alone distributed applications (e.g., neural networks over data streams) and components of data analysis frameworks (e.g., efficient implementation of custom operators in stream processing engines~\cite{flinkuserdefined}).
+        
+\end{itemize}
+    
+To the best of our knowledge, AutoMon is the first truly automatic distributed functional-monitoring scheme that supports a wide range of functions defined on arbitrary data, and works directly from the source code of the function to compute without manual mathematical analysis.
+
+AutoMon is available as an open source project on GitHub: \\ \url{https://github.com/hsivan/automon}.

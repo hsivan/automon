@@ -1,0 +1,62 @@
+\section{Related Work} \label{sec:related_work}
+
+
+We divide related work on distributed monitoring into five areas.
+
+\betterparagraph{Sketches}
+Sketches are comprised of a sketching procedure to reduce the data size, and an appropriate query function that estimates a statistic using the sketch~\cite{2007_rusu_statistical_analysis_of_sketch_estimators}.
+They substantially reduce the size of messages required to monitor a function, while offering 
+(usually probabilistic) approximation guarantees.
+Unlike AutoMon, sketches are generally tailored for specific functions and queries; (e.g., PCA~\cite{Huang2020jmlr});
+creating a sketch for a new function is non-trivial, requiring manual effort and significant mathematical sophistication~\cite{2013_opensketch,univmon_2016, liu2021sketchy}.
+%
+Notably, AutoMon is compatible with most sketches in the turnstile model, since they are linear or can be made linear~\cite{Li_2014_Turnstile}.
+AutoMon can monitor a linear sketch by defining $f$ as the query function and $x$ as the sketched data structure, since $\bar{x} = 1/n \sum x^i$.
+
+\betterparagraph{Generic Sketches}
+%
+Universal Sketches~\cite{zero_one_frequency_laws} provide a distributed approximation for any function from the \emph{Stream-PolyLog} family using a single universal sketch data structure, while requiring no more sophistication than being able to compute the desired function.
+Specifically, if $x$ is a vector of counts (frequencies), and $f(x) = \sum g(x_i)$ where $x_i$ are frequency counts and $g$ is monotonic and bounded from above by $O(x_i^2)$, then given an implementation of $g$ universal sketches provide a multiplicative approximation for $f(x)$ with probabilistic guarantees.
+
+Universal sketches are heavily used in the UnivMon framework for network flow monitoring~\cite{univmon_2016}. Similarly, the AutoMon library is an application-agnostic building block for distributed applications and frameworks.
+%
+Though similar in spirit, universal sketches and AutoMon have different constraints, guarantees, and performance metrics.
+First, they are limited to \emph{Stream-PolyLog} functions defined over frequency vector in the turnstyle stream model.
+Conversely, AutoMon supports a much wider class of functions and the data vector $x$ can be defined arbitrarily.
+Second, universal sketches focuses on providing strong probabilistic guarantees on accuracy.
+While AutoMon does provide strong deterministic accuracy guarantee for functions with constant Hessian and for convex and concave functions, we also show empirically that it is accurate even when no such guarantee is provided.
+Finally, sketches can reduce the size of each message (by reducing the size of the sketch), while AutoMon focuses on reducing the number of messages exchanged.
+
+
+Nitrosketch~\cite{2019_nitrosketch} is a general framework for accelerating the computation time of existing sketches such as universal sketches; it does not address designing those sketches automatically.
+
+
+\betterparagraph{General Algorithms for Distributed Monitoring}
+While many works propose distributed algorithms for monitoring specific functions, they tend to use bespoke protocols; applying such methods (e.g., distributed counting) to new functions (e.g., entropy) often requires non-trivial effort and development of new techniques~\cite{cormode2013}.
+
+
+Some works focus on providing general approaches for distributed function monitoring.
+Geometric Monitoring (GM)~\cite{2008_shape_sensitive_gm,lazerson:one_for_all} is a family of communication-efficient approaches to distributed monitoring that share the same underlying protocol of using convex local constraints to monitor a global threshold condition.
+These have been used to approximate diverse functions including variance~\cite{gabel:variance_monitoring}, mutual information~\cite{giatrakos2012prediction}, AMS sketches~\cite{garofalakis2013sketch}, linear regression~\cite{gabel:monitoring_least_squares}, and more~\cite{sharfman_2007, lazerson_2015, giatrakos_2014, friedman_2014, keren_2012}.
+%
+Convex Bound~\cite{lazerson:lightweight_monitoring} leverages ideas from GM as well as \emph{DC decompositions}~\cite{dc_Decomposition} to monitor several non-convex functions; however, again this approach requires mathematical sophistication and cannot be applied automatically.
+Samoladas and Garofalakis~\cite{samoladas2019functional} introduce Functional Geometric Monitoring, which replaces the GM protocol with a distributed counting protocol, greatly reducing the size of messages.
+As with other methods, it requires finding local constraints (\emph{safe functions}) for each new monitored function.
+More recently, Alfassi et al.~\cite{2021_icde_distance_lemma} proposed a ``drop-in'' replacement of the GM protocol to reduce its bandwidth, while relying on the existing local constraints.
+
+Though general, none of these are automatic; they require in-depth mathematical analysis to develop local constraints for new functions.
+Gabel et al.~\cite{gabel:entropy_approximation} show how to apply GM automatically but their approach is limited to convex or concave functions.
+Conversely, AutoMon derives its local constraints automatically for arbitrary functions of the global vector, directly from source code.
+
+
+
+\betterparagraph{Distributed Dataflow and Query Planning}~
+Stream processing engines~\cite{flink,spark} execute distributed computation as a data-flow graph of built-in primitive operators.
+Other approaches optimize the aggregation network that runs a given query over distributed data~\cite{2018_sonata,mortazavi2020feather,nemo}.
+%
+Such techniques require expressing the computation using only a limited set of built-in primitives~\cite{2019_yu_network_telemetry}.
+For complex numerical functions such as $f_{nn}$ in \S\ref{sec:introduction} or the DNN in \S\ref{sec:evaluation} they are equivalent to centralization or periodic updates.
+AutoMon can complement these approaches by optimizing user-defined operators.
+
+\betterparagraph{Geo-Distributed Data Analytics}~
+Systems proposed for analyzing geo-distributed data generally fall into one of the above general approaches~\cite{wanalytics,pixida,mortazavi2020feather,tiwari2019reconfigurable}, or are designed for specific tasks using bespoke techniques that do not readily generalize~\cite{gaia,kang2017neurosurgeon,iridium}.

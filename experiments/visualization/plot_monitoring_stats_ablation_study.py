@@ -332,8 +332,8 @@ if __name__ == "__main__":
         test_folder_quadratic_inverse = "../test_results/results_ablation_study_quadratic_inverse_2021-07-08_15-40-37"
         test_folder_mlp_2 = "../test_results/results_ablation_study_mlp_2_2021-07-08_15-46-33"
 
-    # Figure 10 (a)
+    # Figure 9 (a)
     plot_monitoring_stats_graph_and_barchart(test_folder_quadratic_inverse, "quadratic_inverse", result_dir)
 
-    # Figure 10 (b)
+    # Figure 9 (b)
     plot_monitoring_stats_barchart(test_folder_mlp_2, "mlp_2", result_dir)

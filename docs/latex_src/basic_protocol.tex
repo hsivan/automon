@@ -1,0 +1,73 @@
+\subsection{The Distributed Protocol}
+\label{sub_sec:basic-protocol}
+
+We can now describe the protocol for AutoMon coordinator and nodes, which is based on the GM protocol;
+the protocol is summarized in Algorithm~\ref{algo:protocol}.
+The coordinator first collects local vectors, sets $x_0 = \bar{x}$, and updates the thresholds $U$ and $L$ based on $f(x_0)$ and the desired approximation.
+Next, the coordinator uses ADCD to derive correct convex local constraints in a \emph{neighborhood} $\FB$ around $x_0$.
+Finally, it distributes these local constraints to all nodes.
+
+\begin{algorithm}
+	\caption{AutoMon protocol for coordinator and node.}
+	\label{algo:protocol}
+	\begin{algorithmic}[1]
+		%
+		\Procedure{CoordinatorFullSync}{} \label{step:full-sync}
+		\State Pull all nodes $x^i$ and update $x_0$: $x_0 \leftarrow \frac{1}{n} \sum_{i=1}^{n} x^i$  \label{step:update-ref-point}
+		\State Use $f(x_0)$ to update the thresholds $L$ and $U$
+		\State Update the neighborhood $\FB$ from  $x_0$ 
+		\State Compute DC decomposition of $f$
+		\State Choose between convex difference and concave difference
+		\State Derive safe zone based on the chosen DC
+		\State Sync all nodes with the safe zone and neighborhood $\FB$
+		%
+		\EndProcedure
+
+		\Procedure{NodeDataUpdate}{sample from local stream}
+		\State Update the local vector $x$ using the new sample
+		\If {$x \notin$ $\FB$} Report neighborhood violation and \oldReturn 
+		\EndIf \label{step:neighborhood-check}
+		\If {$x \notin$ safe zone} Report safe zone violation and \oldReturn
+		\EndIf  \label{step:safezone-check}
+		\EndProcedure		
+		\Procedure{NodeUpdateConstraint}{safe zone, $\FB$}
+		\State Update safe zone and the neighborhood $\FB$
+		\EndProcedure
+	\end{algorithmic}
+\end{algorithm}
+
+Let $\FB$ be the neighborhood of size $r$ around the reference point $x_0$: $\FB = \{ x : x \in [x_0-r,x_0+r] \}$.\footnote{In practice, we also restrict the neighborhood $\FB$ to be contained in the domain $\FD$.}
+When the neighborhood is restricted, we have two types of violations.
+The first type is \emph{safe zone violation}, which is caused when the node's local vector is outside the safe zone.
+The second type is \emph{neighborhood violation}, which is caused when the node's local vector is outside the neighborhood of $x_0$.
+The coordinator uses either type of ADCD to derive the ADCD local constraints.
+For ADCD-X, it applies Lemma~\ref{lemma:adcd_by_extreme_eigenvalue} with $\FS=\FB$.
+In this case, the ADCD local constraints are based on eigenvalues that are evaluated inside a specific neighborhood.
+Hence, these local constraints are applicable only to this neighborhood:
+they maintain correctness as long as all the local vectors are inside $\FB$.
+Nodes must therefore first determine that the local vector is inside $\FB$ before checking for a safe zone violation.
+Note that when using ADCD-E, the coordinator uses Lemma~\ref{lemma:adcd_by_eigendecomposition}; in this case, the neighborhood is the entire $f$'s domain $\FD$ since the Hessian is constant. 
+
+At initialization, the coordinator first determines whether to use ADCD-X or ADCD-E, depending on the function to approximate $f$ (\S\ref{sec:adcd_by_extreme_eigenvalue} and \S\ref{sec:adcd_by_eigendecomposition}).
+If ADCD-E is used, the coordinator evaluates $H^-$ and $H^+$.
+If ADCD-X is used, the coordinator uses the designed approximation error bound $\epsilon$ to evaluate the optimal neighborhood size $\hat{r}$ using the tuning algorithm presented in the next section.
+
+
+The node algorithm is simple: whenever there is an update to the local vector, the node will check if the data remains in the neighborhood $\FB$ and whether the ADCD local constraints still hold.
+If not, the node will report a violation to the coordinator.
+Otherwise, the node does nothing.
+Whenever an updated local constraint arrives from the coordinator, it will use the new constraint.
+
+
+\betterparagraph{Lazy Sync and Slack}
+We incorporate two commonly-used enhancements to the above protocol, which help reduce the number of local violations and allow the coordinator to resolve them without pulling local vectors from all the nodes.
+As they are not the focus of this work, we only include necessary detail, and refer the reader to prior work~\cite[Sec.~4.2 and~4.6]{gabel:entropy_approximation} for description and analysis.
+
+With \emph{slack}, nodes add a \emph{slack vector} $s^i$ to the local vector $x^i$ when checking the local constraints (Alg.~\ref{algo:protocol}, lines~\ref{step:neighborhood-check} and~\ref{step:safezone-check});
+$s^i$ is set by the coordinator to $x_0 - x^i$ whenever we update $x_0$ (line~\ref{step:update-ref-point}).
+%
+\emph{Lazy sync} is an incremental approach to resolving safe zone violations.
+When a violation is reported to the coordinator, it starts adding nodes one by one to a \emph{balancing set} $\FS$ until either the violation is resolved (in which case it rebalances $s^i$ for the nodes in $\FS$ and monitoring resumes without changing $x_0$), or until $\vert \FS \vert > \frac{n}{2}$ (in which case it falls back to the full sync in line~\ref{step:full-sync}).
+We use a least-recently used (LRU) strategy to select nodes to add to $\FS$.
+%
+We explore the impact of slack and lazy sync in \S\ref{sub_sec:rlv_and_lazy_sync}.

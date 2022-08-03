@@ -1,0 +1,105 @@
+%% Put all additions, packages, and customizations in this file
+
+
+\usepackage{bm} % For bold math in titles
+\usepackage{bbm} % For indicator function in appendix \mathbbm{1}
+\usepackage{mathtools}  % amsmath with extensions
+\let\Bbbk\relax % needed for amssymb as it clashes with something else
+\usepackage{amssymb} % needed for traingleq, I guess you can remove if not using
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+
+
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{xpatch}
+\usepackage{realboxes}
+
+\usepackage{suffix} % provides the \WithSuffix command used to create betterparagraph*
+\newcommand{\betterparagraph}[1]{\vspace{2pt} \noindent \textbf{#1:~}}
+\WithSuffix\newcommand\betterparagraph*[1]{\betterparagraph{#1}}
+
+
+% Defines custom \Initialization ... \EndInitialization block
+\algdef{SE}[VARIABLES]{Initialization}{EndInitialization}
+{\algorithmicinitialization}
+{\algorithmicend\ \algorithmicinitialization}
+\algnewcommand{\algorithmicinitialization}{\textbf{initialization:}}
+\let\oldReturn\Return
+\renewcommand{\Return}{\State\oldReturn}
+
+% Tells algorithmicx not to print an empty line if `noend' is set 
+\makeatletter
+\ifthenelse{\equal{\ALG@noend}{t}}%
+{\algtext*{EndInitialization}}
+{}%
+\makeatother
+
+\algrenewcommand\algorithmicindent{1.0em}
+
+\usepackage{pgf,tikz,pgfplots}
+\pgfplotsset{compat=1.14}
+\usepackage{mathrsfs}
+\usetikzlibrary{arrows}
+\usetikzlibrary{math}
+
+%% Externalize tikz
+%% Must be in main file for overleaf
+%\usetikzlibrary{external}
+%\tikzexternalize[prefix=tikzexternalize/]
+%\tikzset{external/only named=true}
+
+
+\usepackage{subcaption}
+% Make subfigures look like "3(a)" not "3a"
+\captionsetup[subfigure]{labelformat=simple}
+\renewcommand\thesubfigure{(\alph{subfigure})}
+
+% for inline lists
+\usepackage[inline]{enumitem} 
+
+\DeclarePairedDelimiter\abs{\lvert}{\rvert}%
+\DeclarePairedDelimiter\norm{\lVert}{\rVert}%
+\DeclareMathOperator{\sign}{sgn}
+
+% Swap the definition of \abs* and \norm*, so that \abs
+% and \norm resizes the size of the brackets, and the 
+% starred version does not.
+\makeatletter
+\let\oldabs\abs
+\def\abs{\@ifstar{\oldabs}{\oldabs*}}
+%
+\let\oldnorm\norm
+\def\norm{\@ifstar{\oldnorm}{\oldnorm*}}
+\makeatother
+
+
+\lstset{
+  language=Python,
+  tabsize=4,
+  basicstyle=\ttfamily,
+  columns=fullflexible,
+  keepspaces,
+  backgroundcolor=\color{black!10},
+  frame=single,
+  framerule=0pt,
+  xleftmargin=3pt,
+}
+
+
+%% make sure \lstinline has the same bacgrkound
+%% https://tex.stackexchange.com/a/357339
+\makeatletter
+\xpretocmd\lstinline{\setlength{\fboxsep}{1pt}\Colorbox{black!10}\bgroup\appto\lst@DeInit{\egroup}}{}{}
+\makeatother
+
+% Curved letters for mathematical formulas
+\newcommand{\FA}{\mathcal{A}}
+\newcommand{\FR}{\mathcal{R}}
+\newcommand{\FB}{\mathcal{B}}
+\newcommand{\FD}{\mathcal{D}}
+\newcommand{\FH}{\mathcal{H}}
+\newcommand{\FS}{\mathcal{S}}
+\newcommand{\FU}{\mathcal{U}}

@@ -1,6 +1,7 @@
 """
 Reproduce AutoMon's experiments. The script downloads the code from https://github.com/hsivan/automon, downloads the
-external datasets, and runs the experiments.
+external datasets, runs the experiments, generates the paper's figures, and finally compiles the paper's Latex source
+with the newly generated figures.
 Run this script on Linux (Ubuntu 18.04 or later).
 
 Requirements:
@@ -8,6 +9,7 @@ Requirements:
 (2) Docker engine (see https://docs.docker.com/engine/install/ubuntu/, and make sure running 'sudo docker run hello-world' works as expected)
 
 The script uses only libraries from the Python standard library, which prevents the need to install external packages.
+It installs TexLive for the compilation of the paper's Latex source files.
 
 Note: in case the script is called with the --aws options it installs AWS cli and configures it.
 After running the simulations, it runs the distributed experiments on AWS.
@@ -478,6 +480,44 @@ def run_aws_experiments(local_result_dir, docker_result_dir, docker_run_command_
     generate_aws_figures(local_result_dir, docker_result_dir, docker_run_command_prefix)
 
 
+def compile_reproduced_main_pdf():
+    """
+    Installs TexLive for the compilation of the paper's Latex source files and builds the paper from Latex source
+    files with the new figures.
+    :param
+    :return:
+    """
+    execute_shell_command_with_live_output('sudo apt-get install -y texlive-latex-base texlive-fonts-recommended texlive-fonts-extra texlive-latex-extra texlive-science')
+
+    # Copy figures from local_result_dir to project_root/docs/latex_src/figures and report of missing figures
+    figure_list = {"Figure 3": "impact_of_neighborhood_on_violations_three_error_bounds.pdf",
+                   "Figure 5": "max_error_vs_communication.pdf",
+                   "Figure 6": "percent_error_kld_and_dnn.pdf",
+                   "Figure 7 (a)": "dimension_communication.pdf",
+                   "Figure 7 (b)": "num_nodes_vs_communication.pdf",
+                   "Figure 8": "neighborhood_impact_on_communication_error_bound_connection.pdf",
+                   "Figure 9 (a)": "monitoring_stats_quadratic_inverse.pdf",
+                   "Figure 9 (b)": "monitoring_stats_barchart_mlp_2.pdf",
+                   "Figure 10 (top)": "max_error_vs_transfer_volume.pdf",
+                   "Figure 10 (bottom)": "communication_automon_vs_network.pdf"}
+    for figure_name, figure_file in figure_list.items():
+        if not os.path.isfile(local_result_dir + "/" + figure_file):
+            print_to_std_and_file("Note: " + figure_name + " (" + figure_file + ") wasn't found in " + local_result_dir + ". Using the original figure from the paper.")
+        else:
+            shutil.copyfile(local_result_dir + "/" + figure_file, project_root + "/docs/latex_src/figures/" + figure_file)
+            print_to_std_and_file("Replaced " + figure_name + " (" + figure_file + ") with the reproduced one.")
+
+    os.chdir(project_root + "/docs/latex_src")
+
+    execute_shell_command('pdflatex main.tex')
+    execute_shell_command('bibtex main.aux')
+    execute_shell_command('pdflatex main.tex')
+    execute_shell_command('pdflatex main.tex', stdout_verification="main.pdf")
+
+    shutil.copyfile("main.pdf", reproduced_main_pfd_file)
+    print_to_std_and_file("The reproduced paper, containing the new figures based on these experiments, is in " + reproduced_main_pfd_file)
+
+
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description="Reproduce AutoMon's experiments. The script downloads the code from https://github.com/hsivan/automon, downloads the external datasets, and runs the experiments.\n"
@@ -500,6 +540,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     log_file = os.path.abspath(__file__).replace("reproduce_experiments.py", "reproduce_experiments.log")
+    reproduced_main_pfd_file = os.path.abspath(__file__).replace("reproduce_experiments.py", "main.log")
     print_to_std_and_file("======================== Reproduce AutoMon's Experiments ========================")
     print("The script log is at", log_file)
 
@@ -539,6 +580,7 @@ if __name__ == "__main__":
 
         print_to_std_and_file("Experiment results are written to: " + local_result_dir)
 
+        # TODO: write to the log the approximated time for each experiment
         run_error_communication_tradeoff_experiment(local_result_dir, docker_result_dir, docker_run_command_prefix)
         run_scalability_to_dimensionality_experiment(local_result_dir, docker_result_dir, docker_run_command_prefix)
         run_scalability_to_number_of_nodes_experiment(local_result_dir, docker_result_dir, docker_run_command_prefix)
@@ -548,7 +590,9 @@ if __name__ == "__main__":
         if args.b_aws_experiments:
             run_aws_experiments(local_result_dir, docker_result_dir, docker_run_command_prefix)
 
-        # TODO: build the paper from its source files with the new figures
+        # Build the paper from Latex source files with the new figures
+        compile_reproduced_main_pdf()
 
     finally:
+        os.chdir(project_root)
         revert_dockerignore_changes()

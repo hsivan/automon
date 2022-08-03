@@ -304,13 +304,12 @@ class DataGeneratorKldAirQuality(DataGenerator):
         csv_files = [csv_file for csv_file in os.listdir(os.path.abspath(os.path.dirname(__file__)) + "/../datasets/air_quality/") if
                      csv_file.startswith("PRSA") and csv_file.endswith('csv')]
         if len(csv_files) == 0:
-            print("No kld dataset files found")
-            raise Exception
+            raise Exception("No kld dataset files found")
         station_data_arr = []
 
         for csv_file in csv_files:
             station_name = csv_file.split('_')[2]
-            print("station_name:", station_name)
+            #print("station_name:", station_name)
             df_station = DataGeneratorKldAirQuality.read_csv(csv_file)
             # x vector is the TEMP (0 to 25) ans y vector is the DEWP (dew point temperature, -25 to 25)
 

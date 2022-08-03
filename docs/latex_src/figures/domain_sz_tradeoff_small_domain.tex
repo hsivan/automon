@@ -1,0 +1,38 @@
+\pagestyle{empty}
+
+\definecolor{ffqqqq}{rgb}{1,0,0}
+\definecolor{wrwrwr}{rgb}{0.3803921568627451,0.3803921568627451,0.3803921568627451}
+\definecolor{rvwvcq}{rgb}{0.08235294117647059,0.396078431372549,0.7529411764705882}
+
+\begin{tikzpicture}[line cap=round,line join=round,>=triangle 45,x=1cm,y=1cm,yscale=0.8]
+\tikzstyle{every node}=[font=\huge]
+\begin{scope}
+  \clip (-1.2,-0.5) circle (1.441395932235966cm);
+  \fill[rvwvcq!20] (-2.4,-1) rectangle (-0.6,1);
+\end{scope}
+\draw [line width= 1pt,color=wrwrwr] (-1.2,-0.5) circle (1.441395932235966cm);
+\draw[line width=1pt,color=black, dashed] (-2.4,-1) rectangle (-0.6,1);
+
+\draw[thick, smooth, color=ffqqqq] plot coordinates
+{
+	(-3.5,1.3)
+	(-3.2,2.2)
+	(-0.1,1.8)
+	(0.4,0)
+	(0.8,-0.6)
+	(0.6,-1.2)
+	(-0.4,-1.8)
+	(-2,-2.4)
+	(-2.7,-1.6)
+	(-3.7,-0.8)
+	(-3.3,0.5)
+	(-3.5,1.3)
+};
+
+\begin{scriptsize}
+\node [fill=black, circle, inner sep=1.5pt, outer sep=1pt, label=above:$x_0$] (x0) at (-1.5,0) {};
+\draw [color=black] (-2.513809523809525,1.5) node {$\FB$};
+\draw (-1.2,-1.32) node {safe zone};
+\draw [color=ffqqqq] (0.15,1.99) node {$\FA$};
+\end{scriptsize}
+\end{tikzpicture}
