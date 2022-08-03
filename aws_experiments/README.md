@@ -1,6 +1,6 @@
 # Distributed experiment on a real-world WAN
 We include code for a series of cross-region experiments on AWS using two clusters:
-one cluster is located in US-West (Oregon) region and is comprised of a single coordinator using 16 virtual CPUs and 32GB of memory;
+one cluster is located in US-West (Oregon) region and consists a single coordinator using 16 virtual CPUs and 32GB of memory;
 the other one is located in US-East (Ohio) region and includes all the node tasks, each of them with 1 virtual CPU and 4GB of memory.
 
 Note: Running the AWS experiments would cost several hundred dollars!

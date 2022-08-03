@@ -130,7 +130,7 @@ def train_net(test_folder=None, num_epochs=3, step_size=1e-4):
         print("Test set accuracy {}, precision {}, recall {}".format(acc_test, precision_test, recall_test))
 
     net_params = get_params(opt_state)
-    print(net_params)
+    #print(net_params)
     return net_params, net_apply_test
 
 

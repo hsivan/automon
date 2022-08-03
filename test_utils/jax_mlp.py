@@ -138,10 +138,10 @@ def train_net(test_folder=None, x_dim=2, num_train_iter=5000, step_size=1e-2):
         if i % 500 == 0:
             net_params = get_params(opt_state)
             loss = loss_squared_error(net_params, training_batch)
-            print(i, loss)
+            print("Training iteration", i, "loss:", loss)
     net_params = get_params(opt_state)
 
-    print(net_params)
+    #print(net_params)
     if x_dim == 2:
         draw_f_and_f_approx(net_apply, net_params, -2, 2, test_folder)
 

@@ -5,10 +5,10 @@ AutoMon is a library for evaluating a mathematical function over the average of 
 Consider a distributed system with a single coordinator node (e.g., a server) and n nodes (e.g., remote workers, sensors),
 and where every node i holds a dynamic local data vector x_i that is constantly being updated from its local data stream.
 Suppose we want to evaluate some arbitrary real multivariate function f of the average vector of all these local vectors.
-In other words, we want to maintain an estimate of f(x), where x is the average of all the x_i vectrors.
+In other words, we want to maintain an estimate of f(x), where x is the average of all the x_i vectors.
 
 AutoMon is an easy-to-use algorithmic building block for automatically approximating f(x) over time, without having to send all the local updates to x_i to a centralized location.
-Given Python code to compute f(x) from x as well as the desired approximation error, AutoMon will automatically provides communication-efficient distributed monitoring of the function approximation, without requiring any manual mathematical analysis by the developer.
+Given Python code to compute f(x) from x as well as the desired approximation error, AutoMon automatically provide communication-efficient distributed monitoring of the function approximation, without requiring any manual mathematical analysis by the developer.
 
 For more information, see our SIGMOD 2022 paper, [AutoMon: Automatic Distributed Monitoring for Arbitrary
 Multivariate Functions](https://assaf.net.technion.ac.il/files/2021/12/SIGMOD2022_AutoMon_revision.pdf).
@@ -20,7 +20,7 @@ Use the following instructions to install a
 binary package with `pip`, or to download AutoMon's source code.
 We support installing `automon` package on Linux (Ubuntu 18.04 or later) and
 Windows (10 or later) platforms, while Windows support is only partial (see Features section below).
-**The installation requires Python >=3.7, <3.11**.
+**The installation requires Python >=3.8, <3.11**.
 
 To download AutoMon's source code run:
 ```bash
@@ -46,10 +46,10 @@ Instead, the library has a simple and easy to use API, relying on the applicatio
 AutoMon focuses on the mathematical and algorithmic aspects, leaving developers to focus on application and systems aspects.
 
 ### Communication-efficient and adaptive
-AutoMon often uses far fewer messages than simply uploading all data updates to a centralize location.
+AutoMon often uses far fewer messages than simply uploading all data updates to a centralized location.
 Moreover, unlike frequently used periodic approaches (e.g., only send one update every T times), AutoMon adapts to the data, function, and desired approximation error. 
-This means that AutoMon can incurr no communication in periods of quiesence (where the data does not change by much), yet quickly detect and update the approximation in the face of sudden changes.
-On the other hand, periodic approaches can be wasteful during quiesence and result in large approximation errors when data changes quickly.
+This means that AutoMon can incur no communication in periods of quiescence (where the data does not change by much), yet quickly detect and update the approximation in the face of sudden changes.
+On the other hand, periodic approaches can be wasteful during quiescence and result in large approximation errors when data changes quickly.
 
 ### <a name="choice"></a>Choice of automatic differentiation tool
 AutoMon uses automatic differentiation tool to derive local constraints to the nodes.
@@ -211,7 +211,7 @@ The [instructions](aws_experiments/README.md) for running these experiments, as 
 
 ## Citing AutoMon
 
-If AutoMon has been useful for your research and you would like to cite it in an academic
+If AutoMon has been useful for your research, and you would like to cite it in an academic
 publication, please use the following Bibtex entry:
 ```bibtex
 @inproceedings{sivan_automon_2022,

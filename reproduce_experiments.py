@@ -3,10 +3,13 @@ Reproduce AutoMon's experiments. The script downloads the code from https://gith
 external datasets, runs the experiments, generates the paper's figures, and finally compiles the paper's Latex source
 with the newly generated figures.
 Run this script on Linux (Ubuntu 18.04 or later).
+Estimated simulation's runtimes are based on measurements on an Intel i9-7900X at 3.3GHz with 64GB RAM, running Ubuntu
+18.04 with MKL 2019 Update 3.
 
 Requirements:
-(1) Python 3
-(2) Docker engine (see https://docs.docker.com/engine/install/ubuntu/, and make sure running 'sudo docker run hello-world' works as expected)
+(1) Python >= 3.8
+(2) Docker engine (see https://docs.docker.com/engine/install/ubuntu, and make sure running
+    'sudo docker run hello-world' works as expected)
 
 The script uses only libraries from the Python standard library, which prevents the need to install external packages.
 It installs TexLive for the compilation of the paper's Latex source files.
@@ -44,11 +47,11 @@ def print_to_std_and_file(str_to_log):
 
 def verify_requirements():
     """
-    Verifies the requirements for running the script - Python 3 and docker engine installed
+    Verifies the requirements for running the script - Python >= 3.8 and docker engine installed
     :return:
     """
-    if sys.version_info.major != 3:
-        print("Running this script requires Python 3")
+    if not (sys.version_info.major == 3 and sys.version_info.minor >= 8):
+        print_to_std_and_file("Running this script requires Python >= 3.8, current version is " + str(sys.version_info.major) + "." + str(sys.version_info.minor))
         sys.exit(1)
     result = subprocess.run('docker version', shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     if '\'docker\' is not recognized as an internal or external command' in result.stderr.decode():
@@ -72,15 +75,21 @@ def download_repository():
     print_to_std_and_file("The reproduce_experiments.py script is a standalone. Downloading AutoMon's source code.")
     zipped_project = 'automon-main.zip'
     project_root = script_abs_dir + '/' + zipped_project.replace(".zip", "")
-    if os.path.isdir(project_root):
-        # Source code already exists. No need to download again.
-        return project_root
+
     urllib.request.urlretrieve('https://github.com/hsivan/automon/archive/refs/heads/main.zip', zipped_project)
     with zipfile.ZipFile(zipped_project, 'r') as zip_ref:
-        zip_ref.extractall()
+        zip_ref.extractall('automon-main-temp')
     os.remove(zipped_project)
 
-    print_to_std_and_file("Downloaded the project to " + project_root)
+    if os.path.isdir(project_root):
+        # Source code already exists. In order to get updates from the repository merge the downloaded repository to existing automon-main folder
+        shutil.copytree('automon-main-temp/automon-main', 'automon-main', dirs_exist_ok=True)
+        print_to_std_and_file("Found existing local project " + project_root + ". Merged repository updates to it.")
+    else:
+        shutil.move('automon-main-temp/automon-main', 'automon-main')
+        print_to_std_and_file("Downloaded the project to " + project_root)
+    shutil.rmtree('automon-main-temp')
+
     return project_root
 
 
@@ -212,7 +221,7 @@ def get_latest_test_folder(result_dir, filter_str):
     return test_folders[-1].split('/')[-1]
 
 
-def run_experiment(local_result_dir, docker_run_command_prefix, functions, test_name_prefix, result_folder_prefix, file_to_verify_execution, args=None):
+def run_experiment(local_result_dir, docker_run_command_prefix, functions, test_name_prefix, result_folder_prefix, file_to_verify_execution, args=None, estimated_runtimes=None):
     """
     Receives a list of functions and runs a given experiment for each function in the list.
     :param local_result_dir: path of the folder where the experiment's output folder is mapped to on local computer
@@ -222,6 +231,7 @@ def run_experiment(local_result_dir, docker_run_command_prefix, functions, test_
     :param result_folder_prefix: the prefix of the experiment result folder
     :param file_to_verify_execution: the existence of the file indicates if the experiment have been executed successfully already
     :param args: if not None, this is a list of string, each of them is an argument to one function's experiment
+    :param estimated_runtimes: if not None, this is a list of floats, each of them is an estimated runtime in seconds of one function's experiment
     :return:
     """
     test_folders = []
@@ -233,10 +243,12 @@ def run_experiment(local_result_dir, docker_run_command_prefix, functions, test_
             cmd = docker_run_command_prefix + test_name_prefix + function + '.py'
             if args:
                 cmd += ' ' + args[i]
+            if estimated_runtimes:
+                print_to_std_and_file('Experiment ' + test_name_prefix + function + '.py estimated runtime (on an Intel i9-7900X at 3.3GHz with 64GB RAM) is: ' + str(estimated_runtimes[i]) + ' seconds')
             start = timer()
             execute_shell_command_with_live_output(cmd)
             end = timer()
-            print_to_std_and_file('The experiment ' + test_name_prefix + function + '.py took: ' + str(end - start) + ' seconds')
+            print_to_std_and_file('Experiment ' + test_name_prefix + function + '.py took: ' + str(end - start) + ' seconds')
             test_folder = get_latest_test_folder(local_result_dir, result_folder_prefix + function)
         assert test_folder
         assert os.path.isfile(local_result_dir + "/" + test_folder + "/" + file_to_verify_execution)
@@ -271,7 +283,7 @@ def run_error_communication_tradeoff_experiment(local_result_dir, docker_result_
     result_folder_prefix = "results_" + test_name_prefix
     functions = ["inner_product", "quadratic", "dnn_intrusion_detection", "kld_air_quality"]
 
-    test_folders = run_experiment(local_result_dir, docker_run_command_prefix, functions, test_name_prefix, result_folder_prefix, "max_error_vs_communication.pdf")
+    test_folders = run_experiment(local_result_dir, docker_run_command_prefix, functions, test_name_prefix, result_folder_prefix, "max_error_vs_communication.pdf", estimated_runtimes=[60, 40, 67000, 17400])
     generate_figures(docker_result_dir, docker_run_command_prefix, test_folders, 'plot_error_communication_tradeoff.py')
 
     print_to_std_and_file("Successfully executed Error-Communication Tradeoff experiment")
@@ -291,7 +303,7 @@ def run_scalability_to_dimensionality_experiment(local_result_dir, docker_result
     result_folder_prefix = "results_" + test_name_prefix
     functions = ["inner_product", "kld_air_quality", "mlp"]
 
-    test_folders = run_experiment(local_result_dir, docker_run_command_prefix, functions, test_name_prefix, result_folder_prefix, "dimension_200/results.txt")
+    test_folders = run_experiment(local_result_dir, docker_run_command_prefix, functions, test_name_prefix, result_folder_prefix, "dimension_200/results.txt", estimated_runtimes=[60, 8300, 20600])
     generate_figures(docker_result_dir, docker_run_command_prefix, test_folders, 'plot_dimensions_stats.py')
 
     print_to_std_and_file("Successfully executed Scalability to Dimensionality experiment")
@@ -311,7 +323,7 @@ def run_scalability_to_number_of_nodes_experiment(local_result_dir, docker_resul
     result_folder_prefix = "results_" + test_name_prefix
     functions = ["inner_product", "mlp_40"]
 
-    test_folders = run_experiment(local_result_dir, docker_run_command_prefix, functions, test_name_prefix, result_folder_prefix, "num_nodes_vs_communication.pdf")
+    test_folders = run_experiment(local_result_dir, docker_run_command_prefix, functions, test_name_prefix, result_folder_prefix, "num_nodes_vs_communication.pdf", estimated_runtimes=[250, 8700])
     generate_figures(docker_result_dir, docker_run_command_prefix, test_folders, 'plot_num_nodes_impact.py')
 
     print_to_std_and_file("Successfully executed Scalability to Number of Nodes experiment")
@@ -364,7 +376,7 @@ def run_ablation_study_experiment(local_result_dir, docker_result_dir, docker_ru
     print_to_std_and_file("Successfully executed Ablation Study experiment")
 
 
-def run_aws_experiment(node_type, coordinator_aws_instance_type, local_result_dir, b_centralized):
+def run_aws_experiment(node_type, coordinator_aws_instance_type, local_result_dir, b_centralized, estimated_runtime):
     if b_centralized:
         node_name = 'centralization_' + node_type
         b_centralization = ' --centralized'
@@ -377,6 +389,7 @@ def run_aws_experiment(node_type, coordinator_aws_instance_type, local_result_di
         print_to_std_and_file("Found existing local AWS test folder for " + node_name + ": " + test_folder + ". Skipping.")
         return
 
+    print_to_std_and_file('Distributed experiment ' + node_name + ' estimated runtime is: ' + str(estimated_runtime) + ' seconds')
     start = timer()
     # Run the AWS deploy script inside a docker container to avoid the need to install boto3, etc. Use --block flag so the docker waits until it finds the results in AWS S3.
     execute_shell_command_with_live_output('sudo docker run --rm automon_aws_experiment python /app/aws_experiments/deploy_aws_experiment.py --node_type ' + node_type + ' --coordinator_aws_instance_type ' + coordinator_aws_instance_type + ' --block' + b_centralization)
@@ -388,7 +401,7 @@ def run_aws_experiment(node_type, coordinator_aws_instance_type, local_result_di
     # This command requires AWS cli installed and configured
     execute_shell_command_with_live_output('aws s3 cp s3://automon-experiment-results/max_error_vs_comm_' + node_name + '_aws ' + test_folder + ' --recursive')
     end = timer()
-    print_to_std_and_file('The distributed experiment' + node_name + ' took: ' + str(end - start) + ' seconds')
+    print_to_std_and_file('Distributed experiment ' + node_name + ' took: ' + str(end - start) + ' seconds')
 
 
 def generate_aws_figures(local_result_dir, docker_result_dir, docker_run_command_prefix):
@@ -465,16 +478,16 @@ def run_aws_experiments(local_result_dir, docker_result_dir, docker_run_command_
     build_and_push_docker_image_to_aws_ecr()
 
     # Run AutoMon distributed experiments
-    run_aws_experiment('inner_product', 'ec2', local_result_dir, b_centralized=False)
-    run_aws_experiment('quadratic', 'ec2', local_result_dir, b_centralized=False)
-    run_aws_experiment('kld', 'ec2', local_result_dir, b_centralized=False)
-    run_aws_experiment('dnn', 'ec2', local_result_dir, b_centralized=False)
+    run_aws_experiment('inner_product', 'ec2', local_result_dir, b_centralized=False, estimated_runtime=1020) # All 10 experiments (for every error bound) run in parallel and take about the same time
+    run_aws_experiment('quadratic', 'ec2', local_result_dir, b_centralized=False, estimated_runtime=1020) # All 8 experiments (for every error bound) run in parallel and take about the same time
+    run_aws_experiment('kld', 'ec2', local_result_dir, b_centralized=False, estimated_runtime=29900)  # All 8 experiments (for every error bound) run in parallel and take about the same time
+    run_aws_experiment('dnn', 'ec2', local_result_dir, b_centralized=False, estimated_runtime=150900) # All 6 experiments (for every error bound) run in parallel and the reported time is the max between them
 
     # Run the distributed centralized experiments
-    run_aws_experiment('inner_product', 'ec2', local_result_dir, b_centralized=True)
-    run_aws_experiment('quadratic', 'ec2', local_result_dir, b_centralized=True)
-    run_aws_experiment('kld', 'ec2', local_result_dir, b_centralized=True)
-    run_aws_experiment('dnn', 'ec2', local_result_dir, b_centralized=True)
+    run_aws_experiment('inner_product', 'ec2', local_result_dir, b_centralized=True, estimated_runtime=100)
+    run_aws_experiment('quadratic', 'ec2', local_result_dir, b_centralized=True, estimated_runtime=100)
+    run_aws_experiment('kld', 'ec2', local_result_dir, b_centralized=True, estimated_runtime=1000)
+    run_aws_experiment('dnn', 'ec2', local_result_dir, b_centralized=True, estimated_runtime=1000)
 
     # Plot figures
     generate_aws_figures(local_result_dir, docker_result_dir, docker_run_command_prefix)
@@ -482,7 +495,7 @@ def run_aws_experiments(local_result_dir, docker_result_dir, docker_run_command_
 
 def compile_reproduced_main_pdf():
     """
-    Installs TexLive for the compilation of the paper's Latex source files and builds the paper from Latex source
+    Installs TexLive for the compilation of the paper's Latex source files and compiles the paper from Latex source
     files with the new figures.
     :param
     :return:
@@ -509,10 +522,10 @@ def compile_reproduced_main_pdf():
 
     os.chdir(project_root + "/docs/latex_src")
 
-    execute_shell_command('pdflatex main.tex')
+    execute_shell_command('pdflatex --interaction=nonstopmode main.tex')
     execute_shell_command('bibtex main.aux')
-    execute_shell_command('pdflatex main.tex')
-    execute_shell_command('pdflatex main.tex', stdout_verification="main.pdf")
+    execute_shell_command('pdflatex --interaction=nonstopmode main.tex')
+    execute_shell_command('pdflatex --interaction=nonstopmode main.tex', stdout_verification="main.pdf")
 
     shutil.copyfile("main.pdf", reproduced_main_pfd_file)
     print_to_std_and_file("The reproduced paper, containing the new figures based on these experiments, is in " + reproduced_main_pfd_file)
@@ -523,7 +536,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Reproduce AutoMon's experiments. The script downloads the code from https://github.com/hsivan/automon, downloads the external datasets, and runs the experiments.\n"
                                                  "Run this script on Linux (Ubuntu 18.04 or later).\n\n"
                                                  "Requirements:\n"
-                                                 "(1) Python 3\n"
+                                                 "(1) Python >= 3.8\n"
                                                  "(2) Docker engine (see https://docs.docker.com/engine/install/ubuntu, and make sure running 'sudo docker run hello-world' works as expected)\n\n"
                                                  "The script uses only libraries from the Python standard library, which prevents the need to install external packages.", formatter_class=RawTextHelpFormatter)
 
@@ -540,9 +553,11 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     log_file = os.path.abspath(__file__).replace("reproduce_experiments.py", "reproduce_experiments.log")
-    reproduced_main_pfd_file = os.path.abspath(__file__).replace("reproduce_experiments.py", "main.log")
+    reproduced_main_pfd_file = os.path.abspath(__file__).replace("reproduce_experiments.py", "main.pdf")
     print_to_std_and_file("======================== Reproduce AutoMon's Experiments ========================")
     print("The script log is at", log_file)
+
+    verify_requirements()
 
     project_root = download_repository()
     download_external_datasets(project_root)
@@ -550,7 +565,6 @@ if __name__ == "__main__":
     if args.b_download_dataset:
         sys.exit()
 
-    verify_requirements()
     os.chdir(project_root)
 
     if args.b_aws_experiments:
@@ -580,15 +594,15 @@ if __name__ == "__main__":
 
         print_to_std_and_file("Experiment results are written to: " + local_result_dir)
 
-        # TODO: write to the log the approximated time for each experiment
-        run_error_communication_tradeoff_experiment(local_result_dir, docker_result_dir, docker_run_command_prefix)
-        run_scalability_to_dimensionality_experiment(local_result_dir, docker_result_dir, docker_run_command_prefix)
-        run_scalability_to_number_of_nodes_experiment(local_result_dir, docker_result_dir, docker_run_command_prefix)
+        # TODO: write to the log the estimated runtime for each experiment
+        run_error_communication_tradeoff_experiment(local_result_dir, docker_result_dir, docker_run_command_prefix)  # Estimated runtime: ~24 hours
+        run_scalability_to_dimensionality_experiment(local_result_dir, docker_result_dir, docker_run_command_prefix)  # Estimated runtime: ~8 hours
+        run_scalability_to_number_of_nodes_experiment(local_result_dir, docker_result_dir, docker_run_command_prefix)  # Estimated runtime: ~2.5 hours
         run_neighborhood_size_tuning_experiment(local_result_dir, docker_result_dir, docker_run_command_prefix)
         run_ablation_study_experiment(local_result_dir, docker_result_dir, docker_run_command_prefix)
 
         if args.b_aws_experiments:
-            run_aws_experiments(local_result_dir, docker_result_dir, docker_run_command_prefix)
+            run_aws_experiments(local_result_dir, docker_result_dir, docker_run_command_prefix)  # Estimated runtime: ~2 days and 4 hours
 
         # Build the paper from Latex source files with the new figures
         compile_reproduced_main_pdf()

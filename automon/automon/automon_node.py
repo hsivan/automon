@@ -26,7 +26,8 @@ if (AUTO_DIFFERENTIATION_TOOL is None) or (AUTO_DIFFERENTIATION_TOOL == "Jax"):
             return jit(jax_grad(fun))
     except Exception as e:
         AUTO_DIFFERENTIATION_TOOL = "AutoGrad"
-        from autograd import grad
+if AUTO_DIFFERENTIATION_TOOL == "AutoGrad":
+    from autograd import grad
 
 
 class AutomonNode(CommonNode):
