@@ -18,8 +18,8 @@ Note: in case the script is called with the --aws options it installs AWS cli an
 After running the simulations, it runs the distributed experiments on AWS.
 It requires the user to have an AWS account; after opening the account, the user must create AWS IAM user with
 AdministratorAccess permissions, download the csv file new_user_credentials.csv that contains the key ID and the secret
-key, and place the new_user_credentials.csv file in project_root/aws_experiments/new_user_credentials.csv.
-After completing these steps, re-run this script.
+key. Download the project (if you haven't already) using the --dd flag, and place the new_user_credentials.csv file
+in project_root/aws_experiments/new_user_credentials.csv. After completing these steps, re-run this script.
 Running the AWS experiments would cost a few hundred dollars!
 The user must monitor the ECS tasks and EC2 instances, and manually shutdown any dangling tasks/instances in case of
 failures.
@@ -343,13 +343,13 @@ def run_neighborhood_size_tuning_experiment(local_result_dir, docker_result_dir,
     result_folder_prefix = "results_optimal_and_tuned_neighborhood_"
     functions = ["rozenbrock", "mlp_2"]
 
-    test_folders = run_experiment(local_result_dir, docker_run_command_prefix, functions, test_name_prefix, result_folder_prefix, "neighborhood_size_error_bound_connection_avg.pdf")
+    test_folders = run_experiment(local_result_dir, docker_run_command_prefix, functions, test_name_prefix, result_folder_prefix, "neighborhood_size_error_bound_connection_avg.pdf", estimated_runtimes=[15100, 24600])
 
     test_name_prefix = "test_neighborhood_impact_on_communication_"
     result_folder_prefix = "results_comm_neighborhood_"
 
     args = [docker_result_dir + "/" + f for f in test_folders]
-    test_folders += run_experiment(local_result_dir, docker_run_command_prefix, functions, test_name_prefix, result_folder_prefix, "neighborhood_impact_on_communication_error_bound_connection.pdf", args)
+    test_folders += run_experiment(local_result_dir, docker_run_command_prefix, functions, test_name_prefix, result_folder_prefix, "neighborhood_impact_on_communication_error_bound_connection.pdf", args, estimated_runtimes=[1900, 11300])
 
     generate_figures(docker_result_dir, docker_run_command_prefix, test_folders, 'plot_neighborhood_impact.py')
 
@@ -370,7 +370,7 @@ def run_ablation_study_experiment(local_result_dir, docker_result_dir, docker_ru
     result_folder_prefix = "results_ablation_study_"
     functions = ["quadratic_inverse", "mlp_2"]
 
-    test_folders = run_experiment(local_result_dir, docker_run_command_prefix, functions, test_name_prefix, result_folder_prefix, "results.txt")
+    test_folders = run_experiment(local_result_dir, docker_run_command_prefix, functions, test_name_prefix, result_folder_prefix, "results.txt", estimated_runtimes=[20, 200])
     generate_figures(docker_result_dir, docker_run_command_prefix, test_folders, 'plot_monitoring_stats_ablation_study.py')
 
     print_to_std_and_file("Successfully executed Ablation Study experiment")
@@ -573,7 +573,8 @@ if __name__ == "__main__":
         if not os.path.isfile('aws_experiments/new_user_credentials.csv'):
             print_to_std_and_file("To run AWS experiments, you must have an AWS account. After opening the account, create AWS IAM user with "
                                   "AdministratorAccess permissions and download the csv file new_user_credentials.csv that contains the key ID and the secret key. "
-                                  "Place the new_user_credentials.csv file in " + project_root + "/aws_experiments/new_user_credentials.csv and re-run this script.\n"
+                                  "Download the project (if you haven't already) using the --dd flag, and place the new_user_credentials.csv file "
+                                  "in " + project_root + "/aws_experiments/new_user_credentials.csv and re-run this script.\n"
                                   "Note: AWS cli will be installed on your computer and will be configured!")
             sys.exit(1)
 
@@ -594,12 +595,12 @@ if __name__ == "__main__":
 
         print_to_std_and_file("Experiment results are written to: " + local_result_dir)
 
-        # TODO: write to the log the estimated runtime for each experiment
+        # Estimated total runtime: ~2 days and 3 hours
         run_error_communication_tradeoff_experiment(local_result_dir, docker_result_dir, docker_run_command_prefix)  # Estimated runtime: ~24 hours
         run_scalability_to_dimensionality_experiment(local_result_dir, docker_result_dir, docker_run_command_prefix)  # Estimated runtime: ~8 hours
         run_scalability_to_number_of_nodes_experiment(local_result_dir, docker_result_dir, docker_run_command_prefix)  # Estimated runtime: ~2.5 hours
-        run_neighborhood_size_tuning_experiment(local_result_dir, docker_result_dir, docker_run_command_prefix)
-        run_ablation_study_experiment(local_result_dir, docker_result_dir, docker_run_command_prefix)
+        run_neighborhood_size_tuning_experiment(local_result_dir, docker_result_dir, docker_run_command_prefix)  # Estimated runtime: ~15 hours
+        run_ablation_study_experiment(local_result_dir, docker_result_dir, docker_run_command_prefix)  # Estimated runtime: ~4 minutes
 
         if args.b_aws_experiments:
             run_aws_experiments(local_result_dir, docker_result_dir, docker_run_command_prefix)  # Estimated runtime: ~2 days and 4 hours

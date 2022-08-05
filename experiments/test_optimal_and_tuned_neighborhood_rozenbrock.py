@@ -1,5 +1,6 @@
 import os
 os.environ['AUTO_DIFFERENTIATION_TOOL'] = 'AutoGrad'
+import sys
 from automon import AutomonNode, AutomonCoordinator, SlackType, SyncType
 from test_utils.functions_to_monitor import func_rozenbrock
 from test_utils.tune_neighborhood_size import tune_neighborhood_size
@@ -84,5 +85,7 @@ if __name__ == "__main__":
         for idx, error_bound in enumerate(error_bounds):
             executor.submit(neighborhood_size_impact, experiment_folder, error_bound)
         executor.shutdown()
+        print("Completed " + str(100.0 * (experiment_idx + 1) / num_experiments) + "%")
+        sys.stdout.flush()
 
     plot_neighborhood_size_error_bound_connection_avg(parent_test_folder, "Rozenbrock")

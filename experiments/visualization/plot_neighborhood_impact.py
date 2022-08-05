@@ -115,8 +115,11 @@ def plot_communication_error_bound_connection(parent_test_folder, func_name, ax)
         tuned_neighborhood_size_communication.append(tuned_neighborhood_size_comm)
         fixed_neighborhood_size_communications.append(fixed_neighborhood_size_comms)
 
-    ax.plot(error_bounds, np.mean(optimal_neighborhood_size_communication, axis=0), linestyle='-', marker='.', markersize=6, linewidth=0.7, label=r"optimal $r^*$", markevery=3, color="tab:blue")
-    ax.plot(error_bounds, np.mean(tuned_neighborhood_size_communication, axis=0), linestyle='-', marker='x', markersize=4, linewidth=0.7, label=r"tuned $\hat{r}$", markevery=3, color="red")
+    markevery = 3
+    if func_name == "MLP-2":
+        markevery = 2
+    ax.plot(error_bounds, np.mean(optimal_neighborhood_size_communication, axis=0), linestyle='-', marker='.', markersize=6, linewidth=0.7, label=r"optimal $r^*$", markevery=markevery, color="tab:blue")
+    ax.plot(error_bounds, np.mean(tuned_neighborhood_size_communication, axis=0), linestyle='-', marker='x', markersize=4, linewidth=0.7, label=r"tuned $\hat{r}$", markevery=markevery, color="red")
     ax.fill_between(error_bounds, np.mean(optimal_neighborhood_size_communication, axis=0) - np.std(optimal_neighborhood_size_communication, axis=0),
                     np.mean(optimal_neighborhood_size_communication, axis=0) + np.std(optimal_neighborhood_size_communication, axis=0), alpha=.3, color="tab:blue")
     ax.fill_between(error_bounds, np.mean(tuned_neighborhood_size_communication, axis=0) - np.std(tuned_neighborhood_size_communication, axis=0),
@@ -128,7 +131,7 @@ def plot_communication_error_bound_connection(parent_test_folder, func_name, ax)
     markers = ["1", "2", "3"]
     colors = ["tab:green", "tab:orange", "tab:purple"]
     for i, idx in enumerate(interesting_fixed_neighborhood_size_indices):
-        ax.plot(error_bounds, fixed_neighborhood_size_communications_mean[idx], linestyle='--', marker=markers[i], markersize=5, linewidth=0.7, label=r"$r=$" + str(neighborhood_sizes[idx]), markevery=3, color=colors[i])
+        ax.plot(error_bounds, fixed_neighborhood_size_communications_mean[idx], linestyle='--', marker=markers[i], markersize=5, linewidth=0.7, label=r"$r=$" + str(neighborhood_sizes[idx]), markevery=markevery, color=colors[i])
         ax.fill_between(error_bounds, fixed_neighborhood_size_communications_mean[idx] - fixed_neighborhood_size_communications_std[idx],
                         fixed_neighborhood_size_communications_mean[idx] + fixed_neighborhood_size_communications_std[idx], alpha=.3, color=colors[i])
 
@@ -219,12 +222,8 @@ def plot_neighborhood_size_error_bound_connection(parent_test_folder, func_name,
     tunes_neighborhood_sizes_mean = np.mean(tuned_neighborhood_sizes_experiments, axis=0)
     tuned_neighborhood_sizes_std = np.std(tuned_neighborhood_sizes_experiments, axis=0)
 
-    dilution = 1
-    if func_name == "MLP-2":
-        dilution = 2
-
-    ax.plot(error_bounds[::dilution], optimal_neighborhood_sizes_mean[::dilution], linestyle='-', marker='.', markersize=4, linewidth=0.5, label=r"optimal $r^*$")
-    ax.fill_between(error_bounds[::dilution], optimal_neighborhood_sizes_mean[::dilution] - optimal_neighborhood_sizes_std[::dilution], optimal_neighborhood_sizes_mean[::dilution] + optimal_neighborhood_sizes_std[::dilution], alpha=.3)
+    ax.plot(error_bounds, optimal_neighborhood_sizes_mean, linestyle='-', marker='.', markersize=4, linewidth=0.5, label=r"optimal $r^*$")
+    ax.fill_between(error_bounds, optimal_neighborhood_sizes_mean - optimal_neighborhood_sizes_std, optimal_neighborhood_sizes_mean + optimal_neighborhood_sizes_std, alpha=.3)
     ax.set_xlabel(r'error bound $\epsilon$')
 
     ax.spines['right'].set_visible(False)
@@ -236,7 +235,7 @@ def plot_neighborhood_size_error_bound_connection(parent_test_folder, func_name,
     if func_name == "Rozenbrock":
         ax.set_ylim(top=0.21)
 
-    ax.errorbar(error_bounds[::dilution], tunes_neighborhood_sizes_mean[::dilution], tuned_neighborhood_sizes_std[::dilution], fmt='x', markersize=2.3, markeredgewidth=0.5, solid_capstyle='projecting', capsize=2, elinewidth=0.4, capthick=0.4, color='red', label=r"tuned $\hat{r}$")
+    ax.errorbar(error_bounds, tunes_neighborhood_sizes_mean, tuned_neighborhood_sizes_std, fmt='x', markersize=2.3, markeredgewidth=0.5, solid_capstyle='projecting', capsize=2, elinewidth=0.4, capthick=0.4, color='red', label=r"tuned $\hat{r}$")
     ax.legend(loc="lower right", ncol=1, frameon=False, handletextpad=0.29, bbox_to_anchor=(1.08, -0.05), labelspacing=0.1)
 
     ax.annotate(func_name, xy=(0.4, 0.74), xycoords='axes fraction', xytext=(20, 13),

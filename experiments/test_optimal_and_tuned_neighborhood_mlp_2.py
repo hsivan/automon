@@ -1,3 +1,4 @@
+import sys
 from automon import AutomonNode, AutomonCoordinator
 from test_utils.tune_neighborhood_size import tune_neighborhood_size
 from test_utils.data_generator import DataGeneratorMlp
@@ -13,7 +14,7 @@ from test_utils.jax_mlp import load_net
 
 
 def neighborhood_size_impact(experiment_folder, error_bound):
-    neighborhood_sizes = np.arange(0.1, 1.0, 0.05)
+    neighborhood_sizes = np.arange(0.1, 1.0, 0.1)
 
     data_folder = '../datasets/MLP_2/'
     net_params, net_apply = load_net(data_folder)
@@ -62,7 +63,7 @@ def neighborhood_size_impact(experiment_folder, error_bound):
 
 
 if __name__ == "__main__":
-    error_bounds = np.arange(0.005, 0.35, 0.015)
+    error_bounds = np.arange(0.005, 0.35, 0.03)
     num_experiments = 5
 
     parent_test_folder = start_test("optimal_and_tuned_neighborhood_mlp_2")
@@ -83,5 +84,7 @@ if __name__ == "__main__":
 
         for idx, error_bound in enumerate(error_bounds):
             neighborhood_size_impact(experiment_folder, error_bound)
+            print("Completed " + str(100 * (experiment_idx * len(error_bounds) + (idx + 1)) / (len(error_bounds) * num_experiments)) + "%")
+            sys.stdout.flush()
 
     plot_neighborhood_size_error_bound_connection_avg(parent_test_folder, "MLP-2")

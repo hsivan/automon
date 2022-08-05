@@ -49,7 +49,7 @@ def neighborhood_size_impact(experiment_folder, test_folder, neighborhood_sizes,
 if __name__ == "__main__":
     # Use the output folder of test_optimal_and_tuned_neighborhood_mlp_2.py to get the optimal and tuned neighborhood size per error bound
     if len(sys.argv) > 1:
-        full_tuning_test_folder = sys.argv[1]
+        full_tuning_test_folder = sys.argv[1] + "/"
     else:
         full_tuning_test_folder = "./test_results/results_optimal_and_tuned_neighborhood_mlp_2_2021-04-05_15-45-13/"
     full_tuning_test_experiment_folders = [full_tuning_test_folder + sub_folder for sub_folder in os.listdir(full_tuning_test_folder) if os.path.isdir(full_tuning_test_folder + sub_folder)]
@@ -90,5 +90,8 @@ if __name__ == "__main__":
             prefixes = ["optimal", "tuned"] + [str(i) + "_fixed" for i in range(len(fixed_neighborhood_sizes))]
 
             neighborhood_size_impact(experiment_folder, test_folder, neighborhood_sizes, prefixes)
+
+        print("Completed " + str(100.0 * (experiment_idx + 1) / num_experiments) + "%")
+        sys.stdout.flush()
 
     plot_communication_or_violation_error_bound_connection(parent_test_folder, "MLP-2")
