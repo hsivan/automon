@@ -9,12 +9,28 @@ import os
 def create_keypair(ec2_client, keypair_name):
     # Search for existing *.pem file (private key) or create one if not found.
     keypair_file_name = os.path.abspath(os.path.dirname(__file__)) + "/" + keypair_name + '.pem'
-    if not os.path.exists(keypair_file_name):
-        # Create new key pair
+    try:
+        # Create new key pair. Override local pem file if exists.
         response = ec2_client.create_key_pair(KeyName=keypair_name)
         with open(keypair_file_name, 'w') as private_key_file:
             private_key_file.write(response['KeyMaterial'])
             private_key_file.close()
+        print("Created key-pair", keypair_name)
+    except ClientError as e:
+        if e.response["Error"]["Code"] == "InvalidKeyPair.Duplicate":
+            print("key-pair", keypair_name, "already exists")
+            # If there is also a local pem file, just continue. Otherwise, delete the key-pair, create a new one, and write it to a local pem file.
+            if not os.path.exists(keypair_file_name):
+                ec2_client.delete_key_pair(KeyName=keypair_name)
+                print("Deleted key-pair", keypair_name)
+                response = ec2_client.create_key_pair(KeyName=keypair_name)
+                with open(keypair_file_name, 'w') as private_key_file:
+                    private_key_file.write(response['KeyMaterial'])
+                    private_key_file.close()
+                print("Created key-pair", keypair_name)
+        else:
+            raise
+    # TODO 2: in case there is no local pem file but there is key-pair with this name - delete it and create new one
     key = paramiko.RSAKey.from_private_key_file(keypair_file_name)
     ssh_client = paramiko.SSHClient()
     ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())

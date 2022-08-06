@@ -23,8 +23,8 @@ if __name__ == "__main__":
                                         0.016: 0.041666666666666664, 0.025: 0.041666666666666664, 0.05: 0.041666666666666664}
 
     try:
-        test_folder = start_test("distributed_dnn_intrusion_detection")
-        log_num_packets_sent_and_received(test_folder, logging_level=logging.INFO)  # Log before start
+        test_folder = start_test("distributed_dnn_intrusion_detection", logging_level=logging.INFO)
+        log_num_packets_sent_and_received(test_folder)  # Log before start
 
         data_folder = os.path.abspath(os.path.abspath(os.path.dirname(__file__))) + '/../datasets/intrusion_detection/'
         conf = read_config_file(data_folder)

@@ -86,6 +86,7 @@ class DataGenerator:
             data_point = self.monitoring_data[self.data_ptr_monitoring]
             node_idx = self.monitoring_node_schedule[self.data_ptr_monitoring]
             self.data_ptr_monitoring += 1
+        node_idx = int(node_idx)
         return data_point, node_idx
 
     def get_next_data_point(self):

@@ -5,12 +5,14 @@ Cleanup the following AWS resources, which were allocated by our distributed exp
 3. CloudWatch log groups whose name contains inner-product, quadratic, kld, and dnn
 4. ECS clusters whose name contains inner-product, quadratic, kld, and dnn
 5. EC2 instances whose KeyName contains automon
+6. Delete EC2 key-pair named aws_automon_private_key
 
 Requirements:
 Assuming AWS cli is already installed and configured before running this script, by previous run of the
 reproduce_experiment.py script.
 The default region must be us-east-2 (as configured by reproduce_experiment.py).
 """
+import os.path
 import subprocess
 
 
@@ -73,3 +75,15 @@ if __name__ == "__main__":
     except Exception:
         pass
 
+    # Delete EC2 key-pair named aws_automon_private_key and its local pem file
+    try:
+        command = "aws ec2 delete-key-pair --region us-west-2 --key-name aws_automon_private_key"
+        execute_shell_command_with_live_output(command)
+    except Exception:
+        pass
+    # Also delete local aws_automon_private_key.pem file
+    try:
+        if os.path.isfile("./aws_automon_private_key.pem"):
+            os.remove("./aws_automon_private_key.pem")
+    except Exception:
+        pass

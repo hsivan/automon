@@ -47,6 +47,7 @@ class NodeDataLoop(threading.Thread):
         self.num_data_updates = 0
         self.num_detected_full_sync = 0
         self.b_single_sample_per_round = b_single_sample_per_round
+        logging.info("Node " + str(node_idx) + " data loop initialization: lazy sync latency " + os.getenv('LS_LATENCY', '1.0') + ", full sync latency " + os.getenv('FS_LATENCY', '4.0'))
         threading.Thread.__init__(self)
 
     def data_update(self, data_client, idx):

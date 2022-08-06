@@ -384,7 +384,7 @@ def run_aws_experiment(node_type, coordinator_aws_instance_type, local_result_di
         node_name = node_type
         b_centralization = ''
 
-    test_folder = get_latest_test_folder(local_result_dir, "max_error_vs_comm_" + node_name + "_aws/")
+    test_folder = get_latest_test_folder(local_result_dir, "max_error_vs_comm_" + node_name + "_aws")
     if test_folder:
         print_to_std_and_file("Found existing local AWS test folder for " + node_name + ": " + test_folder + ". Skipping.")
         return
@@ -478,16 +478,16 @@ def run_aws_experiments(local_result_dir, docker_result_dir, docker_run_command_
     build_and_push_docker_image_to_aws_ecr()
 
     # Run AutoMon distributed experiments
-    run_aws_experiment('inner_product', 'ec2', local_result_dir, b_centralized=False, estimated_runtime=1020) # All 10 experiments (for every error bound) run in parallel and take about the same time
-    run_aws_experiment('quadratic', 'ec2', local_result_dir, b_centralized=False, estimated_runtime=1020) # All 8 experiments (for every error bound) run in parallel and take about the same time
-    run_aws_experiment('kld', 'ec2', local_result_dir, b_centralized=False, estimated_runtime=29900)  # All 8 experiments (for every error bound) run in parallel and take about the same time
-    run_aws_experiment('dnn', 'ec2', local_result_dir, b_centralized=False, estimated_runtime=150900) # All 6 experiments (for every error bound) run in parallel and the reported time is the max between them
+    run_aws_experiment('inner_product', 'ec2', local_result_dir, b_centralized=False, estimated_runtime=3500) # All 10 experiments (for every error bound) run in parallel and take about the same time, ~1 hour
+    run_aws_experiment('quadratic', 'ec2', local_result_dir, b_centralized=False, estimated_runtime=3500) # All 8 experiments (for every error bound) run in parallel and take about the same time, ~1 hour
+    run_aws_experiment('kld', 'ec2', local_result_dir, b_centralized=False, estimated_runtime=29900)  # All 8 experiments (for every error bound) run in parallel and take about the same time, ~8.5 hours
+    run_aws_experiment('dnn', 'ec2', local_result_dir, b_centralized=False, estimated_runtime=150900) # All 6 experiments (for every error bound) run in parallel and the reported time is the max between them, ~1 day and 18 hours
 
-    # Run the distributed centralized experiments
-    run_aws_experiment('inner_product', 'ec2', local_result_dir, b_centralized=True, estimated_runtime=100)
-    run_aws_experiment('quadratic', 'ec2', local_result_dir, b_centralized=True, estimated_runtime=100)
-    run_aws_experiment('kld', 'ec2', local_result_dir, b_centralized=True, estimated_runtime=1000)
-    run_aws_experiment('dnn', 'ec2', local_result_dir, b_centralized=True, estimated_runtime=1000)
+    # Run the distributed centralized experiments. Each run in a single experiment (no error-bound in centralization)
+    run_aws_experiment('inner_product', 'ec2', local_result_dir, b_centralized=True, estimated_runtime=600)  # ~10 minutes
+    run_aws_experiment('quadratic', 'ec2', local_result_dir, b_centralized=True, estimated_runtime=600)  # ~10 minutes
+    run_aws_experiment('kld', 'ec2', local_result_dir, b_centralized=True, estimated_runtime=900)  # ~15 minutes
+    run_aws_experiment('dnn', 'ec2', local_result_dir, b_centralized=True, estimated_runtime=900)  # ~15 minutes
 
     # Plot figures
     generate_aws_figures(local_result_dir, docker_result_dir, docker_run_command_prefix)
@@ -602,8 +602,9 @@ if __name__ == "__main__":
         run_neighborhood_size_tuning_experiment(local_result_dir, docker_result_dir, docker_run_command_prefix)  # Estimated runtime: ~15 hours
         run_ablation_study_experiment(local_result_dir, docker_result_dir, docker_run_command_prefix)  # Estimated runtime: ~4 minutes
 
+        # Estimated total runtime: ~2 days and 5 hours
         if args.b_aws_experiments:
-            run_aws_experiments(local_result_dir, docker_result_dir, docker_run_command_prefix)  # Estimated runtime: ~2 days and 4 hours
+            run_aws_experiments(local_result_dir, docker_result_dir, docker_run_command_prefix)  # See runtime estimation per experiment in run_aws_experiments()
 
         # Build the paper from Latex source files with the new figures
         compile_reproduced_main_pdf()
