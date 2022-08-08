@@ -1,3 +1,4 @@
+import sys
 import matplotlib.pyplot as plt
 from matplotlib import rcParams, rcParamsDefault
 import numpy as np
@@ -8,7 +9,8 @@ import matplotlib.ticker as tick
 
 
 def plot_monitoring_f_and_error_bound_around_it(kld_test_folder, inner_product_test_folder, mlp_40_test_folder,
-                                                mlp_2_test_folder, quadratic_test_folder, dnn_intrusion_detection_test_folder):
+                                                mlp_2_test_folder, quadratic_test_folder, dnn_intrusion_detection_test_folder,
+                                                result_dir="./"):
     rcParams['pdf.fonttype'] = 42
     rcParams['ps.fonttype'] = 42
     rcParams.update({'legend.fontsize': 5.4})
@@ -53,26 +55,38 @@ def plot_monitoring_f_and_error_bound_around_it(kld_test_folder, inner_product_t
     axs[len(func_names) - 1].set_xlabel('rounds', labelpad=2)
     axs[len(func_names) - 2].set_xlabel('rounds', labelpad=2)
     plt.subplots_adjust(top=0.99, bottom=0.17, left=0.115, right=0.985, hspace=0.65, wspace=0.4)
-    fig.savefig("function_values_and_error_bound_around_it.pdf")
+    fig.savefig(result_dir + "/function_values_and_error_bound_around_it.pdf")
+    plt.close(fig)
 
     rcParams.update(rcParamsDefault)
 
 
 if __name__ == "__main__":
-    # Figure 3
+    # Figure 4
 
     # real_function_value.csv and config.txt files for MLP-40 and Rozenbrock were taken from the following experiment folders
     # mlp_40_test_folder = "../test_results/results_test_dimension_impact_mlp_2021-10-10_13-40-24/dimension_40"
     # rozenbrock_folder = "../test_results/results_comm_neighborhood_rozen_2021-09-20_15-53-41/0/thresh_0_05/0_fixed_neighborhood_0_05"
 
-    kld_test_folder = "../../datasets/air_quality"
-    inner_product_test_folder = "../../datasets/inner_product"
-    mlp_2_test_folder = "../../datasets/MLP_2"
-    quadratic_test_folder = "../../datasets/quadratic"
-    dnn_intrusion_detection_test_folder = "../../datasets/intrusion_detection"
-    mlp_40_test_folder = "./function_values/results_mlp_40_2021-10-10_13-40-24"
-    rozenbrock_folder = "./function_values/results_rozenbrock_2021-04-10_10-13-41"
+    if len(sys.argv) > 1:
+        result_dir = sys.argv[1]
+        kld_test_folder = "/app/datasets/air_quality"
+        inner_product_test_folder = "/app/datasets/inner_product"
+        mlp_2_test_folder = "/app/datasets/MLP_2"
+        quadratic_test_folder = "/app/datasets/quadratic"
+        dnn_intrusion_detection_test_folder = "/app/datasets/intrusion_detection"
+        mlp_40_test_folder = "/app/experiments/visualization/function_values/results_mlp_40_2021-10-10_13-40-24"
+        rozenbrock_folder = "/app/experiments/visualization/function_values/results_rozenbrock_2021-04-10_10-13-41"
+    else:
+        result_dir = "./"
+        kld_test_folder = "../../datasets/air_quality"
+        inner_product_test_folder = "../../datasets/inner_product"
+        mlp_2_test_folder = "../../datasets/MLP_2"
+        quadratic_test_folder = "../../datasets/quadratic"
+        dnn_intrusion_detection_test_folder = "../../datasets/intrusion_detection"
+        mlp_40_test_folder = "./function_values/results_mlp_40_2021-10-10_13-40-24"
+        rozenbrock_folder = "./function_values/results_rozenbrock_2021-04-10_10-13-41"
 
     plot_monitoring_f_and_error_bound_around_it(kld_test_folder, inner_product_test_folder,
                                                 mlp_40_test_folder, mlp_2_test_folder,
-                                                quadratic_test_folder, dnn_intrusion_detection_test_folder)
+                                                quadratic_test_folder, dnn_intrusion_detection_test_folder, result_dir)

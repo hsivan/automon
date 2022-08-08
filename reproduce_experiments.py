@@ -504,6 +504,7 @@ def compile_reproduced_main_pdf():
 
     # Copy figures from local_result_dir to project_root/docs/latex_src/figures and report of missing figures
     figure_list = {"Figure 3": "impact_of_neighborhood_on_violations_three_error_bounds.pdf",
+                   "Figure 4": "function_values_and_error_bound_around_it.pdf",
                    "Figure 5": "max_error_vs_communication.pdf",
                    "Figure 6": "percent_error_kld_and_dnn.pdf",
                    "Figure 7 (a)": "dimension_communication.pdf",
@@ -594,6 +595,9 @@ if __name__ == "__main__":
         docker_run_command_prefix = 'sudo docker run -v ' + local_result_dir + ':' + docker_result_dir + ' --rm automon_experiment python /app/experiments/'
 
         print_to_std_and_file("Experiment results are written to: " + local_result_dir)
+
+        # Plot Figure 4
+        generate_figures(docker_result_dir, docker_run_command_prefix, [], 'plot_function_values_and_error_bound.py')
 
         # Estimated total runtime: ~2 days and 3 hours
         run_error_communication_tradeoff_experiment(local_result_dir, docker_result_dir, docker_run_command_prefix)  # Estimated runtime: ~24 hours
