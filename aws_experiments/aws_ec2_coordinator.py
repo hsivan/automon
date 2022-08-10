@@ -2,7 +2,8 @@ import time
 import boto3
 import paramiko
 from botocore.client import ClientError
-from aws_experiments.utils import read_credentials_file, create_iam_role
+from aws_experiments.utils import read_credentials_file, create_iam_role, get_default_security_group, \
+    create_ingress_rule
 import os
 
 
@@ -38,8 +39,9 @@ def create_keypair(ec2_client, keypair_name):
 
 
 def create_instance(ec2_client, keypair_name):
+    # Note: this AMI is only available in us-west-2 region!!! If changing the default region need to change the AMI accordingly.
     instances = ec2_client.run_instances(
-        ImageId="ami-09889d8d54f9e0a0e",  # Ubuntu Server 18.04 LTS (HVM), SSD Volume Type - ami-09889d8d54f9e0a0e (64-bit x86) / ami-09c7c5f2666edbd1b (64-bit Arm) (free tier eligible)
+        ImageId="ami-0b152cfd354c4c7a4",  # Ubuntu Server 18.04 LTS (HVM), SSD Volume Type - ami-0b152cfd354c4c7a4 (64-bit (x86), free tier eligible)
         MinCount=1,
         MaxCount=1,
         InstanceType="c5.4xlarge",
@@ -92,7 +94,7 @@ def attach_cloudwatch_policy_to_ec2_instance(region, ec2_client, instance_id, se
         print(e)
 
     role_name = 'AutomonEc2CloudWatchRole'
-    create_iam_role(role_name, session)
+    create_iam_role(region, role_name, session)
 
     try:
         response = iam_client.add_role_to_instance_profile(InstanceProfileName=instance_profile_name, RoleName=role_name)
@@ -117,14 +119,17 @@ def attach_cloudwatch_policy_to_ec2_instance(region, ec2_client, instance_id, se
         print(e)
 
 
-def run_coordinator_on_ec2_instance(region='us-west-2', node_type='inner_product', error_bound=0.05, command='python /app/aws_experiments/start_distributed_object_remote.py'):
+def run_coordinator_on_ec2_instance(coordinator_region, nodes_region, node_type='inner_product', error_bound=0.05, command='python /app/aws_experiments/start_distributed_object_remote.py'):
     username, access_key_id, secret_access_key = read_credentials_file()
     session = boto3.session.Session(aws_access_key_id=access_key_id, aws_secret_access_key=secret_access_key)
 
-    ec2_client = session.client('ec2', region_name=region)
+    ec2_client = session.client('ec2', region_name=coordinator_region)
     keypair_name = "aws_automon_private_key"
 
     try:
+        sg_id, subnet_id = get_default_security_group(coordinator_region, session)
+        create_ingress_rule(coordinator_region, session, sg_id)
+
         # Create the instance and connect/ssh to it
         key, ssh_client = create_keypair(ec2_client, keypair_name)
         instance_id = create_instance(ec2_client, keypair_name)
@@ -150,16 +155,16 @@ def run_coordinator_on_ec2_instance(region='us-west-2', node_type='inner_product
         # Configure aws cli
         execute_ssh_command(ssh_client, 'aws configure set aws_access_key_id ' + access_key_id)
         execute_ssh_command(ssh_client, 'aws configure set aws_secret_access_key ' + secret_access_key)
-        execute_ssh_command(ssh_client, 'aws configure set region ' + region)
+        execute_ssh_command(ssh_client, 'aws configure set region ' + coordinator_region)
         execute_ssh_command(ssh_client, 'aws configure set output json')
-        execute_ssh_command(ssh_client, 'aws configure get region', stdout_verification=region)  # Verify configuration worked
+        execute_ssh_command(ssh_client, 'aws configure get region', stdout_verification=coordinator_region)  # Verify configuration worked
 
         # Pull docker images from ECR
         account_id = session.client('sts').get_caller_identity().get('Account')
-        execute_ssh_command(ssh_client, 'aws ecr get-login-password --region us-east-2 | sudo docker login --username AWS --password-stdin ' + account_id + '.dkr.ecr.us-east-2.amazonaws.com/automon', stdout_verification="Login Succeeded")
-        execute_ssh_command(ssh_client, 'sudo docker pull ' + account_id + '.dkr.ecr.us-east-2.amazonaws.com/automon', stdout_verification="Downloaded newer image")
+        execute_ssh_command(ssh_client, 'aws ecr get-login-password --region ' + nodes_region + ' | sudo docker login --username AWS --password-stdin ' + account_id + '.dkr.ecr.' + nodes_region + '.amazonaws.com/automon', stdout_verification="Login Succeeded")
+        execute_ssh_command(ssh_client, 'sudo docker pull ' + account_id + '.dkr.ecr.' + nodes_region + '.amazonaws.com/automon', stdout_verification="Downloaded newer image")
 
-        attach_cloudwatch_policy_to_ec2_instance(region, ec2_client, instance_id, session)
+        attach_cloudwatch_policy_to_ec2_instance(coordinator_region, ec2_client, instance_id, session)
 
         # Run the docker image
         s3_write = 1
@@ -171,11 +176,12 @@ def run_coordinator_on_ec2_instance(region='us-west-2', node_type='inner_product
                          ' --env ERROR_BOUND=' + str(error_bound) + \
                          ' --env S3_WRITE=' + str(s3_write) + \
                          ' --env INSTANCE_ID=' + instance_id + \
+                         ' --env REGION=' + coordinator_region + \
                          ' --log-driver=awslogs' + \
-                         ' --log-opt awslogs-region=us-east-2' + \
+                         ' --log-opt awslogs-region=' + nodes_region + \
                          ' --log-opt awslogs-group=' + node_type.replace("_", "-") + "_" + str(error_bound).replace(".", "-") + \
                          ' --log-opt awslogs-create-group=true' + \
-                         ' -d -it --rm ' + account_id + '.dkr.ecr.us-east-2.amazonaws.com/automon ' + command
+                         ' -d -it --rm ' + account_id + '.dkr.ecr.' + nodes_region + '.amazonaws.com/automon ' + command
         execute_ssh_command(ssh_client, docker_run_cmd, b_stderr_verification=True)
 
         ssh_client.close()
@@ -183,7 +189,3 @@ def run_coordinator_on_ec2_instance(region='us-west-2', node_type='inner_product
         print(e)
         exit(1)
     return instance_public_ip
-
-
-if __name__ == "__main__":
-    run_coordinator_on_ec2_instance()

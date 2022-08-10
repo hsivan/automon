@@ -17,12 +17,20 @@ It installs TexLive for the compilation of the paper's Latex source files.
 Note: in case the script is called with the --aws options it installs AWS cli and configures it.
 After running the simulations, it runs the distributed experiments on AWS.
 It requires the user to have an AWS account; after opening the account, the user must create AWS IAM user with
-AdministratorAccess permissions, download the csv file new_user_credentials.csv that contains the key ID and the secret
-key. Download the project (if you haven't already) using the --dd flag, and place the new_user_credentials.csv file
-in project_root/aws_experiments/new_user_credentials.csv. After completing these steps, re-run this script.
+AdministratorAccess permissions. The full steps to create the IAM user:
+    1. In https://console.aws.amazon.com/iam/ select "Users" on the left and press "Add users".
+    2. Provide user name, e.g. automon, and mark the "Access key" checkbox and press "Next: Permissions".
+    3. Expand the "Set permissions boundary" section and select "Use a permissions boundary to control the maximum user permissions".
+       Use the Filter to search for AdministratorAccess and then select AdministratorAccess from the list and press "Next: Tags".
+    4. No need to add tags so press "Next: Review".
+    5. In the next page press "Create user".
+    6. Press "Download.csv" to download the new_user_credentials.csv file.
+    7. Download the project (if you haven't already) using the --dd flag, and place the new_user_credentials.csv file in
+       <project_root>/aws_experiments/new_user_credentials.csv.
+After completing these steps, re-run this script.
 Running the AWS experiments would cost a few hundred dollars!
-The user must monitor the ECS tasks and EC2 instances, and manually shutdown any dangling tasks/instances in case of
-failures.
+After completion of the experiments and verification of the results, the user should clean AWS resources allocated by
+this script by running the cleanup script <project_root>/aws_experiments/aws_cleanup.py.
 """
 import urllib.request
 import zipfile
@@ -441,7 +449,7 @@ def install_aws_cli():
     execute_shell_command('aws --version', stdout_verification="aws-cli")
 
 
-def configure_aws_cli(region='us-east-2'):
+def configure_aws_cli(region):
     # Get the access key and secret access key from the new_user_credentials.csv file, without using pandas, boto3, etc.
     with open('./aws_experiments/new_user_credentials.csv', 'r') as f:
         credentials = f.read()
@@ -455,7 +463,7 @@ def configure_aws_cli(region='us-east-2'):
     execute_shell_command('aws configure get region', stdout_verification=region)  # Verify configuration worked
 
 
-def build_and_push_docker_image_to_aws_ecr():
+def build_and_push_docker_image_to_aws_ecr(region):
     execute_shell_command_with_live_output('sudo docker build -f aws_experiments/awstest.Dockerfile  -t automon_aws_experiment .')
     print_to_std_and_file("Successfully built docker image for the AWS experiments")
     # Get the AWS account id from the new_user_credentials.csv file, without using pandas, boto3, etc.
@@ -463,19 +471,20 @@ def build_and_push_docker_image_to_aws_ecr():
         credentials = f.read()
         account_id = credentials.split('https://')[1].split('.signin')[0]
     # These two commands require AWS cli installed and configured
-    execute_shell_command_with_live_output('aws ecr describe-repositories --repository-names automon || aws ecr create-repository --repository-name automon')
-    execute_shell_command_with_live_output('aws ecr get-login-password --region us-east-2 | sudo docker login --username AWS --password-stdin ' + account_id + '.dkr.ecr.us-east-2.amazonaws.com/automon')
+    execute_shell_command_with_live_output('aws ecr describe-repositories --region ' + region + ' --repository-names automon || aws ecr create-repository --repository-name automon')
+    execute_shell_command_with_live_output('aws ecr get-login-password --region ' + region + ' | sudo docker login --username AWS --password-stdin ' + account_id + '.dkr.ecr.' + region + '.amazonaws.com/automon')
     print_to_std_and_file("Successfully obtained ECR login password")
-    execute_shell_command_with_live_output('sudo docker tag automon_aws_experiment ' + account_id + '.dkr.ecr.us-east-2.amazonaws.com/automon')
+    execute_shell_command_with_live_output('sudo docker tag automon_aws_experiment ' + account_id + '.dkr.ecr.' + region + '.amazonaws.com/automon')
     print_to_std_and_file("Successfully tagged docker image")
-    execute_shell_command_with_live_output('sudo docker push ' + account_id + '.dkr.ecr.us-east-2.amazonaws.com/automon')
+    execute_shell_command_with_live_output('sudo docker push ' + account_id + '.dkr.ecr.' + region + '.amazonaws.com/automon')
     print_to_std_and_file("Successfully pushed docker image to ECR")
 
 
 def run_aws_experiments(local_result_dir, docker_result_dir, docker_run_command_prefix):
+    nodes_region = 'us-east-2'
     install_aws_cli()
-    configure_aws_cli()
-    build_and_push_docker_image_to_aws_ecr()
+    configure_aws_cli(nodes_region)
+    build_and_push_docker_image_to_aws_ecr(nodes_region)
 
     # Run AutoMon distributed experiments
     run_aws_experiment('inner_product', 'ec2', local_result_dir, b_centralized=False, estimated_runtime=3500) # All 10 experiments (for every error bound) run in parallel and take about the same time, ~1 hour
@@ -546,11 +555,20 @@ if __name__ == "__main__":
                                                                 "Note: in case the script is called with the --aws options it installs AWS cli and configures it. After running\n"
                                                                 "the simulations, it runs the distributed experiments on AWS.\n"
                                                                 "It requires the user to have an AWS account; after opening the account, the user must create AWS IAM user with\n"
-                                                                "AdministratorAccess permissions, download the csv file new_user_credentials.csv that contains the key ID and the secret\n"
-                                                                "key, and place the new_user_credentials.csv file in project_root/aws_experiments/new_user_credentials.csv.\n"
+                                                                "AdministratorAccess permissions. The full steps to create the IAM user:\n"
+                                                                "\t 1. In https://console.aws.amazon.com/iam/ select 'Users' on the left and press 'Add users'. \n"
+                                                                "\t 2. Provide user name, e.g. automon, and mark the 'Access key' checkbox and press 'Next: Permissions'. \n"
+                                                                "\t 3. Expand the 'Set permissions boundary' section and select 'Use a permissions boundary to control the maximum user permissions'. \n"
+                                                                "\t    Use the Filter to search for AdministratorAccess and then select AdministratorAccess from the list and press 'Next: Tags'. \n"
+                                                                "\t 4. No need to add tags so press 'Next: Review'. \n"
+                                                                "\t 5. In the next page press 'Create user'. \n"
+                                                                "\t 6. Press 'Download.csv' to download the new_user_credentials.csv file. \n"
+                                                                "\t 7. Download the project (if you haven't already) using the --dd flag, and place the new_user_credentials.csv file in \n"
+                                                                "\t    <project_root>/aws_experiments/new_user_credentials.csv. \n"
                                                                 "After completing these steps, re-run this script.\n"
                                                                 "Running the AWS experiments would cost a few hundred dollars!\n"
-                                                                "The user must monitor the ECS tasks and EC2 instances, and manually shutdown any dangling tasks/instances in case of failures.", action='store_true')
+                                                                "After completion of the experiments and verification of the results, the user should clean AWS resources allocated by\n"
+                                                                "this script by running the cleanup script <project_root>/aws_experiments/aws_cleanup.py.", action='store_true')
     args = parser.parse_args()
 
     log_file = os.path.abspath(__file__).replace("reproduce_experiments.py", "reproduce_experiments.log")

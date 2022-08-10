@@ -41,8 +41,8 @@ def read_credentials_file():
     return username, access_key_id, secret_access_key
 
 
-def create_iam_role(role_name, session):
-    iam_client = session.client('iam')
+def create_iam_role(region, role_name, session):
+    iam_client = session.client('iam', region_name=region)
 
     role_policy = {
         "Version": "2012-10-17",
@@ -86,9 +86,10 @@ def create_iam_role(role_name, session):
 
 
 # Self termination by the EC2 instance with credentials installed (no need for session)
-def stop_and_terminate_ec2_instance(region='us-west-2'):
+def stop_and_terminate_ec2_instance():
     try:
         ec2_instance_id = os.environ['INSTANCE_ID']
+        region = os.environ['REGION']
     except KeyError:
         print("INSTANCE_ID is not defined. This is an ECS instance. No need to terminate.")
         return
@@ -156,3 +157,42 @@ def num_completed_experiments(node_type):
     files_and_folders = s3_bucket.objects.all()
     files_and_folders = [f.key for f in files_and_folders if node_type in f.key and 'coordinator' in f.key and 'nethogs_out.txt' in f.key]
     return len(files_and_folders)
+
+
+def get_default_security_group(region, session):
+    ec2_client = session.client('ec2', region_name=region)
+    response = ec2_client.describe_security_groups()
+    for sg in response['SecurityGroups']:
+        if sg['Description'] == 'default VPC security group':
+            sg_id = sg['GroupId']
+    # _ = ec2_client.describe_vpcs()
+    response = ec2_client.describe_subnets()
+    subnet_id = response['Subnets'][0]['SubnetId']
+    print('Found sg and subnet for region', region, ': sg_id:', sg_id, 'subnet_id:', subnet_id)
+    return sg_id, subnet_id
+
+
+def create_ingress_rule(region, session, security_group_id):
+    """
+    Creates a security group ingress rule with the specified configuration.
+    """
+    vpc_client = session.client("ec2", region_name=region)
+    try:
+        response = vpc_client.authorize_security_group_ingress(
+            GroupId=security_group_id,
+            IpPermissions=[{
+                'IpProtocol': 'tcp',
+                'FromPort': 10,
+                'ToPort': 65535,
+                'IpRanges': [{
+                    'CidrIp': '0.0.0.0/0'
+                }]
+            }])
+        print("Added inbound rule to sg", security_group_id, "response:\n", response)
+
+    except ClientError as e:
+        if e.response["Error"]["Code"] == "InvalidPermission.Duplicate":
+            print("Inbound rule for TCP port-range 10-65535 already exists.")
+        else:
+            print('Could not create ingress security group rule.')
+            raise

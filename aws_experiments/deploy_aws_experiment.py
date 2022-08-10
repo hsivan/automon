@@ -11,7 +11,8 @@ import json
 import os
 import argparse
 from aws_experiments.aws_ec2_coordinator import run_coordinator_on_ec2_instance
-from aws_experiments.utils import read_credentials_file, num_completed_experiments
+from aws_experiments.utils import read_credentials_file, num_completed_experiments, get_default_security_group, \
+    create_ingress_rule
 
 
 def get_service_ips(ecs_client, cluster, tasks, region):
@@ -111,19 +112,7 @@ def run_task(ecs_client, automon_task, cluster_name, node_idx, host, node_type, 
         print("Error: node", node_idx, "run_task() failure reason:", response['failures'][0]['reason'])
         print("Stop coordinator and nodes manually")
         raise Exception
-
-
-def get_default_security_group(region):
-    ec2_client = session.client('ec2', region_name=region)
-    response = ec2_client.describe_security_groups()
-    for sg in response['SecurityGroups']:
-        if sg['Description'] == 'default VPC security group':
-            sg_id = sg['GroupId']
-    # _ = ec2_client.describe_vpcs()
-    response = ec2_client.describe_subnets()
-    subnet_id = response['Subnets'][0]['SubnetId']
-    print('Found sg and subnet for region', region, ': sg_id:', sg_id, 'subnet_id:', subnet_id)
-    return sg_id, subnet_id
+    print("Run ECS task", task_name)
 
 
 def create_log_group(automon_task, node_type, error_bound):
@@ -147,7 +136,8 @@ def run_coordinator_on_ecs_fargate(coordinator_region, node_type, error_bound, a
         cluster_name = node_type.replace("_", "-") + "_" + str(error_bound).replace(".", "-") + "_" + coordinator_region
     print("Cluster:", cluster_name)
     _ = ecs_client.create_cluster(clusterName=cluster_name)  # Use different cluster for every experiment
-    sg_id, subnet_id = get_default_security_group(coordinator_region)
+    sg_id, subnet_id = get_default_security_group(coordinator_region, session)
+    create_ingress_rule(coordinator_region, session, sg_id)
     run_task(ecs_client, automon_task, cluster_name, -1, '0.0.0.0', node_type, error_bound, subnet_id, sg_id, command)
     time.sleep(10)  # Wait until the task obtains its public IP
     tasks = ecs_client.list_tasks(cluster=cluster_name)
@@ -163,7 +153,8 @@ def run_nodes_on_ecs_fargate(nodes_region, node_type, error_bound, automon_task,
     cluster_name = node_type.replace("_", "-") + "_" + str(error_bound).replace(".", "-") + "_" + nodes_region
     print("Cluster:", cluster_name)
     _ = ecs_client.create_cluster(clusterName=cluster_name)  # Use different cluster for every experiment
-    sg_id, subnet_id = get_default_security_group(nodes_region)
+    sg_id, subnet_id = get_default_security_group(nodes_region, session)
+    create_ingress_rule(nodes_region, session, sg_id)
     for node_idx in range(NUM_NODES):
         run_task(ecs_client, automon_task, cluster_name, node_idx, coordinator_ip, node_type, error_bound, subnet_id, sg_id, command, lazy_sync_latency, full_sync_latency)
 
@@ -183,6 +174,9 @@ if __name__ == "__main__":
                              "and waits until it finds the output files in S3.",
                         action='store_true')
     args = parser.parse_args()
+
+    coordinator_region = "us-west-2"
+    nodes_region = "us-east-2"
 
     if args.b_centralized:
         command = 'python /app/aws_experiments/start_distributed_centralization_object_remote.py'
@@ -236,20 +230,19 @@ if __name__ == "__main__":
     with open(os.path.abspath(os.path.dirname(__file__)) + "/automon_aws_task.json", 'r') as f:
         automon_task = f.read()
     automon_task = automon_task.replace("<account_id>", account_id)
+    automon_task = automon_task.replace("us-east-2", nodes_region)
     automon_task = json.loads(automon_task)
 
     for error_bound in error_bounds:
         create_log_group(automon_task, args.node_type, error_bound)
 
         # Coordinator
-        coordinator_region = "us-west-2"
         if args.coordinator_aws_instance_type == "fargate":
             coordinator_ip = run_coordinator_on_ecs_fargate(coordinator_region, args.node_type, error_bound, automon_task, command)  # Using ECS Fargate coordinator is limited to 4 vCPU and 16GB of memory on an Intel Xeon CPU at 2.2–2.5 GHz.
         else:
-            coordinator_ip = run_coordinator_on_ec2_instance(coordinator_region, args.node_type, error_bound, command)  # Run the coordinator on EC2 c5.4xlarge instance (16 vCPU and 32GB of memory on an Intel Xeon CPU at 3.4–3.9 GHz).
+            coordinator_ip = run_coordinator_on_ec2_instance(coordinator_region, nodes_region, args.node_type, error_bound, command)  # Run the coordinator on EC2 c5.4xlarge instance (16 vCPU and 32GB of memory on an Intel Xeon CPU at 3.4–3.9 GHz).
 
         # Nodes
-        nodes_region = "us-east-2"
         run_nodes_on_ecs_fargate(nodes_region, args.node_type, error_bound, automon_task, coordinator_ip, command,
                                  lazy_sync_latency, full_sync_latency)
 
