@@ -142,6 +142,10 @@ def copy_result_folder_to_s3(test_folder, node_type, node_idx, error_bound):
         bucket = get_s3_bucket()
 
         for file in os.listdir(test_folder):
+            if "data_file.txt" in file or "nethogs_out.txt" in file or "node_schedule_file.txt" in file:
+                # Theses are relatively large files (specifically for KLD and DNN), which are not needed for result
+                # analysis (we use nethogs_vs_automon.txt which summarizes the network results instead).
+                continue
             print("About to write " + os.path.join(test_folder, file) + " to " + dest_folder + '/' + file)
             bucket.upload_file(os.path.join(test_folder, file), dest_folder + '/' + file)
         print("After writing to s3")
@@ -155,7 +159,7 @@ def copy_result_folder_to_s3(test_folder, node_type, node_idx, error_bound):
 def num_completed_experiments(node_type):
     s3_bucket = get_s3_bucket()
     files_and_folders = s3_bucket.objects.all()
-    files_and_folders = [f.key for f in files_and_folders if node_type in f.key and 'coordinator' in f.key and 'nethogs_out.txt' in f.key]
+    files_and_folders = [f.key for f in files_and_folders if node_type in f.key and 'coordinator' in f.key and 'nethogs' in f.key]  # nethogs_vs_automon.txt for automon and nethogs.txt for centralization
     return len(files_and_folders)
 
 
