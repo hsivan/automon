@@ -11,7 +11,7 @@ AutoMon is an easy-to-use algorithmic building block for automatically approxima
 Given Python code to compute f(x) from x as well as the desired approximation error, AutoMon automatically provide communication-efficient distributed monitoring of the function approximation, without requiring any manual mathematical analysis by the developer.
 
 For more information, see our SIGMOD 2022 paper, [AutoMon: Automatic Distributed Monitoring for Arbitrary
-Multivariate Functions](https://assaf.net.technion.ac.il/files/2021/12/SIGMOD2022_AutoMon_revision.pdf).
+Multivariate Functions](https://dl.acm.org/doi/pdf/10.1145/3514221.3517866?casa_token=n1jzfjzOu_wAAAAA:3bFuYHdf9wNOZnO-jHySzZOJm7DS3mP9vzmOrBzr8W9w3dSVixyr_vYvCDMHTeRmW6jPQpIH9cbH2dA).
 
 ## Installation
 
@@ -200,8 +200,9 @@ value in the node command to the IP of the coordinator machine.
 
 ## Reproduce paper's experimental results
 
-We provide detailed instructions for reproducing the experiments from our [paper](https://assaf.net.technion.ac.il/files/2021/12/SIGMOD2022_AutoMon_revision.pdf).
+We provide detailed instructions for reproducing the experiments from our [paper](https://dl.acm.org/doi/pdf/10.1145/3514221.3517866?casa_token=n1jzfjzOu_wAAAAA:3bFuYHdf9wNOZnO-jHySzZOJm7DS3mP9vzmOrBzr8W9w3dSVixyr_vYvCDMHTeRmW6jPQpIH9cbH2dA).
 The full [instructions](experiments/README.md) and scripts are in the `experiments` folder.
+See also [availability and reproducibility](docs/AutoMon_Availability_and_Reproducibility.pdf) file.
 
 
 ## Distributed experiment on a real-world WAN
@@ -220,6 +221,5 @@ publication, please use the following Bibtex entry:
   year      = {2022},
   series    = {SIGMOD '22},
   booktitle = {Proceedings of the 2022 {ACM} {SIGMOD} International Conference on Management of Data},
-  note      = {to appear}
 }
 ```
